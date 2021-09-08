@@ -1,5 +1,5 @@
 {
-  "name": "mint-forge",
+  "name": "kevinjobs",
   "version": "1.0.0",
   "description": "a website powered by React",
   "main": "index.js",
@@ -19,9 +19,6 @@
   ],
   "author": "Kevin Jobs",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kevinjobs/kevinjobs.github.io"
-  },
   "homepage": "https://kevinjobs.github.io/",
   "dependencies": {
     "@icon-park/react": "^1.3.3",
