@@ -1,0 +1,1 @@
+export { apiV2 } from './axios';
