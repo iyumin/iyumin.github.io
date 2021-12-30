@@ -1,6 +1,7 @@
 import { ENV } from '@/configs';
 
 import axios, { AxiosRequestConfig } from 'axios';
+import axiosRetry from 'axios-retry';
 
 const apiV2 = axios.create();
 
@@ -18,11 +19,15 @@ apiV2.interceptors.request.use(
     config.data = JSON.stringify(config.data);
     config.headers = {
       'content-type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
     };
     return config;
   }
 );
+
+// retry auto, fix the keep-alive problem;
+// see: https://zhuanlan.zhihu.com/p/86953757
+axiosRetry(apiV2, { retries: 3});
 
 export {
   apiV2
