@@ -13,6 +13,9 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+  position: relative;
 `;
 
 const ImageMasonry = styled.div`
@@ -241,7 +244,7 @@ export default function GalleryPage () :React.ReactElement {
             <Masonry
               data={imageList as IMasonryItem[]}
               cols={device === 'mobile' ? 2 : 3}
-              colWidth={device === 'mobile' ? clientWidth/2 : 320}
+              colWidth={device === 'mobile' ? (clientWidth - 12)/2 : 320}
               gutter={device === 'mobile' ? 4 : 24}
               onPreview={handleClickPreview}
               ref={masonryRef}
