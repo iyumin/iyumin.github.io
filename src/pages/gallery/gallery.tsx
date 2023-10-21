@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { CalendarThirtyTwo, CrossRingTwo } from '@icon-park/react';
-import api from '@/utils/axios';
+import { fetchPhotos } from '@/apis';
 import { IPost } from '@/types';
 import { Masonry, IMasonryItem, Loading } from '@/components';
 import { useDevice, useScroll } from '@/hooks';
+import { BASE_URL } from '@/configs/environment';
 
 const Container = styled.div`
   width: 100%;
@@ -96,13 +97,13 @@ const calculateoriginalSize = (item: PhotoItem, clientWidth: number, clientHeigh
 };
 
 export default function GalleryPage () :React.ReactElement {
-  const [currentOffset, setCurrentOffset] = React.useState(0);
-  const [imageList, setImageList] = React.useState<Array<PhotoItem>>([]);
-  const [isMoreImage, setIsMoreImage] = React.useState(false);
+  const [nowOffset, setNowOffset] = React.useState(0);
+  const [photos, setPhotos] = React.useState<Array<PhotoItem>>([]);
+  const [hasMore, setHasMore] = React.useState(false);
 
-  const [selectedItem, setSelectedItem] = React.useState<PhotoItem>();
-  const [selectedItemIndex, setSelectedItemIndex] = React.useState<number>();
-  const [maskDescToTop, setMaskDescToTop] = React.useState<number>(0);
+  const [pickItem, setPickItem] = React.useState<PhotoItem>();
+  const [pickItemIdx, setPickItemIdx] = React.useState<number>();
+  const [maskPadding, setMaskPadding] = React.useState<number>(0);
 
   const { clientWidth, clientHeight, device } = useDevice();
   const { toBottom } = useScroll();
@@ -124,7 +125,7 @@ export default function GalleryPage () :React.ReactElement {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const oldItem: any = current !== undefined ? current.children[index] : '';
     
-    const animationDelay = 300; // 300ms
+    const animationDelay = 400; // 300ms
 
     // 复制一份原有的图片
     const previewItem = oldItem.cloneNode(true);
@@ -157,9 +158,9 @@ export default function GalleryPage () :React.ReactElement {
     oldItem.style.display = 'none';      // 隐藏原有图片
     current.append(previewItem);         // 样式设置好后，将其插入原有结构中
 
-    setSelectedItem(item);                      // set item selected
-    setSelectedItemIndex(index);                // set item index selected
-    setMaskDescToTop(finalHeight + finalTop);   // set the mask description position to top;
+    setPickItem(item);                      // set item selected
+    setPickItemIdx(index);                // set item index selected
+    setMaskPadding(finalHeight + finalTop);   // set the mask description position to top;
 
     // 20ms later, 操作 dom 设置放大预览样式
     setTimeout(() => {
@@ -182,50 +183,35 @@ export default function GalleryPage () :React.ReactElement {
         oldItem.style.display = 'block';
       }, animationDelay);
 
-      setSelectedItemIndex(undefined);  // set item index selected undefined;
-      setSelectedItem(undefined);       // set item selected undefined;
+      setPickItemIdx(undefined);  // set item index selected undefined;
+      setPickItem(undefined);       // set item selected undefined;
     };
   };
 
   // 获取图片
-  const getImageList = (page: number, size = 12) => {
-    api
-      .get(`/posts?offset=${page}&limit=${size}&type=photo`)
-      .then(res => {
-        if (res.data.code === 1) {
-          const limit = res.data.data.limit;
-          const offset = res.data.data.offset;
-          const totals = res.data.data.totals || 30;
-          const items = res.data.data.posts;
-          // setState: ImageList
-          setImageList(imageList.concat(covertImageList(items)));
-          // 判断是否还有下一页
-          offset + limit > totals
-            ? setIsMoreImage(false)
-            : setIsMoreImage(true);
-        }
-      });
+  const getImageList = async (page: number, size = 12) => {
+    const data = await fetchPhotos(page, size);
+    setPhotos(photos.concat(covertImageList(data.posts)));
+    if (data.amount < pageLimit) setHasMore(false);
+    else setHasMore(true);
   };
 
   React.useEffect(() => {
     // 获取图片
-    getImageList(currentOffset, pageLimit);
+    getImageList(nowOffset, pageLimit);
   }, []);
 
   React.useEffect(() => {
-    if (isMoreImage && toBottom < 500) {
-      // console.log('almost bottom');
-      getImageList(currentOffset + pageLimit, pageLimit);
-      setCurrentOffset(currentOffset + pageLimit);
+    if (hasMore && toBottom < 500) {
+      getImageList(nowOffset + pageLimit, pageLimit);
+      setNowOffset(nowOffset + pageLimit);
     }
   }, [toBottom]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLockScroll = (e: any) => {
-    if (selectedItemIndex) {
-      e.preventDefault(selectedItemIndex);
-    } else {
-      // console.log(e);
+    if (pickItemIdx) {
+      e.preventDefault(pickItemIdx);
     }
   };
 
@@ -234,17 +220,17 @@ export default function GalleryPage () :React.ReactElement {
     return () => {
       window.removeEventListener('wheel', handleLockScroll);
     };
-  }, [selectedItemIndex]);
+  }, [pickItemIdx]);
 
   return (
     <Container>
       <ImageMasonry>
         {
-          imageList.length !== 0
+          photos.length !== 0
             ? 
             <Masonry
-              data={imageList as PhotoItem[]}
-              cols={device === 'mobile' ? 2 : 3}
+              data={photos as PhotoItem[]}
+              cols={device === 'mobile' ? 2 : 4}
               colWidth={device === 'mobile' ? (clientWidth - 12)/2 : 320}
               gutter={device === 'mobile' ? 4 : 24}
               onPreview={handleClickPreview}
@@ -254,66 +240,66 @@ export default function GalleryPage () :React.ReactElement {
             :
             <Loading />
         }
-        <Mask style={selectedItemIndex && maskStyle}>
+        <Mask style={pickItemIdx && maskStyle}>
           <MaskDesc
             style={{
-              visibility: selectedItemIndex ? 'visible' : 'hidden',
+              visibility: pickItemIdx ? 'visible' : 'hidden',
               position: 'absolute',
-              top: maskDescToTop + 8,
+              top: maskPadding + 8,
               left: '50%',
               transform: 'translateX(-50%)',
               // transition: 'all .1s ease-in',
               flexWrap: device === 'mobile' ? 'wrap' : 'wrap',
             }}
           >
-            {
-              selectedItem
-                ?
-                <>
-                  <div style={{width:'100%',textAlign:'center',}}>
-                    <h3>{ selectedItem.title }</h3>
-                  </div>
-                  <span className="mask-desc-item">
-                    <CalendarThirtyTwo theme="outline" size="20" fill="#333" strokeWidth={2}/>
-                    <span style={{ margin: '0 8px'}}>
-                      { dayjs(selectedItem.createAt).format('YYYY-MM-DD') }
-                    </span>
-                  </span>
-                  <span className="mask-desc-item">
-                    <CrossRingTwo theme="outline" size="20" fill="#333" strokeWidth={2}/>
-                    <span style={{margin: '0 8px'}}>
-                      {selectedItem.description || '还没有图片说明' }
-                    </span>
-                  </span>
-                </>
-                :
-                ''
-            }
+            { pickItem && renderDesc(pickItem) }
           </MaskDesc>
         </Mask>
       </ImageMasonry>
-      { isMoreImage && <Loading /> }
+      { hasMore && <Loading /> }
     </Container>
   );
 }
 
 // covert the raw image list to the masonry required.
 const covertImageList = (imageList: Array<PhotoItem>) :Array<PhotoItem> => {
-  return imageList.map((image: IPost, index: number) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const tmp: any = image;
-    const source = 'http://localhost:5000' + image.url;
-    tmp.key = image.uid;
-    tmp.child = (
-      <img
-        src={source}
-        data-index={index}
-        alt={image.title}
-        style={{width:'100%', height: '100%',}} />
-    );
-    const exif = JSON.parse(image.exif);
-    tmp.width = exif.width;
-    tmp.height = exif.height;
-    return tmp;
+  return imageList.map((img: IPost, index: number) => {
+    const exif = JSON.parse(img.exif);
+    const src = BASE_URL + img.url;
+    return {
+      'id': img.id,
+      'uid': img.uid,
+      'source': src,
+      'key': img.uid,
+      'createAt': img.createAt,
+      'updateAt': img.updateAt,
+      'description': img.description,
+      'title': img.title,
+      'child': <img src={src} data-index={index} alt={img.title} style={{width:'100%', height: '100%'}} />,
+      'width': exif.width,
+      'height': exif.height,
+    };
   });
+};
+
+const renderDesc = (pickItem: PhotoItem) => {
+  return (
+    <>
+      <div style={{width:'100%',textAlign:'center',}}>
+        <h3>{ pickItem.title }</h3>
+      </div>
+      <span className="mask-desc-item">
+        <CalendarThirtyTwo theme="outline" size="20" fill="#333" strokeWidth={2}/>
+        <span style={{ margin: '0 8px'}}>
+          { dayjs.unix(pickItem.createAt).format('YYYY-MM-DD') }
+        </span>
+      </span>
+      <span className="mask-desc-item">
+        <CrossRingTwo theme="outline" size="20" fill="#333" strokeWidth={2}/>
+        <span style={{margin: '0 8px'}}>
+          {pickItem.description || '还没有图片说明' }
+        </span>
+      </span>
+    </>
+  );
 };

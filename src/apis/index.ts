@@ -9,6 +9,14 @@ export async function fetchArticles(offset: number, limit: number) {
   return;
 }
 
+export async function fetchPhotos(offset: number, limit: number) {
+  const url = BASE_URL + '/posts';
+  const params = { offset, limit, type: 'photo' };
+  const resp = await api.get(url, {params});
+  if (resp.data.code === 0) return resp.data.data;
+  return;
+}
+
 export async function deletePost(uid: string) {
   const url = BASE_URL + '/p?uid=' + uid;
   const resp = await api.delete(url);
