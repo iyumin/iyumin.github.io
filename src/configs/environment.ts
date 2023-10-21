@@ -1,14 +1,12 @@
 export const ENV = {
   develop: {
     api: {
-      baseUrl: 'https://api.kevinjobs.com:5000/v2',
-      v2BaseUrl: 'https://api.kevinjobs.com:5000/v2',
+      baseUrl: 'http://localhost:5000',
     },
   },
   production: {
     api: {
-      baseUrl: 'https://api.kevinjobs.com:5000/v2',
-      v2BaseUrl: 'https://api.kevinjobs.com:5000/v2',
+      baseUrl: 'https://api.kevinjobs.com:5000',
     }
   },
 };

@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { CalendarThirtyTwo, CrossRingTwo } from '@icon-park/react';
-import { apiV2 } from '@/utils';
-import { IPicture } from '@/types';
+import api from '@/utils/axios';
+import { IPost } from '@/types';
 import { Masonry, IMasonryItem, Loading } from '@/components';
 import { useDevice, useScroll } from '@/hooks';
 
@@ -54,8 +54,10 @@ const maskStyle = {
   filter: 'opacity(98%)',
 } as React.CSSProperties;
 
+type PhotoItem = IMasonryItem & IPost;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const calculateoriginalSize = (item: IMasonryItem, clientWidth: number, clientHeight: number) => {
+const calculateoriginalSize = (item: PhotoItem, clientWidth: number, clientHeight: number) => {
   /**
    * 计算预览图最终状态
    * @param item
@@ -95,10 +97,10 @@ const calculateoriginalSize = (item: IMasonryItem, clientWidth: number, clientHe
 
 export default function GalleryPage () :React.ReactElement {
   const [currentOffset, setCurrentOffset] = React.useState(0);
-  const [imageList, setImageList] = React.useState<Array<IMasonryItem & IPicture>>([]);
+  const [imageList, setImageList] = React.useState<Array<PhotoItem>>([]);
   const [isMoreImage, setIsMoreImage] = React.useState(false);
 
-  const [selectedItem, setSelectedItem] = React.useState<IPicture & IMasonryItem>();
+  const [selectedItem, setSelectedItem] = React.useState<PhotoItem>();
   const [selectedItemIndex, setSelectedItemIndex] = React.useState<number>();
   const [maskDescToTop, setMaskDescToTop] = React.useState<number>(0);
 
@@ -110,7 +112,7 @@ export default function GalleryPage () :React.ReactElement {
   const pageLimit = 12;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClickPreview = (e: any, item: IMasonryItem & IPicture) => {
+  const handleClickPreview = (e: any, item: PhotoItem) => {
     /**
      * 处理点击图片预览事件
      */
@@ -187,15 +189,14 @@ export default function GalleryPage () :React.ReactElement {
 
   // 获取图片
   const getImageList = (page: number, size = 12) => {
-    apiV2
-      .get(`/pictures?offset=${page}&limit=${size}&orderBy=createAt&order=desc`)
+    api
+      .get(`/posts?offset=${page}&limit=${size}&type=photo`)
       .then(res => {
         if (res.data.code === 1) {
-          // console.log(res.data.data.items);
-          const limit = res.data.limit;
-          const offset = res.data.offset;
-          const totals = res.data.totals;
-          const items = res.data.data;
+          const limit = res.data.data.limit;
+          const offset = res.data.data.offset;
+          const totals = res.data.data.totals || 30;
+          const items = res.data.data.posts;
           // setState: ImageList
           setImageList(imageList.concat(covertImageList(items)));
           // 判断是否还有下一页
@@ -207,7 +208,7 @@ export default function GalleryPage () :React.ReactElement {
   };
 
   React.useEffect(() => {
-    // console.log(currentPage);
+    // 获取图片
     getImageList(currentOffset, pageLimit);
   }, []);
 
@@ -242,7 +243,7 @@ export default function GalleryPage () :React.ReactElement {
           imageList.length !== 0
             ? 
             <Masonry
-              data={imageList as IMasonryItem[]}
+              data={imageList as PhotoItem[]}
               cols={device === 'mobile' ? 2 : 3}
               colWidth={device === 'mobile' ? (clientWidth - 12)/2 : 320}
               gutter={device === 'mobile' ? 4 : 24}
@@ -297,13 +298,22 @@ export default function GalleryPage () :React.ReactElement {
 }
 
 // covert the raw image list to the masonry required.
-const covertImageList = (imageList: Array<IMasonryItem & IPicture>) :Array<IMasonryItem & IPicture> => {
-  return imageList.map((image: IPicture, index: number) => {
+const covertImageList = (imageList: Array<PhotoItem>) :Array<PhotoItem> => {
+  return imageList.map((image: IPost, index: number) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const tmp: any = image;
-    const source = image.source.toLowerCase();
+    const source = 'http://localhost:5000' + image.url;
     tmp.key = image.uid;
-    tmp.child = <img src={source} data-index={index} alt={image.title} style={{width:'100%', height: '100%',}} />;
+    tmp.child = (
+      <img
+        src={source}
+        data-index={index}
+        alt={image.title}
+        style={{width:'100%', height: '100%',}} />
+    );
+    const exif = JSON.parse(image.exif);
+    tmp.width = exif.width;
+    tmp.height = exif.height;
     return tmp;
   });
 };

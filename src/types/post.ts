@@ -1,17 +1,27 @@
 interface IBase {
-  createAt: string,
-  updateAt: string,
   id: number,
   uid: string,
 }
 
-interface IPost extends IBase {
+type IPost = Partial<{
   //
-  title: string,
-  author: string,
-  publish: string,
-  tags: string,
-}
+  createAt: number;
+  publishAt: number;
+  updateAt: number;
+  type: string;
+  title: string;
+  author: string;
+  content: string;
+  excerpt: string;
+  cover: string;
+  status: string;
+  tags: string;
+  category: string;
+  format: string;
+  url: string;
+  exif: string;
+  description: string;
+}> & IBase;
 
 interface IArticle extends IPost {
   cover: string,
