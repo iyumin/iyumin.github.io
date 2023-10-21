@@ -40,7 +40,7 @@ export async function addPost(data: any) {
 
 export async function fetchPost(uid: any) {
   const url = BASE_URL + '/p?uid=' + uid;
-  const resp = await api.delete(url);
+  const resp = await api.get(url);
   if (resp.data.code === 0) return resp.data.data;
   return;
 }

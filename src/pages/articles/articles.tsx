@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router';
 import dayjs from 'dayjs';
 
-import api from '@/utils/axios';
 import { IPost } from '@/types';
 import COLOR_MAP from '@/styles/colors';
 import { Loading } from '@/components';
 import { RightNavi } from '../_partial';
 import { rootRouteItems } from '@/routes';
+import { BASE_URL } from '@/configs/environment';
+import { fetchArticles } from '@/apis';
 
 const Container = styled.div`
   padding: 48px 0;
@@ -26,22 +27,24 @@ const ArticleItem = styled.div`
   position: relative;
   transition: all .3s ease-in-out;
   display: flex;
+  &:hover {
+    .cover {
+      width: 46%;
+    }
+  }
 `;
 
 const Cover = styled.div`
   width: 44%;
   min-height: 160px;
   max-height: 300px;
-  transition: all .3s ease-in-out;
+  transition: width .2s ease-in-out;
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     cursor: pointer;
     border-radius: 4px 0 0 4px;
-  }
-  &:hover {
-    width: 42%;
   }
 `;
 
@@ -84,57 +87,57 @@ const LoadMore = styled.div`
   border-radius: 4px;
 `;
 
-const HOST_URL = 'http://localhost:5000';
-
-function transferArticleList(origin: IPost[]) :IPost[] {
+function transformList(origin: IPost[]) :IPost[] {
   const arr = [];
   for (let i=0; i<origin.length; i++) {
     const n = origin[i];
-    n.cover = HOST_URL + n.cover;
+    n.cover = BASE_URL + n.cover;
     arr.push(n);
   }
   return arr;
 }
 
 export default function ArticlesPage () :React.ReactElement {
-  const [isRightNaviOpen, setIsRightNaviOpen] = React.useState(false);
-  const [articleList, setArticleList] = React.useState<IPost[]>();
+  const [isNavOpen, setIsNavOpen] = React.useState(false);
+  const [list, setList] = React.useState<IPost[]>();
   const [offset, setOffset] = React.useState(0);
+  const [hasMore, setHasMore] = React.useState(true);
   
-  const pageLimit = 9;
+  const pageLimit = 5;
   const history = useHistory();
 
-  const handleMore = (e: React.MouseEvent<HTMLElement>) => {
-    e.preventDefault();
-    api
-      .get(`/posts?offset=${offset+pageLimit}&limit=${pageLimit}&type=article`)
-      .then(res => {
-        if (res.data.code === 0) {
-          setArticleList(
-            articleList.concat(transferArticleList(res.data.data.posts)));
-          setOffset(offset+pageLimit);
-        }
-      })
-      .catch(err => window.alert(err.response.data.msg));
+  const handleClickMore = async () => {
+    const data = await fetchArticles(offset+pageLimit, pageLimit);
+    if (!data) {
+      setHasMore(false);
+      return;
+    }
+    setList(list.concat(transformList(data.posts)));
+    setOffset(offset+pageLimit);
   };
 
-  const handleClickArticle = (e: React.MouseEvent<HTMLElement>, a: IPost) => {
-    e.preventDefault();
+  const handleClickArticle = (a: IPost) => {
     history.push(`/article/${a.uid}`);
   };
 
-  const renderArticleItem = (a: IPost) => (
-    <ArticleItem>
-      <Cover onClick={e => handleClickArticle(e, a)}>
+  const renderItem = (a: IPost) => (
+    <ArticleItem key={a.uid}>
+      <Cover onClick={() => handleClickArticle(a)} className='cover'>
         <img src={a.cover} alt={a.title} />
       </Cover>
       <Info>
         <div style={{margin:16}}>
-          <h3 className="info-item" onClick={e => handleClickArticle(e, a)}>{ a.title }</h3>
-          <div className="info-item" style={{color: COLOR_MAP.white7}}>{ a.excerpt }</div>
+          <h3 className="info-item" onClick={() => handleClickArticle(a)}>
+            { a.title }
+          </h3>
+          <div className="info-item" style={{color: COLOR_MAP.white7}}>
+            { a.excerpt }
+          </div>
           <div className="info-author-date info-item">
             <div className="info-author">{ a.author }</div>
-            <div className="info-date">{ dayjs(a.updateAt).format('YYYY年M月D日') }</div>
+            <div className="info-date">
+              { dayjs.unix(a.updateAt).format('YYYY年M月D日') }
+            </div>
           </div>
         </div>
       </Info>
@@ -143,29 +146,25 @@ export default function ArticlesPage () :React.ReactElement {
 
   // 组件加载时获取文章列表
   React.useEffect(() => {
-    api
-      .get(`/posts?offset=${offset}&limit=${pageLimit}&type=article`)
-      .then(res => {
-        if (res.data.code === 0) {
-          setArticleList(transferArticleList(res.data.data.posts));
-        }
-      })
-      .catch(err => window.alert(err.response.data.msg));
+    (async() => {
+      const data = await fetchArticles(offset, pageLimit);
+      setList(transformList(data.posts));
+      if (data.amount < pageLimit) setHasMore(false);
+    })();
   }, []);
 
   return (
     <Container>
       <ArticleList>
-        {
-          articleList
-            ? articleList.map(renderArticleItem)
-            : <Loading />
-        }
+        { list ? list.map(renderItem) : <Loading /> }
       </ArticleList>
-      <LoadMore role="button" onClick={handleMore}>Load More</LoadMore>
+      {
+        hasMore &&
+        <LoadMore role="button" onClick={handleClickMore}>Load More</LoadMore>
+      }
       <RightNavi
-        isOpen={isRightNaviOpen}
-        onClick={e => {e.preventDefault(); setIsRightNaviOpen(!isRightNaviOpen);}}
+        isOpen={isNavOpen}
+        onClick={() => setIsNavOpen(!isNavOpen)}
         menus={rootRouteItems}
       />
     </Container>

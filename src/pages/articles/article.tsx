@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import { useParams } from 'react-router';
-import { IArticle } from '@/types';
-import api from '@/utils/axios';
+import { IPost } from '@/types';
 import { Loading } from '@/components';
+import { fetchPost } from '@/apis';
 import { RightNavi, Comment } from '../_partial';
 import { rootRouteItems } from '@/routes';
 import COLOR_MAP from '@/styles/colors';
@@ -44,41 +44,22 @@ const Content = styled.div`
 `;
 
 export default function ArticlePage () :React.ReactElement {
-  const [article, setArticle] = React.useState<IArticle>();
+  const [article, setArticle] = React.useState<IPost>();
   const [isRightNaviOpen, setIsRightNaviOpen] = React.useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const params: any = useParams();
 
   React.useEffect(() => {
     const { uid } = params;
-    api
-      .get(`/p?uid=${uid}`)
-      .then(res => setArticle(res.data.data))
-      .catch(err => console.error(err));
+    (async() => {
+      const data = await fetchPost(uid);
+      setArticle(data.post);
+    })();
   }, []);
 
   return (
     <Container>
-      {
-        article
-          ?
-          <>
-            <Header className="article-page-header">
-              <h2>{ article.title }</h2>
-              <div className="author">
-                { article.author }
-              </div>
-              <div className="date">
-                { dayjs(article.createAt).format('YYYY年M月D日') }
-              </div>
-            </Header>
-            <Content>
-              <div dangerouslySetInnerHTML={{__html: article.content}}></div>
-            </Content>
-          </>
-          :
-          <Loading />
-      }
+      { article ? renderContent(article) : <Loading /> }
       <div style={{marginTop:64,maxWidth:1000,padding:16}}>
         <Comment />
       </div>
@@ -90,3 +71,22 @@ export default function ArticlePage () :React.ReactElement {
     </Container>
   );
 }
+
+const renderContent = (article: IPost) => {
+  return (
+    <div className='article-content'>
+      <Header className="article-page-header">
+        <h2>{ article.title }</h2>
+        <div className="author">
+          { article.author }
+        </div>
+        <div className="date">
+          { dayjs.unix(article.createAt).format('YYYY年M月D日') }
+        </div>
+      </Header>
+      <Content>
+        <div dangerouslySetInnerHTML={{__html: article.content}}></div>
+      </Content>
+    </div>
+  );
+};
