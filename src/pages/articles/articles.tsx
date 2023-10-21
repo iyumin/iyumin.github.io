@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router';
 import dayjs from 'dayjs';
 
-import { apiV2 } from '@/utils';
-import { IArticle } from '@/types';
+import api from '@/utils/axios';
+import { IPost } from '@/types';
 import COLOR_MAP from '@/styles/colors';
 import { Loading } from '@/components';
 import { RightNavi } from '../_partial';
@@ -84,9 +84,21 @@ const LoadMore = styled.div`
   border-radius: 4px;
 `;
 
+const HOST_URL = 'http://localhost:5000';
+
+function transferArticleList(origin: IPost[]) :IPost[] {
+  const arr = [];
+  for (let i=0; i<origin.length; i++) {
+    const n = origin[i];
+    n.cover = HOST_URL + n.cover;
+    arr.push(n);
+  }
+  return arr;
+}
+
 export default function ArticlesPage () :React.ReactElement {
   const [isRightNaviOpen, setIsRightNaviOpen] = React.useState(false);
-  const [articleList, setArticleList] = React.useState<IArticle[]>();
+  const [articleList, setArticleList] = React.useState<IPost[]>();
   const [offset, setOffset] = React.useState(0);
   
   const pageLimit = 9;
@@ -94,21 +106,24 @@ export default function ArticlesPage () :React.ReactElement {
 
   const handleMore = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    apiV2
-      .get(`/articles?offset=${offset+pageLimit}&limit=${pageLimit}`)
+    api
+      .get(`/posts?offset=${offset+pageLimit}&limit=${pageLimit}&type=article`)
       .then(res => {
-        setArticleList(articleList.concat(res.data.data));
-        setOffset(offset+pageLimit);
+        if (res.data.code === 0) {
+          setArticleList(
+            articleList.concat(transferArticleList(res.data.data.posts)));
+          setOffset(offset+pageLimit);
+        }
       })
       .catch(err => window.alert(err.response.data.msg));
   };
 
-  const handleClickArticle = (e: React.MouseEvent<HTMLElement>, a: IArticle) => {
+  const handleClickArticle = (e: React.MouseEvent<HTMLElement>, a: IPost) => {
     e.preventDefault();
     history.push(`/article/${a.uid}`);
   };
 
-  const renderArticleItem = (a: IArticle) => (
+  const renderArticleItem = (a: IPost) => (
     <ArticleItem>
       <Cover onClick={e => handleClickArticle(e, a)}>
         <img src={a.cover} alt={a.title} />
@@ -126,10 +141,15 @@ export default function ArticlesPage () :React.ReactElement {
     </ArticleItem>
   );
 
+  // 组件加载时获取文章列表
   React.useEffect(() => {
-    apiV2
-      .get(`/articles?offset=${offset}&limit=${pageLimit}&order=desc&orderBy=updateAt`)
-      .then(res => setArticleList(res.data.data))
+    api
+      .get(`/posts?offset=${offset}&limit=${pageLimit}&type=article`)
+      .then(res => {
+        if (res.data.code === 0) {
+          setArticleList(transferArticleList(res.data.data.posts));
+        }
+      })
       .catch(err => window.alert(err.response.data.msg));
   }, []);
 

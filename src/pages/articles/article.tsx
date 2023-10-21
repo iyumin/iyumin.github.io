@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import { useParams } from 'react-router';
 import { IArticle } from '@/types';
-import { apiV2 } from '@/utils';
+import api from '@/utils/axios';
 import { Loading } from '@/components';
 import { RightNavi, Comment } from '../_partial';
 import { rootRouteItems } from '@/routes';
@@ -51,8 +51,8 @@ export default function ArticlePage () :React.ReactElement {
 
   React.useEffect(() => {
     const { uid } = params;
-    apiV2
-      .get(`/article?uid=${uid}`)
+    api
+      .get(`/p?uid=${uid}`)
       .then(res => setArticle(res.data.data))
       .catch(err => console.error(err));
   }, []);
