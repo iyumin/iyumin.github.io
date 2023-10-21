@@ -1,4 +1,4 @@
-export const ENV = {
+const ENV = {
   develop: {
     api: {
       baseUrl: 'http://localhost:5000',
@@ -9,4 +9,11 @@ export const ENV = {
       baseUrl: 'https://api.kevinjobs.com:5000',
     }
   },
+};
+
+const BASE_URL = 'http://localhost:5000';
+
+export {
+  BASE_URL,
+  ENV,
 };

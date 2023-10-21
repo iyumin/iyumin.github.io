@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import marked from 'marked';
 import WE from 'wangeditor';
 
-import { IArticle } from '@/types';
+import { IPost } from '@/types';
 import { Dialog, Button, Input, } from '@/components';
 import renderer from './marked-plugin';
 
@@ -11,7 +11,7 @@ export interface EditorProps {
   /**
    * 文章对象
    */
-  article: IArticle,
+  article: IPost,
   /**
    * 编辑器是否可以
    */
@@ -19,7 +19,7 @@ export interface EditorProps {
   /**
    * handle [submit] button
    */
-  onSubmit: (e: React.MouseEvent<HTMLElement>, article: IArticle) => void,
+  onSubmit: (e: React.MouseEvent<HTMLElement>, article: IPost) => void,
   /**
    * 处理右上角【x】关闭按钮
    */
@@ -62,8 +62,8 @@ export default function Editor (props: EditorProps) :React.ReactElement {
   const [cover, setCover] = React.useState<string>();
   const [excerpt, setExcerpt] = React.useState<string>();
   const [tags, setTags] = React.useState<string>();
-  const [extension, setExtension] = React.useState<string>();
-  const [publish, setPublish] = React.useState<string>();
+  const [format, setFormat] = React.useState<string>();
+  const [status, setStatus] = React.useState<string>();
 
   /**
    * 清理所有存在的状态
@@ -80,16 +80,16 @@ export default function Editor (props: EditorProps) :React.ReactElement {
     setCover(undefined);
     setExcerpt(undefined);
     setTags(undefined);
-    setExtension(undefined);
+    setStatus(undefined);
 
-    setPublish(undefined);
+    setFormat(undefined);
   };
 
   /**
    * 处理点击【提交】按钮事件
    * @param e 鼠标事件
    */
-  const handleSubmit = (e: React.MouseEvent<HTMLElement>, a: IArticle) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>, a: IPost) => {
     e.preventDefault();
     const form = {
       uid: uid || a.uid,
@@ -102,8 +102,8 @@ export default function Editor (props: EditorProps) :React.ReactElement {
       cover: cover || a.cover,
       excerpt: excerpt || a.excerpt,
       tags: tags || a.tags,
-      extension: extension || a.extension,
-      publish: publish || a.publish,
+      format: format || a.format,
+      status: status || a.status,
     };
     onSubmit(e, form);
     clearAllStates();
@@ -114,7 +114,7 @@ export default function Editor (props: EditorProps) :React.ReactElement {
     onClose(e);
   };
 
-  const renderArticleInfo = (a: IArticle) => {
+  const renderArticleInfo = (a: IPost) => {
     return (
       <ArticleInfo>
         <div className="article-item">
@@ -146,7 +146,7 @@ export default function Editor (props: EditorProps) :React.ReactElement {
         </div>
         <div className="article-item" style={{margin:'8px 0'}}>
           <label style={{marginRight:16}}>格式</label>
-          <select value={extension} onChange={e => setExtension(e.target.value)} defaultValue={a.extension}>
+          <select value={format} onChange={e => setFormat(e.target.value)} defaultValue={a.format}>
             <option value="html">HTML</option>
             <option value="text">纯文本</option>
             <option value="markdown">Markdown</option>
@@ -154,7 +154,7 @@ export default function Editor (props: EditorProps) :React.ReactElement {
         </div>
         <div className="article-item" style={{margin:'8px 0'}}>
           <label style={{marginRight:16}}>发布</label>
-          <select value={publish} onChange={e => setPublish(e.target.value)} defaultValue={a.publish}>
+          <select value={status} onChange={e => setStatus(e.target.value)} defaultValue={a.status}>
             <option value="public">公开</option>
             <option value="private">隐藏</option>
             <option value="draft">草稿</option>
@@ -183,8 +183,8 @@ export default function Editor (props: EditorProps) :React.ReactElement {
     // 判断内容的格式进行相应处理
     if (article) {
       console.log(article);
-      const { extension, content } = article;
-      switch (extension) {
+      const { format, content } = article;
+      switch (format) {
       case 'markdown':
         editor.txt.html(marked(content));
         break;

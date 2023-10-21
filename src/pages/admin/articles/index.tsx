@@ -4,14 +4,26 @@ import dayjs from 'dayjs';
 import lodash from 'lodash';
 
 import { Table, Input, Button, Spin, Tag } from '@/components';
-import { apiV2 } from '@/utils';
-import { IArticle } from '@/types';
+import { IPost } from '@/types';
+import { fetchArticles, deletePost, updatePost, addPost } from '@/apis';
+import { BASE_URL } from '@/configs/environment';
 
 import { ArticleEditor } from '../_partial/article-editor';
 import { Header } from '../_partial/admin-container-layout';
+import { getLocalStorage } from '../index';
 
-interface IArticleTable extends IArticle {
-  showCover: React.ReactNode;
+interface IArticleTable {
+  id: React.ReactNode;
+  uid: React.ReactNode;
+  createAt: React.ReactNode;
+  updateAt: React.ReactNode;
+  title: React.ReactNode;
+  author: React.ReactNode;
+  cover: React.ReactNode;
+  tags: React.ReactNode;
+  excerpt: React.ReactNode;
+  format: React.ReactNode;
+  status: React.ReactNode;
   edit: React.ReactNode;
 }
 
@@ -36,7 +48,7 @@ const TableContainer = styled.div`
   }
 `;
 
-const emptyArticle: IArticle = {
+const emptyArticle: IPost = {
   title: '',
   author: '',
   updateAt: undefined,
@@ -47,22 +59,22 @@ const emptyArticle: IArticle = {
   id: undefined,
   excerpt: '',
   tags: '',
-  extension: 'html',
-  publish: 'draft',
+  format: 'html',
+  status: 'draft',
 };
 
-export default function AdminArticlePage () :React.ReactElement {
+export default function AdminArticlePage(): React.ReactElement {
   // 文章列表
-  const [articleList, setArticleList] = React.useState<Array<IArticleTable>>();
+  const [articleList, setArticleList] = React.useState<IPost[]>();
   // 搜索框
   const [searchValue, setSearchValue] = React.useState('');
   // 当前文章偏移量
   const [currentOffset, setCurrentOffset] = React.useState(0);
   // 选定的文章对象
-  const [selectedArticle, setSelectedArticle] = React.useState<IArticle>();
+  const [selectedArticle, setSelectedArticle] = React.useState<IPost>();
   // 上一页、下一页按钮是否可用
-  const [isPrevButtonDisable, setIsPrevButtonDisable] = React.useState(false);
-  const [isNextButtonDisable, setIsNextButtonDisable] = React.useState(false);
+  const [hasPrev, setHasPrev] = React.useState(false);
+  const [hasNext, setHasNext] = React.useState(true);
   // refresh this component
   const [refresh, setRefresh] = React.useState(0);
 
@@ -73,14 +85,13 @@ export default function AdminArticlePage () :React.ReactElement {
     { field: 'uid', name: 'UID', width: 100, height: 20, },
     { field: 'createAt', name: '创建日期', width: 100, },
     { field: 'updateAt', name: '更新日期', width: 100, },
-    { field: 'publish', name: '是否发布', },
     { field: 'title', name: '标题', },
     { field: 'author', name: '作者', },
-    // { field: 'tags', name: '标签', },
-    { field: 'extension', name: '文档格式', },
+    { field: 'cover', name: '封面', width: 100, },
+    { field: 'tags', name: '标签', },
     { field: 'excerpt', name: '摘要', width: 200, },
-    { field: 'showCover', name: '封面', width: 100, },
-    { field: 'showTags', name: '标签', },
+    { field: 'format', name: '文档格式', },
+    { field: 'status', name: '状态', },
     { field: 'edit', name: '编辑', width: 120, },
   ];
 
@@ -94,18 +105,17 @@ export default function AdminArticlePage () :React.ReactElement {
    * @param e 鼠标事件
    * @param article 文章对象
    */
-  const handleEdit = (e: React.MouseEvent<HTMLElement>, article: IArticle) => {
-    e.preventDefault();
+  const handleEdit = (article: IPost) => {
     setSelectedArticle(article);
   };
 
-  const handleDelete = (e: React.MouseEvent<HTMLElement>, article: IArticle) => {
-    e.preventDefault();
+  const handleDelete = (article: IPost) => {
     if (window.confirm('确定要删除吗？')) {
-      apiV2
-        .delete(`/article?uid=${article.uid}`)
-        .then(res => {window.alert(res.data.msg); setRefresh(Math.random());})
-        .catch(err => window.alert(err.response.data.msg));
+      deletePost(article.uid)
+        .then(() => {
+          window.alert('删除成功');
+          setRefresh(Math.random());
+        });
     }
   };
 
@@ -114,28 +124,24 @@ export default function AdminArticlePage () :React.ReactElement {
    * @param e 鼠标事件
    * @param newArticle 修改后的文章对象
    */
-  const handleUpdate = (e: React.MouseEvent<HTMLElement>, newArticle: IArticle) => {
+  const handleUpdate = (e: React.MouseEvent<HTMLElement>, a: IPost) => {
     e.preventDefault();
-    if (!newArticle.uid) {
-      delete newArticle.uid;
-      delete newArticle.id;
-      delete newArticle.createAt;
-      delete newArticle.updateAt;
-      apiV2
-        .post('/article', newArticle)
-        .then(res => {
-          window.alert(res.data.msg);
+    if (!a.uid) {
+      delete a.uid;
+      delete a.id;
+      delete a.createAt;
+      delete a.updateAt;
+      addPost(a)
+        .then(() => {
+          window.alert('添加成功');
           setSelectedArticle(undefined);
-        })
-        .catch(err => window.alert(err.response.data.msg));
+        });
     } else {
-      apiV2
-        .put(`/article?uid=${newArticle.uid}`, newArticle)
-        .then(res => {
-          window.alert(res.data.msg);
+      updatePost(a.uid, a)
+        .then(() => {
+          window.alert('更新成功');
           setSelectedArticle(undefined);
-        })
-        .catch(err => window.alert(err.response.data.msg));
+        });
     }
   };
 
@@ -169,61 +175,17 @@ export default function AdminArticlePage () :React.ReactElement {
   };
 
   /**
-   * 处理文章列表 使其满足列表的格式要求
-   * @param articleList 原生的文章列表
-   * @returns 处理后的文章列表
-   */
-  const covertArticleList = (articleList: IArticleTable[]) => {
-    return articleList.map((article) => {
-      const newArticle = lodash.clone(article); // 浅拷贝一份 避免后续操作影响值
-      /**
-       * 对各项值进行转换
-       */
-      article.createAt = dayjs(article.createAt).format('YYYY-MM-DD');
-      article.updateAt = dayjs(article.updateAt).format('YYYY-MM-DD');
-      article.showCover = (
-        <img
-          src={article.cover}
-          alt={article.title}
-          style={{width:100,height:80,objectFit:'cover'}}
-        />
-      );
-      article.showTags = (
-        article.tags !== ''
-          ? <span>{article.tags.split('|').map((t,i) => <Tag key={i}>{t}</Tag>)}</span>
-          : ''
-      );
-      article.edit = (
-        <span>
-          <Button onClick={e => handleEdit(e, newArticle)}>编辑</Button>
-          <Button onClick={e => handleDelete(e, newArticle)} danger>删除</Button>
-        </span>
-      );
-      delete article.cover;
-      delete article.tags;
-      delete article.content;
-      return article;
-    });
-  };
-
-  /**
    * get the article lists.
    * @param offset offset to the start;
    * @param limit page size
    */
   const getArticleList = async (offset = 0, limit: number) => {
-    await apiV2
-      .get(`/articles?offset=${offset}&limit=${limit}&orderBy=createAt`)
-      .then(res => {
-        setArticleList(covertArticleList(res.data.data));
-        // 判断是否已经是最后一页
-        if (currentOffset + pageLimit >= res.data.totals) {
-          setIsNextButtonDisable(true);
-        } else {
-          setIsNextButtonDisable(false);
-        }
-      })
-      .catch(err => console.log(err));
+    const data = await fetchArticles(offset, limit);
+    if (data) {
+      if (data.amount < limit) setHasNext(false);
+      else setHasNext(true);
+      setArticleList(data.posts);
+    }
   };
 
   /**
@@ -236,9 +198,9 @@ export default function AdminArticlePage () :React.ReactElement {
     // console.log('current offset', currentOffset);
     // 判断是否是第一页
     if (currentOffset <= 0) {
-      setIsPrevButtonDisable(true);
+      setHasPrev(false);
     } else {
-      setIsPrevButtonDisable(false);
+      setHasPrev(true);
     }
 
     getArticleList(currentOffset, pageLimit);
@@ -259,19 +221,93 @@ export default function AdminArticlePage () :React.ReactElement {
       </div>
       <TableContainer>
         <div className="table">
-          { articleList ? <Table data={articleList} heads={heads} /> : <Spin /> }
+          {
+            articleList
+              ? <Table
+                data={toTableData(articleList, handleEdit, handleDelete)}
+                heads={heads}
+              />
+              : <Spin />}
         </div>
         <div className="prev-next">
-          <Button onClick={handlePrev} disabled={isPrevButtonDisable}>Prev</Button>
-          <Button onClick={handleNext} disabled={isNextButtonDisable}>Next</Button>
+          <Button onClick={handlePrev} disabled={!hasPrev}>Prev</Button>
+          <Button onClick={handleNext} disabled={!hasNext}>Next</Button>
         </div>
       </TableContainer>
       <ArticleEditor
         article={selectedArticle}
         visible={Boolean(selectedArticle)}
-        onSubmit={(e, newArticle) => handleUpdate(e, newArticle)}
+        onSubmit={(e, a) => handleUpdate(e, a)}
         onClose={handleEditorClose}
       />
     </Article>
   );
 }
+
+/**
+ * 处理文章列表 使其满足列表的格式要求
+ * @param articleList 原生的文章列表
+ * @returns 处理后的文章列表
+ */
+const toTableData = (
+  articleList: IPost[],
+  onEdit: (p: IPost) => void,
+  onDel: (p: IPost) => void
+) => {
+  return articleList.map((article) => {
+    return {
+      id: <span style={{fontSize: 14}}>{article.id}</span>,
+      uid: <span style={{fontSize: 12}}>{article.uid.slice(0, 6)+'...'}</span>,
+      createAt: <span>{dayjs.unix(article.createAt).format('YYYY-MM-DD')}</span>,
+      updateAt: <span>{dayjs.unix(article.updateAt).format('YYYY-MM-DD')}</span>,
+      title: <span>{article.title}</span>,
+      author: <span>{article.author}</span>,
+      cover: renderCover(article.cover, article.title),
+      tags: renderTags(article.tags),
+      excerpt: <span>{article.excerpt}</span>,
+      format: <span>{article.format}</span>,
+      status: renderStatus(article.status),
+      edit: renderEdit(article, onEdit, onDel),
+    };
+  });
+};
+
+const renderTags = (tags: string) => {
+  return (
+    <span>{tags.split('|').map((t, i) => <Tag key={i}>{t}</Tag>)}</span>
+  );
+};
+
+const renderCover = (cover: string, title:string) => {
+  return (
+    <img
+      src={BASE_URL + cover}
+      alt={title}
+      style={{ width: 100, height: 80, objectFit: 'cover' }}
+    />
+  );
+};
+
+const renderStatus = (status: string) => {
+  let s = '';
+  if (status === 'publish') s = '已发表';
+  else if (status === 'draft') s = '草稿';
+  return (
+    <span>{s}</span>
+  );
+};
+
+const renderEdit = (
+  a: IPost,
+  onEdit: (a: IPost) => void,
+  onDel: (a: IPost) => void
+) => {
+  const { token } = getLocalStorage();
+  const isLogin = token === null ? false : true;
+  return (
+    <span>
+      <Button onClick={() => onEdit(a)} disabled={!isLogin}>编辑</Button>
+      <Button onClick={() => onDel(a)} danger disabled={!isLogin}>删除</Button>
+    </span>
+  );
+};

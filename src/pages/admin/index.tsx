@@ -4,7 +4,7 @@ import { Redirect, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { IUser } from '@/types';
-import { apiV2 } from '@/utils/axios';
+import api from '@/utils/axios';
 import { Loading } from '@/components';
 
 import Navbar from './_partial/navbar';
@@ -36,6 +36,15 @@ const Admin = styled.div`
   }
 `;
 
+/**
+ * 取出存放在 localStorage 中的值
+ * @returns {object} {token: string, name: string}
+ */
+export const getLocalStorage = () => {
+  const token = localStorage.getItem('token');
+  const name = localStorage.getItem('name');
+  return { token, name };
+};
 
 export default function AdminPage () :ReactElement {
   const [isLogin, setIsLogin] = React.useState(false);
@@ -62,25 +71,15 @@ export default function AdminPage () :ReactElement {
   };
 
   /**
-   * 集中取出存放在 localStorage 中的值
-   * @returns {object} {token: string, name: string}
-   */
-  const getLocalStorage = () => {
-    const token = localStorage.getItem('token');
-    const name = localStorage.getItem('name');
-    return { token, name };
-  };
-
-  /**
    * 处理点击【提交】按钮事件
    * @param e 鼠标事件
    * @param form 用户信息表单
    */
   const handleSubmit = (e: React.MouseEvent<HTMLElement>, form: Partial<IUser>) => {
-    apiV2
-      .post('/token', form)
+    api
+      .post('/login', form)
       .then(res => {
-        setLocalStorage(res.data.token, form.name);
+        setLocalStorage(res.data.data.token, form.name);
         setIsDialogVisible(false);
         setIsLogin(true);
         history.go(0);

@@ -4,7 +4,7 @@ import * as echarts from 'echarts';
 import dayjs from 'dayjs';
 import '../_configs/echarts-theme/shine.js';
 
-import { apiV2 } from '@/utils';
+import api from '@/utils/axios';
 
 const Container = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ export default function VisitData (props: IProps) :React.ReactElement {
   ];
 
   React.useEffect(() => {
-    apiV2
+    api
       .get(`/logs/visit-data?dates=${JSON.stringify(dateQueries)}`)
       .then(res => {
         const rates = res.data.data.map((log: {date: string, totals: number}) => log.totals);
