@@ -40,7 +40,7 @@ const Admin = styled.div`
  * 取出存放在 localStorage 中的值
  * @returns {object} {token: string, name: string}
  */
-export const getLocalStorage = () => {
+export const getLocalStorage = () :{token: string, name: string} => {
   const token = localStorage.getItem('token');
   const name = localStorage.getItem('name');
   return { token, name };

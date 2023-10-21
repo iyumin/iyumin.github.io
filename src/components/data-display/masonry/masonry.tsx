@@ -95,4 +95,6 @@ const Masonry = React.forwardRef((props: MasonryProps, ref: React.RefObject<HTML
   );
 });
 
+Masonry.displayName = 'Masonry';
+
 export default Masonry;

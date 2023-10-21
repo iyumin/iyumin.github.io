@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import lodash from 'lodash';
 
 import { Table, Input, Button, Spin, Tag } from '@/components';
 import { IPost } from '@/types';
@@ -11,21 +10,6 @@ import { BASE_URL } from '@/configs/environment';
 import { ArticleEditor } from '../_partial/article-editor';
 import { Header } from '../_partial/admin-container-layout';
 import { getLocalStorage } from '../index';
-
-interface IArticleTable {
-  id: React.ReactNode;
-  uid: React.ReactNode;
-  createAt: React.ReactNode;
-  updateAt: React.ReactNode;
-  title: React.ReactNode;
-  author: React.ReactNode;
-  cover: React.ReactNode;
-  tags: React.ReactNode;
-  excerpt: React.ReactNode;
-  format: React.ReactNode;
-  status: React.ReactNode;
-  edit: React.ReactNode;
-}
 
 const Article = styled.div`
   .options {
