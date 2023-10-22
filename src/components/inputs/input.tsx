@@ -5,6 +5,7 @@ import COLOR_MAP from '@/styles/colors';
 type InputProps = {
   label?: string,
   style?: React.CSSProperties,
+  name?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 const InputStyled = styled.div`
@@ -30,12 +31,16 @@ const InputStyled = styled.div`
 `;
 
 function Input (props: InputProps) :React.ReactElement {
-  const { label, style, ...restProps } = props;
+  const { label, name, style, ...restProps } = props;
 
   return (
     <InputStyled style={style}>
       <label>{ label }</label>
-      <input {...restProps} />
+      <input
+        data-label={label}
+        data-name={name}
+        {...restProps}
+      />
     </InputStyled>
   );
 }

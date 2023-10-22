@@ -8,7 +8,7 @@ import api from '@/utils/axios';
 import { Loading } from '@/components';
 
 import Navbar from './_partial/navbar';
-import Navigator from './_partial/navigator';
+import Navigator from './_partial/menu';
 
 import { adminHomeRoute, generalRouteItems, editRouteItems } from '@/routes';
 

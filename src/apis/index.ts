@@ -7,7 +7,16 @@ type ReturnType = Promise<{
   amount?: number;
   offset?: number;
   limit?: number;
+  post?: IPost;
 }> | null;
+
+export async function fetchPosts(offset: number, limit: number) :ReturnType {
+  const url = BASE_URL + '/posts';
+  const params = { offset, limit };
+  const resp = await api.get(url, {params});
+  if (resp.data.code === 0) return resp.data.data;
+  return;
+}
 
 export async function fetchArticles(offset: number, limit: number) :ReturnType {
   const url = BASE_URL + '/posts';
@@ -35,7 +44,7 @@ export async function deletePost(uid: string) :ReturnType {
 export async function updatePost(uid: string, data: IPost) :ReturnType {
   const url = BASE_URL + '/p?uid=' + uid;
   const resp = await api.put(url, data);
-  if (resp.data.code === 0) return resp.data.data;
+  if (resp.data.code === 0) return resp.data.msg;
   return;
 }
 
@@ -48,6 +57,13 @@ export async function addPost(data: IPost) :ReturnType {
 
 export async function fetchPost(uid: string) :ReturnType {
   const url = BASE_URL + '/p?uid=' + uid;
+  const resp = await api.get(url);
+  if (resp.data.code === 0) return resp.data.data;
+  return;
+}
+
+export async function fetchLogs(start: number, end: number) :ReturnType {
+  const url = BASE_URL + `/logs?start=${start}&end=${end}`;
   const resp = await api.get(url);
   if (resp.data.code === 0) return resp.data.data;
   return;

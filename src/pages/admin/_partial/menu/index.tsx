@@ -33,14 +33,14 @@ export default function Navigator () :React.ReactElement {
           <Link to={adminHomeRoute.paths.join('/')}>{adminHomeRoute.title}</Link>
         </Menu.Item>
         <Menu.SubMenu
-          title="概览"
+          title="内容管理"
           isOpen
           icon={<BlocksAndArrows theme="outline" size="20" fill="#333" strokeWidth={2}/>}
         >
           { generalRouteItems.map(renderMenuItem) }
         </Menu.SubMenu>
         <Menu.SubMenu
-          title="管理"
+          title="系统管理"
           isOpen
           icon={<Config theme="outline" size="20" fill="#333" strokeWidth={2}/>}
         >

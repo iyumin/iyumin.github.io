@@ -5,6 +5,7 @@ const AdminPage = React.lazy(() => import('@/pages/admin'));
 const ArticlePage = React.lazy(() => import('@/pages/articles/article'));
 const ArticlesPage = React.lazy(() => import('@/pages/articles'));
 const GalleryPage = React.lazy(() => import('@/pages/gallery'));
+const EditPage = React.lazy(() => import('../pages/admin/edit'));
 
 const rootRouteItems: IRouteItem[] = [
   {
@@ -43,6 +44,15 @@ const rootRouteItems: IRouteItem[] = [
     exact: true,
     type: 'hash',
   },
+  {
+    key: 5,
+    paths: ['', 'edit', ':type', ':uid'],
+    name: 'edit-post',
+    title: 'Edit Post',
+    component: EditPage,
+    exact: true,
+    type: 'hash',
+  }
 ];
 
 export { rootRouteItems };
