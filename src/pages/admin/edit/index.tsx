@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import styled from 'styled-components';
 import marked from 'marked';
@@ -6,20 +7,21 @@ import dayjs from 'dayjs';
 import { useLocation } from 'react-router-dom';
 
 import { IPost } from '@/types';
-import { Input, Button } from '@/components';
+import { Input } from '@/components';
 import Upload, { UploadData } from '@/components/inputs/upload';
+import { Select, Option } from '@/components/inputs/select';
 import { fetchPost, updatePost, addPost } from '@/apis';
 import { BASE_URL } from '@/configs/environment';
 
 const renderer = {
-  image(href: string, title: string, text: string) :string {
+  image(href: string, title: string, text: string): string {
     return `
       <div style="display:flex;justify-content:center;flex-wrap:wrap;">
         <img src="${href}" alt="${text || title}" style="width:80%;" />
         <div style="width:100%;text-align:center;color:#777777;">${text}</div>
       </div>
     `;
-  }
+  },
 };
 
 const Frame = styled.div`
@@ -74,7 +76,7 @@ const Photo = styled.div`
   }
 `;
 
-const POST_TEMPLATE: IPost = {
+const DEFAULT_POST: IPost = {
   title: '',
   author: '',
   updateAt: dayjs().valueOf(),
@@ -89,13 +91,29 @@ const POST_TEMPLATE: IPost = {
   status: 'draft',
 };
 
-export default function Editor(): React.ReactElement {
-  const [ post, setPost ] = React.useState<IPost>();
-  const [ content, setContent ] = React.useState(null);
-  const location = useLocation();
-  const otherRef = React.useRef<HTMLDivElement>(null);
-  const titleRef = React.useRef<HTMLDivElement>(null);
+interface Action {
+  type: string;
+  payload: Partial<IPost>;
+}
 
+export default function Editor(): React.ReactElement {
+  const reducer = (state: IPost, action: Action) => {
+    return { ...state, ...action.payload };
+  };
+
+  const [state, dispatch] = React.useReducer(reducer, DEFAULT_POST);
+
+  const setPostValue = (key: string, value: any) => {
+    dispatch({ type: '', payload: { [key]: value } });
+  };
+
+  const setInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.dataset['name'];
+    const value = e.target.value;
+    dispatch({ type: '', payload: { [name]: value } });
+  };
+
+  const location = useLocation();
   // update or add
   const mode = location.pathname.split('/')[1];
   const typ = location.pathname.split('/')[2];
@@ -106,46 +124,25 @@ export default function Editor(): React.ReactElement {
       marked.use({ renderer });
       const e = new WE('#article-editor');
       e.config.height = 500;
-      e.config.onchange = setContent;
+      e.config.onchange = (t: string) => setPostValue('content', t);
       e.create();
-      e.txt.html(post?.content);
+      e.txt.html(state.content);
       return () => e.destroy();
     }
-  }, [post]);
+  }, [state.content]);
 
   React.useEffect(() => {
-    if (mode === 'add') {
-      POST_TEMPLATE['type'] = typ;
-      setPost(POST_TEMPLATE);
-    } else if (mode === 'update') {
-      (async() => {
+    if (mode === 'update') {
+      (async () => {
         const data = await fetchPost(uid);
-        if (data) setPost(data.post);
+        if (data) dispatch({ type: '', payload: data.post });
       })();
     }
   }, []);
 
-  const getKeyValue = () => {
-    const data = Object.create({});
-    Object.assign(data, {content});
-    if (otherRef.current) {
-      const inputs = otherRef.current.querySelectorAll('input');
-      for (const i of inputs) {
-        const name = i.dataset['name'];
-        const value = i.value;
-        Object.assign(data, {[name]: value});
-      }
-    }
-    if (titleRef.current) {
-      const input = titleRef.current.querySelector('input');
-      Object.assign(data, {title: input.value});
-    }
-    return data;
-  };
-
   const clickSubmit = () => {
-    (async() => {
-      const data = getKeyValue();
+    (async () => {
+      const data = state;
       if (mode === 'update') {
         const r = await updatePost(uid, data);
         if (r) window.alert('更新成功' + r);
@@ -164,90 +161,174 @@ export default function Editor(): React.ReactElement {
 
   return (
     <Frame>
-      <div className='left' ref={titleRef}>
+      <div className="left">
         <PostTitle>
           <Input
-            name='title'
-            placeholder='请输入标题'
-            defaultValue={post?.title}
+            data-name="title"
+            placeholder="请输入标题"
+            defaultValue={state?.title}
+            onChange={setInputValue}
           />
         </PostTitle>
-        {
-          typ === 'article'
-            ? <PostEditor id="article-editor" />
-            : <Photo><img src={BASE_URL + post?.url} alt={post?.title}/></Photo>
-        }
+        { typ === 'article' && <PostEditor id="article-editor" /> }
+        { typ === 'photo' && <Photo><img src={state?.url} alt={state?.title} /></Photo>}
       </div>
-      <div className='right'>
-        <div className='more-info' ref={otherRef}>
-          { mode === 'update' && <span>{ post?.id }</span> }
-          { mode === 'update' && <span>{ post?.uid }</span> }
-
-          <EditItem name='type'>
-            <label>类型</label>
-            <select id='edit-item' defaultValue={post?.type}>
-              <option value='article'>文章</option>
-              <option value='photo'>照片</option>
-            </select>
-          </EditItem>
-
-          <EditItem name='category'>
-            <label>分类</label>
-            <select id='edit-item' defaultValue={post?.category}>
-              <option value='dairy'>日志</option>
-              <option value='life'>生活</option>
-              <option value='travel'>旅行</option>
-            </select>
-          </EditItem>
-          
-          {
-            typ === 'article' &&
-            <EditItem name='cover'>
-              { mode === 'update' && <img alt={post?.title} src={post?.cover} /> }
-              { mode === 'add' && <Upload url={BASE_URL + '/upload'} onFinish={onUploadFinish} /> }
-            </EditItem>
-          }
-
-          { typ === 'photo' && <Input label='源' data-name='url' defaultValue={post?.url} /> }
-          <EditItem name='author'>
-            <Input label='作者' data-name='author' defaultValue={post?.author} />
-          </EditItem>
-          
-          <EditItem name='createAt'>
-            <Input
-              label='创建'
-              data-name='createAt'
-              defaultValue={post?.createAt}
-            />
-          </EditItem>
-
-          <Input label='更新' data-name='updateAt' defaultValue={post?.updateAt} />
-          <Input label='简介' data-name='excerpt' defaultValue={post?.excerpt} />
-          <Input label='格式' data-name='format' defaultValue={post?.format} />
-          <Input label='状态' data-name='status' defaultValue={post?.status} />
-          
-          <Input label='标签' data-name='tags' defaultValue={post?.tags} />
-          { typ === 'photo' && <Input label='说明' data-name='description' defaultValue={post?.description} /> }
-          { typ === 'photo' && <Input label='EXIF' data-name='exif' defaultValue={post?.exif} /> }
-        </div>
-        <div className='submit-cancel'>
-          <Button onClick={clickSubmit} type='primary'>提交</Button>
-        </div>
+      <div className="right">
+        <Preview onFinish={onUploadFinish} state={state} />
+        <MoreInfo state={state} setValue={setInputValue} />
       </div>
     </Frame>
   );
 }
 
+export interface MoreInfoProps {
+  state: IPost;
+  setValue(e: React.ChangeEvent<HTMLInputElement>): void;
+}
+
+interface PreviewProps {
+  state: IPost;
+  onFinish(data: UploadData): void;
+}
+
+function Preview({state, onFinish}: PreviewProps) {
+  if (state.cover || state.url) {
+    return (
+      <EditItem name='preview' label='预览'>
+        <img alt={state?.title} src={state?.cover} />
+      </EditItem>
+    );
+  } else {
+    return (
+      <EditItem name='preview' label='上传图片'>
+        <Upload url={BASE_URL + '/upload'} onFinish={onFinish} />
+      </EditItem>
+    );
+  }
+}
+
+function MoreInfo(props: MoreInfoProps) {
+  const { state, setValue } = props;
+
+  return (
+    <div className="more-info">
+
+      <EditItem name="category" label='分类'>
+        <Select onChange={console.log}>
+          <Option value='dairy' name='日志' />
+          <Option value='life' name='生活' />
+          <Option value='traval' name='旅行' />
+        </Select>
+      </EditItem>
+
+      <EditItem name="author" label="作者">
+        <Input
+          data-name="author"
+          defaultValue={state?.author}
+        />
+      </EditItem>
+
+      <EditItem name="createAt" label="创建">
+        <Input
+          data-name="createAt"
+          defaultValue={state?.createAt}
+        />
+      </EditItem>
+
+      <EditItem name='updateAt' label="更新">
+        <Input
+          data-name="updateAt"
+          defaultValue={state?.updateAt}
+          onChange={setValue}
+        />
+      </EditItem>
+      
+      <EditItem name='exceprt' label="简介">
+        <Input
+          data-name="excerpt"
+          defaultValue={state?.excerpt}
+          onChange={setValue}
+        />
+      </EditItem>
+      
+      <EditItem label="格式">
+        <Input 
+          data-name="format"
+          defaultValue={state?.format}
+          onChange={setValue}
+        />
+      </EditItem>
+
+      <EditItem label="状态">
+        <Input
+          data-name="status"
+          defaultValue={state?.status}
+          onChange={setValue}
+        />
+      </EditItem>
+
+      <EditItem label="标签">
+        <Input
+          data-name="tags"
+          defaultValue={state?.tags}
+          onChange={setValue}
+        />
+      </EditItem>
+
+      <EditItem label="说明">
+        <Input
+          data-name="description"
+          defaultValue={state?.description}
+          onChange={setValue}
+        />
+      </EditItem>
+
+      <EditItem label="EXIF">
+        <Input
+          data-name="exif"
+          defaultValue={state?.exif}
+          onChange={setValue}
+        />
+      </EditItem>
+
+      <EditItem name="type" label='类型'>
+        <Select onChange={console.log}>
+          <Option value='article' name='文章' />
+          <Option value='photo' name='照片' />
+          <Option value='other' name='其他' />
+          <Option value='dairy' name='日志' />
+        </Select>
+      </EditItem>
+    </div>
+  );
+}
+
 interface EditItemProps {
-  name: string;
+  name?: string;
+  label?: string;
   children: React.ReactNode;
 }
 
+const EI = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  .edit-item-label {
+    margin: 0 8px 0 0;
+    width: 32px;
+    text-align: right;
+  }
+  .edit-item-children {
+    flex-grow: 1;
+  }
+`;
+
 const EditItem = (props: EditItemProps) => {
-  const { name, children } = props;
+  const { name, label, children } = props;
   return (
-    <div className='edit-item' data-name={name}>
-      { children }
-    </div>
+    <EI className="edit-item" data-name={name}>
+      <div className="edit-item-label">{label}</div>
+      <div className="edit-item-children">{children}</div>
+    </EI>
   );
 };

@@ -1,12 +1,10 @@
 import React from 'react';
 import axios, { AxiosRequestConfig } from 'axios';
 import styled from 'styled-components';
+import { Upload as UploadIcon } from '@icon-park/react';
 
 const Box = styled.div`
   position: relative;
-  border-width: 1px;
-  border-style: dashed;
-  border-color: '#c1c2c3';
   border-radius: 8px;
   background-color: #ddd;
   min-height: 60px;
@@ -93,7 +91,7 @@ export default function Upload(props: UploadProps) :React.ReactElement {
         style={{width: 1, height: 1}}
         ref={inputRef}
       />
-      <div style={{zIndex: 2}}>{ status || '点击上传' }</div>
+      <div style={{zIndex: 2, color: '#f1f2f3'}}>{ status || <UploadIcon theme="outline" size="24" fill="#333"/> }</div>
     </Box>
   );
 }
