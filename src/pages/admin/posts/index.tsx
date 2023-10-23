@@ -37,8 +37,8 @@ export default function AdminArticlePage(): React.ReactElement {
   const [hasPrev, setHasPrev] = React.useState(false);
   const [hasNext, setHasNext] = React.useState(true);
 
-  const clickAdd = () => {
-    history.push('/add/article/0');
+  const clickAdd = (t: string) => {
+    history.push(`/add/${t}/0`);
     return;
   };
 
@@ -78,7 +78,8 @@ export default function AdminArticlePage(): React.ReactElement {
       <Header>
         <Header.Title>文章管理</Header.Title>
         <Header.Add>
-          <Button onClick={clickAdd}>新增</Button>
+          <Button onClick={() => clickAdd('article')}>新增文章</Button>
+          <Button onClick={() => clickAdd('photo')}>添加图片</Button>
         </Header.Add>
       </Header>
       <TableContainer>

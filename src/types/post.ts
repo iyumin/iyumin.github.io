@@ -23,6 +23,11 @@ type IPost = Partial<{
   description: string;
 }> & IBase;
 
+export interface IExif {
+  width?: number;
+  height?: number;
+}
+
 interface IArticle extends IPost {
   
 }

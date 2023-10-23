@@ -1,5 +1,5 @@
 import { ILog } from './log';
-import { IBase, IPost, IArticle, IPicture, IUser, IComment } from './post';
+import { IBase, IPost, IArticle, IPicture, IUser, IComment, IExif } from './post';
 import { IRouteItem } from './route';
 
 /**
@@ -19,7 +19,7 @@ export {
   /**
    * post
    */
-  IBase, IPost, IArticle, IPicture, IUser, IComment,
+  IBase, IPost, IArticle, IPicture, IUser, IComment, IExif,
   /**
    * log
    */

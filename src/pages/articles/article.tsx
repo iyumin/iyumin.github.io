@@ -53,7 +53,7 @@ export default function ArticlePage () :React.ReactElement {
     const { uid } = params;
     (async() => {
       const data = await fetchPost(uid);
-      setArticle(data.post);
+      setArticle(data);
     })();
   }, []);
 
@@ -81,7 +81,7 @@ const renderContent = (article: IPost) => {
           { article.author }
         </div>
         <div className="date">
-          { dayjs.unix(article.createAt).format('YYYY年M月D日') }
+          { dayjs.unix(Number(String(article.createAt).slice(0,10))).format('YYYY年M月D日') }
         </div>
       </Header>
       <Content>

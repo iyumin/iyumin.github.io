@@ -84,7 +84,7 @@ function toTableData (
       author: <span>{post.author}</span>,
       // content: <span>{post.content}</span>,
       sumary: <span>{post.excerpt || post.description}</span>,
-      preview: renderPreview(post.cover || post.url, post.title),
+      preview: renderPreview((post.cover || post.url).replace('static/', 'static/thumb-'), post.title),
       status: renderStatus(post.status),
       tags: renderTags(post.tags),
       category: renderTags(post.category),

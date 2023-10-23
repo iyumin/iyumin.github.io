@@ -89,9 +89,9 @@ const LoadMore = styled.div`
 
 function transformList(origin: IPost[]) :IPost[] {
   const arr = [];
-  for (let i=0; i<origin.length; i++) {
+  for (let i=0; i<origin?.length; i++) {
     const n = origin[i];
-    n.cover = BASE_URL + n.cover;
+    n.cover = BASE_URL + n.cover.replace('static/', 'static/thumb-');
     arr.push(n);
   }
   return arr;
@@ -148,8 +148,8 @@ export default function ArticlesPage () :React.ReactElement {
   React.useEffect(() => {
     (async() => {
       const data = await fetchArticles(offset, pageLimit);
-      setList(transformList(data.posts));
-      if (data.amount < pageLimit) setHasMore(false);
+      setList(transformList(data?.posts));
+      if (data?.amount < pageLimit) setHasMore(false);
     })();
   }, []);
 

@@ -128,19 +128,21 @@ export default function Editor(): React.ReactElement {
         const data: IPost = await fetchPost(uid);
         if (data) {
           dispatch({ type: '', payload: data });
-          weditor.current.txt.html(data.content);
+          weditor.current?.txt.html(data.content);
         }
       })();
     }
   }, []);
 
   React.useEffect(() => {
-    weditor.current = new WE('#article-editor');
-    weditor.current.config.height = 500;
-    weditor.current.config.onchange = (t: string) => setPostValue('content', t);
-    weditor.current.create();
-    weditor.current.txt.html(state.content);
-    return () => weditor.current.destroy();
+    if (document.querySelector('#article-editor')) {
+      weditor.current = new WE('#article-editor');
+      weditor.current.config.height = 500;
+      weditor.current.config.onchange = (t: string) => setPostValue('content', t);
+      weditor.current.create();
+      weditor.current.txt.html(state.content);
+    }
+    return () => weditor.current?.destroy();
   }, []);
 
   const clickSubmit = () => {
@@ -161,6 +163,7 @@ export default function Editor(): React.ReactElement {
 
   const onUploadFinish = (data: any) => {
     setPostValue('cover', data.url);
+    setPostValue('url', data.url);
   };
 
   return (
@@ -175,7 +178,14 @@ export default function Editor(): React.ReactElement {
           />
         </PostTitle>
         { typ === 'article' && <PostEditor id="article-editor" /> }
-        { typ === 'photo' && <Photo><img src={state?.url} alt={state?.title} /></Photo>}
+        {
+          typ === 'photo' && 
+          <Photo>
+            <img
+              src={BASE_URL + (state?.url !== '' ? state?.url : state?.cover)}
+              alt={state?.title} />
+          </Photo>
+        }
       </div>
       <div className="right" style={{width: 300}}>
         <Preview onFinish={onUploadFinish} state={state} />
@@ -212,7 +222,7 @@ function Preview({state, onFinish}: PreviewProps) {
     <EditItem name='preview' label='预览'>
       <img
         alt={state?.title}
-        src={BASE_URL + state?.cover}
+        src={BASE_URL + state?.cover.replace('static/', 'static/thumb-')}
         style={{width: '100%', height: '100%'}}
       />
     </EditItem>
@@ -233,6 +243,7 @@ function MoreInfo(props: MoreInfoProps) {
 
       <EditItem name="category" label='分类'>
         <Select onChange={v => setPostValue('category', v)} defaultValue={state?.category}>
+          <Option value='fiction' name='科幻' />
           <Option value='dairy' name='日志' />
           <Option value='life' name='生活' />
           <Option value='travel' name='旅行' />

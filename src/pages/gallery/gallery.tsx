@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { CalendarThirtyTwo, CrossRingTwo } from '@icon-park/react';
 import { fetchPhotos } from '@/apis';
-import { IPost } from '@/types';
+import { IPost, IExif } from '@/types';
 import { Masonry, IMasonryItem, Loading } from '@/components';
 import { useDevice, useScroll } from '@/hooks';
 import { BASE_URL } from '@/configs/environment';
@@ -264,22 +264,28 @@ export default function GalleryPage () :React.ReactElement {
 }
 
 // covert the raw image list to the masonry required.
-const covertImageList = (imageList: Array<PhotoItem>) :Array<PhotoItem> => {
+const covertImageList = (imageList: Array<IPost>) :Array<PhotoItem> => {
   return imageList.map((img: IPost, index: number) => {
-    const exif = JSON.parse(img.exif);
-    const src = BASE_URL + img.url;
+    let exif: IExif;
+    try {
+      exif = JSON.parse(img.exif);
+    } catch (e) {
+      console.log(e);
+    }
+
+    const src = BASE_URL + (img.url !== '' ? img.url : img.cover);
     return {
       'id': img.id,
       'uid': img.uid,
       'source': src,
       'key': img.uid,
-      'createAt': img.createAt,
-      'updateAt': img.updateAt,
-      'description': img.description,
+      'createAt': Number(String(img.createAt).slice(0, 10)),
+      'updateAt': Number(String(img.updateAt).slice(0, 10)),
+      'description': img.excerpt,
       'title': img.title,
       'child': <img src={src} data-index={index} alt={img.title} style={{width:'100%', height: '100%'}} />,
-      'width': exif.width,
-      'height': exif.height,
+      'width': exif?.width,
+      'height': exif?.height,
     };
   });
 };
