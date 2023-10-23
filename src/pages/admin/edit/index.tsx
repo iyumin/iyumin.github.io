@@ -97,6 +97,9 @@ interface Action {
 }
 
 export default function Editor(): React.ReactElement {
+  marked.use({ renderer });
+  const weditor = React.useRef<WE>(null);
+
   const reducer = (state: IPost, action: Action) => {
     return { ...state, ...action.payload };
   };
@@ -120,24 +123,24 @@ export default function Editor(): React.ReactElement {
   const uid = location.pathname.split('/')[3];
 
   React.useEffect(() => {
-    if (typ === 'article') {
-      marked.use({ renderer });
-      const e = new WE('#article-editor');
-      e.config.height = 500;
-      e.config.onchange = (t: string) => setPostValue('content', t);
-      e.create();
-      e.txt.html(state.content);
-      return () => e.destroy();
+    if (mode === 'update') {
+      (async () => {
+        const data: IPost = await fetchPost(uid);
+        if (data) {
+          dispatch({ type: '', payload: data });
+          weditor.current.txt.html(data.content);
+        }
+      })();
     }
   }, []);
 
   React.useEffect(() => {
-    if (mode === 'update') {
-      (async () => {
-        const data = await fetchPost(uid);
-        if (data) dispatch({ type: '', payload: data.post });
-      })();
-    }
+    weditor.current = new WE('#article-editor');
+    weditor.current.config.height = 500;
+    weditor.current.config.onchange = (t: string) => setPostValue('content', t);
+    weditor.current.create();
+    weditor.current.txt.html(state.content);
+    return () => weditor.current.destroy();
   }, []);
 
   const clickSubmit = () => {
@@ -153,6 +156,7 @@ export default function Editor(): React.ReactElement {
         else window.alert('新增失败');
       }
     })();
+    console.log(state);
   };
 
   const onUploadFinish = (data: any) => {
@@ -221,10 +225,10 @@ function MoreInfo(props: MoreInfoProps) {
     <div className="more-info">
 
       <EditItem name="category" label='分类'>
-        <Select onChange={v => setPostValue('category', v)}>
+        <Select onChange={v => setPostValue('category', v)} defaultValue={state?.category}>
           <Option value='dairy' name='日志' />
           <Option value='life' name='生活' />
-          <Option value='traval' name='旅行' />
+          <Option value='travel' name='旅行' />
         </Select>
       </EditItem>
 
@@ -301,7 +305,7 @@ function MoreInfo(props: MoreInfoProps) {
       </EditItem>
 
       <EditItem name="type" label='类型'>
-        <Select onChange={v => setPostValue('type', v)}>
+        <Select onChange={v => setPostValue('type', v)} defaultValue={state?.type}>
           <Option value='article' name='文章' />
           <Option value='photo' name='照片' />
         </Select>

@@ -64,7 +64,7 @@ const Opt = styled.div`
 
 export const Select: React.FC<SelectProps> = (props: SelectProps) => {
   const { children, defaultValue, onChange, ...rest } = props;
-  const [ value, setValue ] = React.useState(defaultValue);
+  const [ value, setValue ] = React.useState(null);
   const [ height, setHeight ] = React.useState(0);
 
   const ref = React.useRef<HTMLDivElement>(null);
@@ -87,22 +87,26 @@ export const Select: React.FC<SelectProps> = (props: SelectProps) => {
     if (onChange) onChange(v);
   };
 
-  const findName = (value: string) => {
+  const findName = (v: string) => {
     const childs = ref?.current?.children;
     if (!childs) return;
     for (const child of childs) {
       const c = child as HTMLElement;
-      if (c.dataset['value'] === value) {
+      if (c.dataset['value'] === v) {
         return c.dataset['name'];
       }
     }
   };
 
   React.useEffect(() => {
-    const childs = ref?.current?.children;
-    const first = childs[0] as HTMLElement;
-    setValue(first.dataset['value']);
-  }, []);
+    if (!defaultValue) {
+      const childs = ref?.current?.children;
+      const first = childs[0] as HTMLElement;
+      setValue(first.dataset['value']);
+    } else {
+      setValue(defaultValue);
+    }
+  }, [defaultValue]);
 
   return (
     <Sel {...rest} onClick={handleClick} onBlur={() => setHeight(0)} tabIndex={0}>

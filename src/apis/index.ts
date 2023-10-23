@@ -55,15 +55,10 @@ export async function addPost(data: IPost) :ReturnType {
   return;
 }
 
-export async function fetchPost(uid: string) :ReturnType {
+export async function fetchPost(uid: string) :Promise<IPost> {
   const url = BASE_URL + '/p?uid=' + uid;
   const resp = await api.get(url);
-  if (resp.data.code === 0) {
-    const post = resp.data.data.post;
-    post.cover = BASE_URL + post.cover;
-    post.url = BASE_URL + post.url;
-    return post;
-  }
+  if (resp.data.code === 0) return resp.data.data.post;
   return;
 }
 
