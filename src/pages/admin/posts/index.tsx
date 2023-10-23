@@ -38,6 +38,7 @@ export default function AdminArticlePage(): React.ReactElement {
   const [hasNext, setHasNext] = React.useState(true);
 
   const clickAdd = () => {
+    history.push('/add/article/0');
     return;
   };
 
@@ -52,7 +53,7 @@ export default function AdminArticlePage(): React.ReactElement {
   };
 
   const editTableRow = (p: IPost) => {
-    history.push(`/edit/${p.type}/${p.uid}`);
+    history.push(`/update/${p.type}/${p.uid}`);
   };
 
   const getPosts = async (offset = 0, limit: number) => {

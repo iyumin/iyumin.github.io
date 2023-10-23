@@ -46,7 +46,7 @@ const rootRouteItems: IRouteItem[] = [
   },
   {
     key: 5,
-    paths: ['', 'edit', ':type', ':uid'],
+    paths: ['', ':mode', ':type', ':uid'],
     name: 'edit-post',
     title: 'Edit Post',
     component: EditPage,

@@ -47,7 +47,7 @@ const TABLE_HEADERS = [
   { field: 'edit', name: '编辑', width: 120, },
 ];
 
-export const PostTable: React.FC<PostTableProps> = props => {
+export const PostTable: React.FC<PostTableProps> = (props: PostTableProps) => {
   const { posts, onEdit, onDel } = props;
 
   const clickEdit = (p: IPost) => {

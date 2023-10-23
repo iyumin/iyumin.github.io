@@ -191,9 +191,11 @@ export default function GalleryPage () :React.ReactElement {
   // 获取图片
   const getImageList = async (page: number, size = 12) => {
     const data = await fetchPhotos(page, size);
-    setPhotos(photos.concat(covertImageList(data.posts)));
-    if (data.amount < pageLimit) setHasMore(false);
-    else setHasMore(true);
+    if (data) {
+      setPhotos(photos.concat(covertImageList(data.posts)));
+      if (data.amount < pageLimit) setHasMore(false);
+      else setHasMore(true);
+    }
   };
 
   React.useEffect(() => {

@@ -7,7 +7,8 @@ import { useLocation } from 'react-router-dom';
 
 import { IPost } from '@/types';
 import { Input, Button } from '@/components';
-import { fetchPost, updatePost } from '@/apis';
+import Upload, { UploadData } from '@/components/inputs/upload';
+import { fetchPost, updatePost, addPost } from '@/apis';
 import { BASE_URL } from '@/configs/environment';
 
 const renderer = {
@@ -95,11 +96,13 @@ export default function Editor(): React.ReactElement {
   const otherRef = React.useRef<HTMLDivElement>(null);
   const titleRef = React.useRef<HTMLDivElement>(null);
 
-  const uid = location.pathname.split('/')[3];
+  // update or add
+  const mode = location.pathname.split('/')[1];
   const typ = location.pathname.split('/')[2];
+  const uid = location.pathname.split('/')[3];
 
   React.useEffect(() => {
-    if (post && post?.type === 'article') {
+    if (typ === 'article') {
       marked.use({ renderer });
       const e = new WE('#article-editor');
       e.config.height = 500;
@@ -111,10 +114,15 @@ export default function Editor(): React.ReactElement {
   }, [post]);
 
   React.useEffect(() => {
-    (async() => {
-      const data = await fetchPost(uid);
-      if (data) setPost(data.post);
-    })();
+    if (mode === 'add') {
+      POST_TEMPLATE['type'] = typ;
+      setPost(POST_TEMPLATE);
+    } else if (mode === 'update') {
+      (async() => {
+        const data = await fetchPost(uid);
+        if (data) setPost(data.post);
+      })();
+    }
   }, []);
 
   const getKeyValue = () => {
@@ -138,10 +146,20 @@ export default function Editor(): React.ReactElement {
   const clickSubmit = () => {
     (async() => {
       const data = getKeyValue();
-      const r = await updatePost(uid, data);
-      if (r) window.alert('更新成功' + r);
-      else window.alert('更新失败');
+      if (mode === 'update') {
+        const r = await updatePost(uid, data);
+        if (r) window.alert('更新成功' + r);
+        else window.alert('更新失败');
+      } else if (mode === 'add') {
+        const r = await addPost(data);
+        if (r) window.alert('添加成功');
+        else window.alert('新增失败');
+      }
     })();
+  };
+
+  const onUploadFinish = (data: UploadData) => {
+    console.log(data);
   };
 
   return (
@@ -162,16 +180,52 @@ export default function Editor(): React.ReactElement {
       </div>
       <div className='right'>
         <div className='more-info' ref={otherRef}>
-          <Input label='类型' data-name='type' defaultValue={post?.type} />
-          { typ === 'article' && <Input label='封面' data-name='cover' defaultValue={post?.cover} /> }
+          { mode === 'update' && <span>{ post?.id }</span> }
+          { mode === 'update' && <span>{ post?.uid }</span> }
+
+          <EditItem name='type'>
+            <label>类型</label>
+            <select id='edit-item' defaultValue={post?.type}>
+              <option value='article'>文章</option>
+              <option value='photo'>照片</option>
+            </select>
+          </EditItem>
+
+          <EditItem name='category'>
+            <label>分类</label>
+            <select id='edit-item' defaultValue={post?.category}>
+              <option value='dairy'>日志</option>
+              <option value='life'>生活</option>
+              <option value='travel'>旅行</option>
+            </select>
+          </EditItem>
+          
+          {
+            typ === 'article' &&
+            <EditItem name='cover'>
+              { mode === 'update' && <img alt={post?.title} src={post?.cover} /> }
+              { mode === 'add' && <Upload url={BASE_URL + '/upload'} onFinish={onUploadFinish} /> }
+            </EditItem>
+          }
+
           { typ === 'photo' && <Input label='源' data-name='url' defaultValue={post?.url} /> }
-          <Input label='作者' data-name='author' defaultValue={post?.author} />
-          <Input label='创建' data-name='createAt' defaultValue={post?.createAt} />
+          <EditItem name='author'>
+            <Input label='作者' data-name='author' defaultValue={post?.author} />
+          </EditItem>
+          
+          <EditItem name='createAt'>
+            <Input
+              label='创建'
+              data-name='createAt'
+              defaultValue={post?.createAt}
+            />
+          </EditItem>
+
           <Input label='更新' data-name='updateAt' defaultValue={post?.updateAt} />
           <Input label='简介' data-name='excerpt' defaultValue={post?.excerpt} />
           <Input label='格式' data-name='format' defaultValue={post?.format} />
           <Input label='状态' data-name='status' defaultValue={post?.status} />
-          <Input label='分类' data-name='category' defaultValue={post?.category} />
+          
           <Input label='标签' data-name='tags' defaultValue={post?.tags} />
           { typ === 'photo' && <Input label='说明' data-name='description' defaultValue={post?.description} /> }
           { typ === 'photo' && <Input label='EXIF' data-name='exif' defaultValue={post?.exif} /> }
@@ -183,3 +237,17 @@ export default function Editor(): React.ReactElement {
     </Frame>
   );
 }
+
+interface EditItemProps {
+  name: string;
+  children: React.ReactNode;
+}
+
+const EditItem = (props: EditItemProps) => {
+  const { name, children } = props;
+  return (
+    <div className='edit-item' data-name={name}>
+      { children }
+    </div>
+  );
+};

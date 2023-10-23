@@ -51,7 +51,7 @@ export async function updatePost(uid: string, data: IPost) :ReturnType {
 export async function addPost(data: IPost) :ReturnType {
   const url = BASE_URL + '/p';
   const resp = await api.post(url, data);
-  if (resp.data.code === 0) return resp.data.data;
+  if (resp.data.code === 0) return resp.data.msg;
   return;
 }
 
