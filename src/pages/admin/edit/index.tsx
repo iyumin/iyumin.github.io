@@ -198,23 +198,30 @@ interface PreviewProps {
 }
 
 function Preview({state, onFinish}: PreviewProps) {
+  const u = (
+    <EditItem name='preview' label='上传图片'>
+      <Upload
+        url={BASE_URL + '/upload'}
+        onFinish={onFinish}
+        allowExtensions={['jpg', 'png', 'gif', 'jpeg']}
+      />
+    </EditItem>
+  );
+
+  const p = (
+    <EditItem name='preview' label='预览'>
+      <img
+        alt={state?.title}
+        src={BASE_URL + state?.cover}
+        style={{width: '100%', height: '100%'}}
+      />
+    </EditItem>
+  );
+
   if (state.cover || state.url) {
-    return (
-      <>
-        <EditItem name='preview' label='上传图片'>
-          <Upload url={BASE_URL + '/upload'} onFinish={onFinish} />
-        </EditItem>
-        <EditItem name='preview' label='预览'>
-          <img alt={state?.title} src={BASE_URL + state?.cover} style={{width: '100%', height: '100%'}} />
-        </EditItem>
-      </>
-    );
+    return <>{u}{p}</>;
   } else {
-    return (
-      <EditItem name='preview' label='上传图片'>
-        <Upload url={BASE_URL + '/upload'} onFinish={onFinish} allowExtensions={['jpg', 'png']} />
-      </EditItem>
-    );
+    return u;
   }
 }
 

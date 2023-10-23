@@ -26,7 +26,7 @@ const Mask = styled.div`
 
 export interface UploadProps {
   url?: string;
-  allowExtensions?: string[],
+  allowExtensions?: string[];
   onChange?(file: File): void;
   onFinish?(data: UploadData): void;
   onFailed?(): void;
@@ -61,8 +61,8 @@ export default function Upload(props: UploadProps) :React.ReactElement {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0] as File;
-    // console.log(file);
     const n = file?.name.split('.').pop();
+    
     if (!allowExtensions?.includes(n)) {
       setWidth('100%');
       setFilename('不被允许的格式');
