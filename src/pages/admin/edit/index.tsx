@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import { useLocation } from 'react-router-dom';
 
 import { IPost } from '@/types';
-import { Input } from '@/components';
+import { Button, Input } from '@/components';
 import Upload, { UploadData } from '@/components/inputs/upload';
 import { Select, Option } from '@/components/inputs/select';
 import { fetchPost, updatePost, addPost } from '@/apis';
@@ -129,7 +129,7 @@ export default function Editor(): React.ReactElement {
       e.txt.html(state.content);
       return () => e.destroy();
     }
-  }, [state.content]);
+  }, []);
 
   React.useEffect(() => {
     if (mode === 'update') {
@@ -155,8 +155,8 @@ export default function Editor(): React.ReactElement {
     })();
   };
 
-  const onUploadFinish = (data: UploadData) => {
-    console.log(data);
+  const onUploadFinish = (data: any) => {
+    setPostValue('cover', data.url);
   };
 
   return (
@@ -173,9 +173,10 @@ export default function Editor(): React.ReactElement {
         { typ === 'article' && <PostEditor id="article-editor" /> }
         { typ === 'photo' && <Photo><img src={state?.url} alt={state?.title} /></Photo>}
       </div>
-      <div className="right">
+      <div className="right" style={{width: 300}}>
         <Preview onFinish={onUploadFinish} state={state} />
-        <MoreInfo state={state} setValue={setInputValue} />
+        <MoreInfo state={state} setValue={setInputValue} setPostValue={setPostValue} />
+        <Button onClick={clickSubmit}>提交</Button>
       </div>
     </Frame>
   );
@@ -184,6 +185,7 @@ export default function Editor(): React.ReactElement {
 export interface MoreInfoProps {
   state: IPost;
   setValue(e: React.ChangeEvent<HTMLInputElement>): void;
+  setPostValue(key: string, v: string): void;
 }
 
 interface PreviewProps {
@@ -194,27 +196,32 @@ interface PreviewProps {
 function Preview({state, onFinish}: PreviewProps) {
   if (state.cover || state.url) {
     return (
-      <EditItem name='preview' label='预览'>
-        <img alt={state?.title} src={state?.cover} />
-      </EditItem>
+      <>
+        <EditItem name='preview' label='上传图片'>
+          <Upload url={BASE_URL + '/upload'} onFinish={onFinish} />
+        </EditItem>
+        <EditItem name='preview' label='预览'>
+          <img alt={state?.title} src={BASE_URL + state?.cover} style={{width: '100%', height: '100%'}} />
+        </EditItem>
+      </>
     );
   } else {
     return (
       <EditItem name='preview' label='上传图片'>
-        <Upload url={BASE_URL + '/upload'} onFinish={onFinish} />
+        <Upload url={BASE_URL + '/upload'} onFinish={onFinish} allowExtensions={['jpg', 'png']} />
       </EditItem>
     );
   }
 }
 
 function MoreInfo(props: MoreInfoProps) {
-  const { state, setValue } = props;
+  const { state, setValue, setPostValue } = props;
 
   return (
     <div className="more-info">
 
       <EditItem name="category" label='分类'>
-        <Select onChange={console.log}>
+        <Select onChange={v => setPostValue('category', v)}>
           <Option value='dairy' name='日志' />
           <Option value='life' name='生活' />
           <Option value='traval' name='旅行' />
@@ -225,6 +232,7 @@ function MoreInfo(props: MoreInfoProps) {
         <Input
           data-name="author"
           defaultValue={state?.author}
+          onChange={setValue}
         />
       </EditItem>
 
@@ -232,6 +240,7 @@ function MoreInfo(props: MoreInfoProps) {
         <Input
           data-name="createAt"
           defaultValue={state?.createAt}
+          onChange={setValue}
         />
       </EditItem>
 
@@ -292,11 +301,9 @@ function MoreInfo(props: MoreInfoProps) {
       </EditItem>
 
       <EditItem name="type" label='类型'>
-        <Select onChange={console.log}>
+        <Select onChange={v => setPostValue('type', v)}>
           <Option value='article' name='文章' />
           <Option value='photo' name='照片' />
-          <Option value='other' name='其他' />
-          <Option value='dairy' name='日志' />
         </Select>
       </EditItem>
     </div>
