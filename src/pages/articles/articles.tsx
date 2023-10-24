@@ -91,7 +91,7 @@ function transformList(origin: IPost[]) :IPost[] {
   const arr = [];
   for (let i=0; i<origin?.length; i++) {
     const n = origin[i];
-    n.cover = BASE_URL + n.cover.replace('static/', 'static/thumb-');
+    n.url = BASE_URL + n.url.replace('static/', 'static/thumb-');
     arr.push(n);
   }
   return arr;
@@ -123,7 +123,7 @@ export default function ArticlesPage () :React.ReactElement {
   const renderItem = (a: IPost) => (
     <ArticleItem key={a.uid}>
       <Cover onClick={() => handleClickArticle(a)} className='cover'>
-        <img src={a.cover} alt={a.title} />
+        <img src={a.url} alt={a.title} />
       </Cover>
       <Info>
         <div style={{margin:16}}>

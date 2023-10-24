@@ -46,6 +46,7 @@ export interface IRouteItem {
   component: React.ComponentType,
   exact: boolean,
   type: 'history' | 'hash',
+  show?: boolean,
 }
 
 export interface IColorMap {

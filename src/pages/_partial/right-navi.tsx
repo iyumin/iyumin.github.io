@@ -119,7 +119,7 @@ export default function RightNavi (props: IProps) :React.ReactElement {
         <RightMenus style={{visibility: isOpen ? 'visible' : 'hidden'}}>
           {
             menus.map(menu => {
-              if (menu.paths.length === 2) {
+              if (menu.paths.length === 2 && !(menu.show===false)) {
                 return (
                   <div className={classnames(menu)} key={menu.key}>
                     <a href={_judegPaths(menu)}>{menu.title}</a>

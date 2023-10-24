@@ -58,13 +58,15 @@ export default function AdminArticlePage(): React.ReactElement {
 
   const clickDelRow = (p: IPost) => {
     const uid = p.uid;
-    (async() => {
-      const data = await deletePost(uid);
-      if (data) {
-        window.alert('删除成功');
-        getPosts();
-      } else window.alert('删除失败');
-    })();
+    if (confirm('确定要删除？')) {
+      (async() => {
+        const data = await deletePost(uid);
+        if (data) {
+          window.alert('删除成功');
+          getPosts();
+        } else window.alert('删除失败');
+      })();
+    }
   }
 
   const getPosts = async (offset = 0, limit=PAGE_LIMIT) => {

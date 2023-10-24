@@ -273,7 +273,7 @@ const covertImageList = (imageList: Array<IPost>) :Array<PhotoItem> => {
       console.log(e);
     }
 
-    const src = BASE_URL + (img.url !== '' ? img.url : img.cover);
+    const src = BASE_URL + img.url;
     return {
       'id': img.id,
       'uid': img.uid,
