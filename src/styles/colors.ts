@@ -1,23 +1,4 @@
-interface IColorMap {
-  [key: string]: string,
-  red: string,
-  orange: string,
-  yellow: string,
-  green: string,
-  cyan: string,
-  blue: string,
-  purple: string,
-  primary: string,
-  white: string,
-  white1: string,
-  white2: string,
-  white3: string,
-  white4: string,
-  white5: string,
-  white6: string,
-  white7: string,
-  dark: string,
-} 
+import { IColorMap } from '@/types';
 
 const COLOR_MAP: IColorMap = {
   red: '#E74C3C',

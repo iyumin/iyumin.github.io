@@ -5,7 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
-  template: path.resolve(__dirname, '../public/index.htm'),
+  template: path.resolve(__dirname, '../public/index.html'),
 });
 
 // 用于复制文件
@@ -15,7 +15,9 @@ const copyWebpackPlugin = new CopyWebpackPlugin({
       from: path.resolve(__dirname, '../public'),
       to: path.resolve(__dirname, '../dist'),
       globOptions: {
-        ignore: ['index.html'],
+        dot: true,
+        gitignore: true,
+        ignore: ['**/index.html'],
       }
     }
   ]

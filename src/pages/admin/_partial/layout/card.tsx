@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IPicture } from '@/types';
+import { IPost } from '@/types';
 
 const Wrapper = styled.div`
   margin: 8px;
@@ -27,8 +27,8 @@ const Mask = styled.div`
 interface WrapperProps {
   width?: number,
   height?: number,
-  p: IPicture,
-  onEdit: (e: React.MouseEvent<HTMLDivElement>, p: IPicture) => void,
+  p: IPost,
+  onEdit: (e: React.MouseEvent<HTMLDivElement>, p: IPost) => void,
   children?: React.ReactNode
 }
 

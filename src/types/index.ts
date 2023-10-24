@@ -1,11 +1,75 @@
-import { ILog } from './log';
-import { IBase, IPost, IArticle, IPicture, IUser, IComment, IExif } from './post';
-import { IRouteItem } from './route';
+import React from 'react';
 
-/**
- * 诗句、歌词、散文
- */
-interface IVerse {
+export interface IBase {
+  id: number,
+  uid: string,
+}
+
+export type IPost = Partial<{
+  //
+  createAt: number;
+  publishAt: number;
+  updateAt: number;
+  type: string;
+  title: string;
+  author: string;
+  content: string;
+  excerpt: string;
+  cover: string;
+  status: string;
+  tags: string;
+  category: string;
+  format: string;
+  url: string;
+  exif: string;
+  description: string;
+}> & IBase;
+
+export interface IExif {
+  width?: number;
+  height?: number;
+}
+
+export interface IUser extends IBase {
+  username: string,
+  password: string,
+}
+
+export interface IComment extends IPost {}
+
+export interface IRouteItem {
+  key: number,
+  icon?: React.ReactNode,
+  paths: Array<string>,
+  name: string,
+  title: string,
+  component: React.ComponentType,
+  exact: boolean,
+  type: 'history' | 'hash',
+}
+
+export interface IColorMap {
+  [key: string]: string,
+  red: string,
+  orange: string,
+  yellow: string,
+  green: string,
+  cyan: string,
+  blue: string,
+  purple: string,
+  primary: string,
+  white: string,
+  white1: string,
+  white2: string,
+  white3: string,
+  white4: string,
+  white5: string,
+  white6: string,
+  white7: string,
+  dark: string,
+}
+
+export interface IVerse {
   createAt: string,
   updateAt: string,
   id: number,
@@ -14,22 +78,3 @@ interface IVerse {
   author: string,
   content: string[],
 }
-
-export {
-  /**
-   * post
-   */
-  IBase, IPost, IArticle, IPicture, IUser, IComment, IExif,
-  /**
-   * log
-   */
-  ILog,
-  /**
-   * route item
-   */
-  IRouteItem,
-  /**
-   * poem, poetry
-   */
-  IVerse,
-};

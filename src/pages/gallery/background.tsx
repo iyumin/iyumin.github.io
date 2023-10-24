@@ -1,11 +1,3 @@
-/*
- * @Author       : Kevin Jobs
- * @Date         : 2022-03-15 15:47:34
- * @LastEditTime : 2022-03-15 15:51:00
- * @lastEditors  : Kevin Jobs
- * @FilePath     : \iyumin.github.io\src\pages\gallery\background.tsx
- * @Description  : 
- */
 import COLOR_MAP from '@/styles/colors';
 import React from 'react';
 import styled from 'styled-components';

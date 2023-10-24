@@ -36,19 +36,19 @@ export default function Comment () :React.ReactElement {
     if (e.key === 'Enter') {
       e.preventDefault();
       setCs(cs.concat([{
-        createAt: '',
-        updateAt: '',
+        createAt: 0,
+        updateAt: 0,
         content: target.innerText,
         id: undefined,
         uid: undefined,
-        user: '匿名',
+        author: '匿名',
       }]));
     }
   };
 
   const renderCommentItem = (c: IComment) => (
     <CommentItem key={c.uid}>
-      <div style={{color:'#777'}}>{ c.user }</div>
+      <div style={{color:'#777'}}>{ c.author }</div>
       <div>{ c.content }</div>
     </CommentItem>
   );

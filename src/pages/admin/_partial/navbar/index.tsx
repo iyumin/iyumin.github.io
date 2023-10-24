@@ -157,7 +157,7 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
           <div style={{width: '100%', textAlign: 'center', marginTop: 24,}}>
             <Button
               type="primary"
-              onClick={e => handleSubmit(e, {name: username, password})}>登录</Button>
+              onClick={e => handleSubmit(e, {username: username, password})}>登录</Button>
             <Button onClick={onCancel}>取消</Button>
           </div>
         </DialogContent>

@@ -78,7 +78,7 @@ export default function AdminPage () :ReactElement {
     api
       .post('/login', form)
       .then(res => {
-        setLocalStorage(res.data.data.token, form.name);
+        setLocalStorage(res.data.data.token, form.username);
         setIsDialogVisible(false);
         setIsLogin(true);
         history.go(0);
