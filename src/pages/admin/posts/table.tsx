@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { IPost } from '@/types';
 import { getLocalStorage } from '..';
 import { BASE_URL } from '@/configs/environment';
-import { Button, Table, Tag } from '@/components';
+import { Button, Skeleton, Table, Tag } from '@/components';
 
 export interface PostTableProps {
   posts: IPost[];
@@ -16,6 +16,7 @@ export interface TableRow {
   uid?: React.ReactNode;
   title: React.ReactNode;
   author: React.ReactNode;
+  type: React.ReactNode;
   updateAt: React.ReactNode;
   createAt: React.ReactNode;
   preview: React.ReactNode;
@@ -23,6 +24,7 @@ export interface TableRow {
   sumary: React.ReactNode;
   format: React.ReactNode;
   status: React.ReactNode;
+  category: React.ReactNode;
   edit: React.ReactNode;
 }
 
@@ -73,6 +75,31 @@ function toTableData (
   onEdit: (p: IPost) => void,
   onDel: (p: IPost) => void
 ) :TableRow[] {
+  if (!posts) {
+    const sk = {
+      id: <Skeleton />,
+      uid: <Skeleton />,
+      createAt: <Skeleton />,
+      updateAt: <Skeleton />,
+      type: <Skeleton />,
+      title: <Skeleton />,
+      author: <Skeleton />,
+      // content: <span>{post.content}</span>,
+      sumary: <Skeleton />,
+      preview: <Skeleton height={40} />,
+      status: <Skeleton />,
+      tags: <Skeleton />,
+      category: <Skeleton />,
+      format: <Skeleton />,
+      // url: <span>{post.url}</span>,
+      // exif: <span>{post.exif}</span>,
+      // description: <span>{post.description}</span>,
+      edit: <Skeleton />,
+    };
+    const sks = [];
+    for (let i=0; i<4; i++) sks.push(sk);
+    return sks;
+  }
   const rows:TableRow[] = posts.map((post) => {
     return {
       id: <span style={{fontSize: 14}}>{post.id}</span>,

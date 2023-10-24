@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import { Button, Spin } from '@/components';
+import { Button } from '@/components';
 import { IPost } from '@/types';
 import { fetchPosts } from '@/apis';
 
@@ -84,7 +84,7 @@ export default function AdminArticlePage(): React.ReactElement {
       </Header>
       <TableContainer>
         <div className="table">
-          { posts ? <PostTable posts={posts} onEdit={editTableRow} /> : <Spin /> }
+          <PostTable posts={posts} onEdit={editTableRow} />
         </div>
         <div className="prev-next">
           <Button onClick={clickPrev} disabled={!hasPrev}>Prev</Button>

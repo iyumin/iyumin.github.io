@@ -23,3 +23,5 @@ export { Link } from './navigation/link';
 
 export { Menu } from './navigation/menu';
 export type { MenuProps } from './navigation/menu';
+
+export { Skeleton } from './data-display/skeleton';
