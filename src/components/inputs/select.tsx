@@ -32,6 +32,7 @@ const Sel = styled.div`
     padding: 0 4px;
     user-select: none;
     position: relative;
+    border: none;
     .arrow {
       position: absolute;
       right: 4px;
@@ -41,11 +42,10 @@ const Sel = styled.div`
   .children-option {
     overflow: hidden;
     position: absolute;
-    border: 1px solid ${COLOR_MAP.white6};
-    border-top: none;
     left: -1px;
     width: 100%;
     transition: height .1s ease-in-out;
+    z-index: 1;
   }
 `;
 const Opt = styled.div`
