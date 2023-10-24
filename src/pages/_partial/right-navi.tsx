@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { MenuFold, MenuUnfold, } from '@icon-park/react';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 import { IRouteItem } from '@/types';
 

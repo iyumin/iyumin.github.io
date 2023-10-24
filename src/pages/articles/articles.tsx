@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 import { IPost } from '@/types';

@@ -2,19 +2,24 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const EslintPlugin = require('eslint-webpack-plugin');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
-  template: path.resolve(__dirname, '../public/index.html'),
+  template: path.resolve(__dirname, '../public/index.htm'),
 });
 
 // 用于复制文件
-const copyWebpackPlugin = new CopyWebpackPlugin([
-  {
-    from: path.resolve(__dirname, '../public'),
-    to: path.resolve(__dirname, '../dist'),
-    ignore: ['index.html'],
-  }
-]);
+const copyWebpackPlugin = new CopyWebpackPlugin({
+  patterns: [
+    {
+      from: path.resolve(__dirname, '../public'),
+      to: path.resolve(__dirname, '../dist'),
+      globOptions: {
+        ignore: ['index.html'],
+      }
+    }
+  ]
+});
 
 module.exports = {
   mode: 'production',
@@ -37,12 +42,13 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        use: ['ts-loader', 'eslint-loader'],
+        use: ['ts-loader'],
       },
     ],
   },
   plugins: [
     htmlWebpackPlugin,
     copyWebpackPlugin,
+    new EslintPlugin(),
   ],
 };

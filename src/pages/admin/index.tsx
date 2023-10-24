@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Route, Switch } from 'react-router';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { IUser } from '@/types';

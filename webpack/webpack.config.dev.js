@@ -4,6 +4,7 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 const ReactRefreshTypeScript = require('react-refresh-typescript');
 const webpack = require('webpack');
+const EslintPlugin = require('eslint-webpack-plugin');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
   template: path.resolve(__dirname, '../public/index.html'),
@@ -47,7 +48,6 @@ module.exports = {
               transpileOnly: true,
             }
           },
-          'eslint-loader',
         ],
       },
     ],
@@ -56,5 +56,6 @@ module.exports = {
     htmlWebpackPlugin,
     new webpack.HotModuleReplacementPlugin(),
     new ReactRefreshWebpackPlugin(),
+    new EslintPlugin(),
   ],
 };

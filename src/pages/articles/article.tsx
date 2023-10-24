@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { IPost } from '@/types';
 import { Loading } from '@/components';
 import { fetchPost } from '@/apis';
