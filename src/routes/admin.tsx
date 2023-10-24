@@ -28,8 +28,8 @@ const generalRouteItems: IRouteItem[] = [
   {
     key: 1,
     icon: <DocumentFolder theme="outline" size="16" fill="#333" strokeWidth={2}/>,
-    paths: ['', 'admin', 'articles'],
-    name: 'admin-articles-view',
+    paths: ['', 'admin', 'posts'],
+    name: 'admin-posts-view',
     title: '发表',
     component: AdminArticlePage,
     exact: true,

@@ -10,8 +10,20 @@ type ReturnType = Promise<{
   post?: IPost;
 }> | null;
 
+export interface LoginData {
+  username: string;
+  password: string;
+}
+
+export async function login(data: LoginData) {
+  const url = BASE_URL + '/token';
+  const resp = await api.post(url, data);
+  if (resp.data.code === 0) return resp.data.data;
+  return;
+}
+
 export async function fetchPosts(offset: number, limit: number) :ReturnType {
-  const url = BASE_URL + '/posts';
+  const url = BASE_URL + '/post/list';
   const params = { offset, limit };
   const resp = await api.get(url, {params});
   if (resp.data.code === 0) return resp.data.data;
@@ -19,7 +31,7 @@ export async function fetchPosts(offset: number, limit: number) :ReturnType {
 }
 
 export async function fetchArticles(offset: number, limit: number) :ReturnType {
-  const url = BASE_URL + '/posts';
+  const url = BASE_URL + '/post/list';
   const params = { offset, limit, type: 'article' };
   const resp = await api.get(url, {params});
   if (resp.data.code === 0) return resp.data.data;
@@ -27,18 +39,18 @@ export async function fetchArticles(offset: number, limit: number) :ReturnType {
 }
 
 export async function fetchPhotos(offset: number, limit: number) :ReturnType {
-  const url = BASE_URL + '/posts';
+  const url = BASE_URL + '/post/list';
   const params = { offset, limit, type: 'photo' };
   const resp = await api.get(url, {params});
   if (resp.data.code === 0) return resp.data.data;
   return;
 }
 
-export async function deletePost(uid: string) :ReturnType {
+export async function deletePost(uid: string) :Promise<boolean> {
   const url = BASE_URL + '/p?uid=' + uid;
   const resp = await api.delete(url);
-  if (resp.data.code === 0) return resp.data.data;
-  return;
+  if (resp.data.code === 0) return true;
+  return false;
 }
 
 export async function updatePost(uid: string, data: IPost) :ReturnType {

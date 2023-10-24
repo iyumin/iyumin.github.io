@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@/components';
 import { IPost } from '@/types';
-import { fetchPosts } from '@/apis';
+import { fetchPosts, deletePost } from '@/apis';
 
 import { Header } from '../_partial/layout';
 import { PostTable } from './table';
@@ -56,7 +56,18 @@ export default function AdminArticlePage(): React.ReactElement {
     history.push(`/update/${p.type}/${p.uid}`);
   };
 
-  const getPosts = async (offset = 0, limit: number) => {
+  const clickDelRow = (p: IPost) => {
+    const uid = p.uid;
+    (async() => {
+      const data = await deletePost(uid);
+      if (data) {
+        window.alert('删除成功');
+        getPosts();
+      } else window.alert('删除失败');
+    })();
+  }
+
+  const getPosts = async (offset = 0, limit=PAGE_LIMIT) => {
     const data = await fetchPosts(offset, limit);
     if (data) {
       if (offset <= 0) setHasPrev(false);
@@ -84,7 +95,11 @@ export default function AdminArticlePage(): React.ReactElement {
       </Header>
       <TableContainer>
         <div className="table">
-          <PostTable posts={posts} onEdit={editTableRow} />
+          <PostTable
+            posts={posts}
+            onEdit={editTableRow}
+            onDel={clickDelRow}
+          />
         </div>
         <div className="prev-next">
           <Button onClick={clickPrev} disabled={!hasPrev}>Prev</Button>

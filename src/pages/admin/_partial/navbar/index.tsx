@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Input, Button, Dialog } from '@/components';
 import { IUser } from '@/types';
+import { LoginData } from '@/apis';
 
 const Nav = styled.div`
   width: 100%;
@@ -45,7 +46,7 @@ export interface NavbarProps {
   /**
    * 点击登录 dialog 的【提交】按钮时触发
    */
-  onSubmit: (e: React.MouseEvent<HTMLElement>, form: Partial<IUser>) => void,
+  onSubmit: (e: React.MouseEvent<HTMLElement>, form: LoginData) => void,
   /**
    * 点击登录 dialog 的【取消】按钮或右上角【X】按钮时触发
    */
@@ -82,7 +83,7 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
    * @param form 登录表单
    * @returns {null}
    */
-  const handleSubmit = (e: React.MouseEvent<HTMLElement>, form: Partial<IUser>) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>, form: LoginData) => {
     e.preventDefault();
     onSubmit(e, form);
   };

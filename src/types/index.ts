@@ -15,7 +15,7 @@ export type IPost = Partial<{
   author: string;
   content: string;
   excerpt: string;
-  cover: string;
+  // cover: string;
   status: string;
   tags: string;
   category: string;

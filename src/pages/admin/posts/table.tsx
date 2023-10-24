@@ -41,7 +41,7 @@ const TABLE_HEADERS = [
   { field: 'preview', name: '预览', width: 100, },
   { field: 'status', name: '状态', },
   { field: 'tags', name: '标签', },
-  { field: 'category', name: '状态', },
+  { field: 'category', name: '分类', },
   { field: 'format', name: '格式', },
   // { field: 'url', name: '预览', },
   // { field: 'exif', name: '图片信息', },
@@ -77,27 +77,27 @@ function toTableData (
 ) :TableRow[] {
   if (!posts) {
     const sk = {
-      id: <Skeleton />,
+      id: <Skeleton width={20} />,
       uid: <Skeleton />,
       createAt: <Skeleton />,
       updateAt: <Skeleton />,
-      type: <Skeleton />,
-      title: <Skeleton />,
-      author: <Skeleton />,
+      type: <Skeleton width={40} />,
+      title: <Skeleton width={80} />,
+      author: <Skeleton width={60} />,
       // content: <span>{post.content}</span>,
       sumary: <Skeleton />,
-      preview: <Skeleton height={40} />,
-      status: <Skeleton />,
-      tags: <Skeleton />,
-      category: <Skeleton />,
-      format: <Skeleton />,
+      preview: <Skeleton height={80} />,
+      status: <Skeleton width={40} />,
+      tags: <Skeleton width={40} />,
+      category: <Skeleton width={40} />,
+      format: <Skeleton width={40} />,
       // url: <span>{post.url}</span>,
       // exif: <span>{post.exif}</span>,
       // description: <span>{post.description}</span>,
       edit: <Skeleton />,
     };
     const sks = [];
-    for (let i=0; i<4; i++) sks.push(sk);
+    for (let i=0; i<6; i++) sks.push(sk);
     return sks;
   }
   const rows:TableRow[] = posts.map((post) => {
@@ -111,7 +111,7 @@ function toTableData (
       author: <span>{post.author}</span>,
       // content: <span>{post.content}</span>,
       sumary: <span>{post.excerpt || post.description}</span>,
-      preview: renderPreview((post.cover || post.url).replace('static/', 'static/thumb-'), post.title),
+      preview: renderPreview(post.url.replace('static/', 'static/thumb-'), post.title),
       status: renderStatus(post.status),
       tags: renderTags(post.tags),
       category: renderTags(post.category),

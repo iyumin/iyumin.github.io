@@ -82,7 +82,6 @@ const DEFAULT_POST: IPost = {
   updateAt: dayjs().valueOf(),
   createAt: dayjs().valueOf(),
   content: '',
-  cover: '',
   uid: '',
   id: 0,
   excerpt: '',
@@ -158,11 +157,10 @@ export default function Editor(): React.ReactElement {
         else window.alert('新增失败');
       }
     })();
-    console.log(state);
+    // console.log(state);
   };
 
   const onUploadFinish = (data: any) => {
-    setPostValue('cover', data.url);
     setPostValue('url', data.url);
   };
 
@@ -182,7 +180,7 @@ export default function Editor(): React.ReactElement {
           typ === 'photo' && 
           <Photo>
             <img
-              src={BASE_URL + (state?.url !== '' ? state?.url : state?.cover)}
+              src={BASE_URL + (state?.url)}
               alt={state?.title} />
           </Photo>
         }
@@ -222,13 +220,13 @@ function Preview({state, onFinish}: PreviewProps) {
     <EditItem name='preview' label='预览'>
       <img
         alt={state?.title}
-        src={BASE_URL + state?.cover.replace('static/', 'static/thumb-')}
+        src={BASE_URL + state?.url?.replace('static/', 'static/thumb-')}
         style={{width: '100%', height: '100%'}}
       />
     </EditItem>
   );
 
-  if (state.cover || state.url) {
+  if (state.url) {
     return <>{u}{p}</>;
   } else {
     return u;

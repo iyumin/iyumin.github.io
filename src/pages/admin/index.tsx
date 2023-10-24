@@ -2,10 +2,8 @@ import React, { ReactElement } from 'react';
 import { Redirect, useHistory, Route, Switch } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { IUser } from '@/types';
-import api from '@/utils/axios';
 import { Loading } from '@/components';
-
+import { login, LoginData } from '@/apis';
 import Navbar from './_partial/navbar';
 import Navigator from './_partial/menu';
 
@@ -74,16 +72,18 @@ export default function AdminPage () :ReactElement {
    * @param e 鼠标事件
    * @param form 用户信息表单
    */
-  const handleSubmit = (e: React.MouseEvent<HTMLElement>, form: Partial<IUser>) => {
-    api
-      .post('/login', form)
-      .then(res => {
-        setLocalStorage(res.data.data.token, form.username);
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>, form:LoginData) => {
+    (async() => {
+      const data = await login(form);
+      if (data) {
+        setLocalStorage(data.token, form.username);
         setIsDialogVisible(false);
         setIsLogin(true);
         history.go(0);
-      })
-      .catch(err => console.log(err));
+      } else {
+        window.alert('登录失败');
+      }
+    })();
   };
 
   /**
