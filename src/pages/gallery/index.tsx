@@ -12,7 +12,7 @@ import Gallery from './gallery';
 
 export default function GalleryPage () :React.ReactElement {
   const [isRightNaviOpen, setIsRightNaviOpen] = React.useState(false);
-  const [cover, setCover] = React.useState();
+  const [cover, setCover] = React.useState<string>();
 
   const verses = [
     {
@@ -31,12 +31,60 @@ export default function GalleryPage () :React.ReactElement {
       createAt: '2023-10-25',
       updateAt: '2023-10-25',
       id: 1,
-      uid: '4646aeraedfladlfhadiofag',
+      uid: 'daadsgasdfafa',
       title: 'soso',
       author: 'yiming',
       content: [
         '须知少时凌云志',
         '曾许人间第一流'
+      ]
+    },
+    {
+      createAt: '2023-10-25',
+      updateAt: '2023-10-25',
+      id: 1,
+      uid: '4646aeraedfladlfdasfhadiofag',
+      title: 'soso',
+      author: 'yiming',
+      content: [
+        '醉后不知天在水',
+        '满床清梦压星河'
+      ]
+    },
+    {
+      createAt: '2023-10-25',
+      updateAt: '2023-10-25',
+      id: 1,
+      uid: '4646aeraedflad3asdfla34asfhadiofag',
+      title: 'soso',
+      author: 'yiming',
+      content: [
+        '久雨寒蝉少',
+        '空山落叶深'
+      ]
+    },
+    {
+      createAt: '2023-10-25',
+      updateAt: '2023-10-25',
+      id: 1,
+      uid: '4646aeraedflad3asdfla34asfhadiofag',
+      title: 'soso',
+      author: 'yiming',
+      content: [
+        '梦里寻欢终是客',
+        '客醒五更空愁眠'
+      ]
+    },
+    {
+      createAt: '2023-10-25',
+      updateAt: '2023-10-25',
+      id: 1,
+      uid: '4646aeraedflad3asdfla34asfhadiofag',
+      title: 'soso',
+      author: 'yiming',
+      content: [
+        '氤氲旧时江上',
+        '曾是照影惊鸿'
       ]
     }
   ];

@@ -111,8 +111,8 @@ function toTableData (
     return {
       id: <span style={{fontSize: 14}}>{post.id}</span>,
       uid: <span style={{fontSize: 12}}>{post.uid.slice(0, 10)+'...'}</span>,
-      createAt: <span>{dayjs.unix(post.createAt).format('YYYY-MM-DD')}</span>,
-      updateAt: <span>{dayjs.unix(post.updateAt).format('YYYY-MM-DD')}</span>,
+      createAt: <span>{dayjs.unix(Number(String(post.createAt).slice(0, 10))).format('YYYY-MM-DD')}</span>,
+      updateAt: <span>{dayjs.unix(Number(String(post.updateAt).slice(0, 10))).format('YYYY-MM-DD')}</span>,
       type: <span>{post.type}</span>,
       title: <span onClick={() => onView(post)} style={{cursor: 'pointer', color: COLOR_MAP.primary}}>{post.title}</span>,
       author: <span>{post.author}</span>,
