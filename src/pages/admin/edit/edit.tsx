@@ -242,7 +242,13 @@ export function Editor(): React.ReactElement {
                   <Upload
                     allowExtensions={['jpg', 'jpeg']}
                     url={BASE_URL + '/upload'}
-                    onFinish={(d: any) => setPostValue('url', d.url)}
+                    onFinish={(d: any) => {
+                      setPostValue('url', d.url);
+                      const width = d.width;
+                      const height = d.height;
+                      setPostValue('exif', JSON.stringify({width, height}));
+                      setPostValue('format', d.ext);
+                    }}
                   />
                 </div>
               }
