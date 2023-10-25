@@ -82,6 +82,9 @@ const LoadMore = styled.div`
   border: 1px solid ${COLOR_MAP.white4};
   cursor: pointer;
   border-radius: 4px;
+  &:hover {
+    background-color: ${COLOR_MAP.white3};
+  }
 `;
 
 const Sk = styled.div`

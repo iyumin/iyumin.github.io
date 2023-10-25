@@ -3,18 +3,37 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 
 import { useParams } from 'react-router-dom';
+import { Left } from '@icon-park/react';
 import { IPost } from '@/types';
-import { Loading } from '@/components';
+import { Skeleton } from '@/components';
 import { fetchPost } from '@/apis';
 import { RightNavi, Comment } from '../_partial';
 import { rootRouteItems } from '@/routes';
 import COLOR_MAP from '@/styles/colors';
+import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   padding: 32px 16px;
   background-color: #fff;
+  .back {
+    padding: 0 16px;
+    margin-bottom: 24px;
+    div.back-txt {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 20px 8px 12px;
+      background-color: ${COLOR_MAP.white3};
+      width: fit-content;
+      border-radius: 4px;
+      cursor: pointer;
+      &:hover {
+        background-color: ${COLOR_MAP.white4};
+      }
+    }
+  }
 `;
 
 const Header = styled.div`
@@ -43,6 +62,18 @@ const Content = styled.div`
   padding: 0 16px 32px 16px;
 `;
 
+const Sk = styled.div`
+  .item {
+    margin: 16px 0;
+  }
+  .content {
+    margin-top: 60px;
+    div {
+      margin: 18px 0;
+    }
+  }
+`;
+
 export default function ArticlePage () :React.ReactElement {
   const [article, setArticle] = React.useState<IPost>();
   const [isRightNaviOpen, setIsRightNaviOpen] = React.useState(false);
@@ -59,7 +90,7 @@ export default function ArticlePage () :React.ReactElement {
 
   return (
     <Container>
-      { article ? renderContent(article) : <Loading /> }
+      { article ? renderContent(article) : renderLoading() }
       <div style={{marginTop:64,maxWidth:1000,padding:16}}>
         <Comment />
       </div>
@@ -73,8 +104,16 @@ export default function ArticlePage () :React.ReactElement {
 }
 
 const renderContent = (article: IPost) => {
+  const history = useHistory();
+
   return (
     <div className='article-content'>
+      <div className='back'>
+        <div className='back-txt' onClick={() => history.go(-1)}>
+          <Left theme="outline" size="24" fill="#333"/>
+          <span>返回</span>
+        </div>
+      </div>
       <Header className="article-page-header">
         <h2>{ article.title }</h2>
         <div className="author">
@@ -88,5 +127,36 @@ const renderContent = (article: IPost) => {
         <div dangerouslySetInnerHTML={{__html: article.content}}></div>
       </Content>
     </div>
+  );
+};
+
+const renderLoading = () => {
+  return (
+    <Sk>
+      <div className='title item'>
+        <Skeleton height={50} />
+      </div>
+      <div className='author item'>
+        <Skeleton height={12} width={80} />
+      </div>
+      <div className='datetime item'>
+        <Skeleton height={12} width={150} />
+      </div>
+      <div className='content item'>
+        <div><Skeleton height={16} width={500} /></div>
+        <div><Skeleton height={16} width={300} /></div>
+        <div><Skeleton height={16} width={200} /></div>
+        <div><Skeleton height={16} width={320} /></div>
+        <div><Skeleton height={16} width={400} /></div>
+        <div><Skeleton height={16} /></div>
+        <div><Skeleton height={16} width={210} /></div>
+        <div><Skeleton height={16} width={300} /></div>
+        <div><Skeleton height={16} width={600} /></div>
+        <div><Skeleton height={16} width={80} /></div>
+        <div><Skeleton height={16} /></div>
+        <div><Skeleton height={16} width={230} /></div>
+        <div><Skeleton height={16} width={400} /></div>
+      </div>
+    </Sk>
   );
 };

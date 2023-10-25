@@ -89,7 +89,7 @@ function toTableData (
       createAt: <Skeleton />,
       updateAt: <Skeleton />,
       type: <Skeleton width={40} />,
-      title: <Skeleton width={80} />,
+      title: <Skeleton width={140} />,
       author: <Skeleton width={60} />,
       // content: <span>{post.content}</span>,
       sumary: <Skeleton />,
