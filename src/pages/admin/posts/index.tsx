@@ -56,6 +56,10 @@ export default function AdminArticlePage(): React.ReactElement {
     history.push(`/update/${p.type}/${p.uid}`);
   };
 
+  const clickViewPost = (p: IPost) => {
+    history.push(`/${p.type}/${p.uid}`);
+  };
+
   const clickDelRow = (p: IPost) => {
     const uid = p.uid;
     if (confirm('确定要删除？')) {
@@ -67,7 +71,7 @@ export default function AdminArticlePage(): React.ReactElement {
         } else window.alert('删除失败');
       })();
     }
-  }
+  };
 
   const getPosts = async (offset = 0, limit=PAGE_LIMIT) => {
     const data = await fetchPosts(offset, limit);
@@ -101,6 +105,7 @@ export default function AdminArticlePage(): React.ReactElement {
             posts={posts}
             onEdit={editTableRow}
             onDel={clickDelRow}
+            onView={clickViewPost}
           />
         </div>
         <div className="prev-next">

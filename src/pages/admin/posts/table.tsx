@@ -4,11 +4,13 @@ import { IPost } from '@/types';
 import { getLocalStorage } from '..';
 import { BASE_URL } from '@/configs';
 import { Button, Skeleton, Table, Tag } from '@/components';
+import COLOR_MAP from '@/styles/colors';
 
 export interface PostTableProps {
   posts: IPost[];
   onEdit?(p: IPost): void;
   onDel?(p: IPost): void;
+  onView?(p: IPost): void;
 }
 
 export interface TableRow {
@@ -50,7 +52,7 @@ const TABLE_HEADERS = [
 ];
 
 export const PostTable: React.FC<PostTableProps> = (props: PostTableProps) => {
-  const { posts, onEdit, onDel } = props;
+  const { posts, onEdit, onDel, onView } = props;
 
   const clickEdit = (p: IPost) => {
     if (onEdit) onEdit(p);
@@ -60,10 +62,14 @@ export const PostTable: React.FC<PostTableProps> = (props: PostTableProps) => {
     if (onDel) onDel(p);
   };
 
+  const clickView = (p: IPost) => {
+    if (onView) onView(p);
+  };
+
   return (
     <div className='post-table'>
       <Table
-        data={toTableData(posts, clickEdit, clickDel)}
+        data={toTableData(posts, clickEdit, clickDel, clickView)}
         heads={TABLE_HEADERS}
       />
     </div>
@@ -73,7 +79,8 @@ export const PostTable: React.FC<PostTableProps> = (props: PostTableProps) => {
 function toTableData (
   posts: IPost[],
   onEdit: (p: IPost) => void,
-  onDel: (p: IPost) => void
+  onDel: (p: IPost) => void,
+  onView?: (p: IPost) => void
 ) :TableRow[] {
   if (!posts) {
     const sk = {
@@ -107,7 +114,7 @@ function toTableData (
       createAt: <span>{dayjs.unix(post.createAt).format('YYYY-MM-DD')}</span>,
       updateAt: <span>{dayjs.unix(post.updateAt).format('YYYY-MM-DD')}</span>,
       type: <span>{post.type}</span>,
-      title: <span>{post.title}</span>,
+      title: <span onClick={() => onView(post)} style={{cursor: 'pointer', color: COLOR_MAP.primary}}>{post.title}</span>,
       author: <span>{post.author}</span>,
       // content: <span>{post.content}</span>,
       sumary: <span>{post.excerpt || post.description}</span>,
