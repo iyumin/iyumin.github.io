@@ -1,5 +1,5 @@
 import api from '@/utils/axios';
-import { BASE_URL } from '@/configs/environment';
+import { BASE_URL } from '@/configs';
 import { IPost } from '@/types';
 
 type ReturnType = Promise<{

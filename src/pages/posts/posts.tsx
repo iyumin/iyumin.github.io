@@ -8,7 +8,7 @@ import COLOR_MAP from '@/styles/colors';
 import { Loading } from '@/components';
 import { RightNavi } from '../_partial';
 import { rootRouteItems } from '@/routes';
-import { BASE_URL } from '@/configs/environment';
+import { BASE_URL } from '@/configs';
 import { fetchArticles } from '@/apis';
 
 const Container = styled.div`

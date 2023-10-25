@@ -11,6 +11,7 @@ const COLOR_MAP: IColorMap = {
   //
   primary: '#3498DB',
   dark: '#212121',
+  dark2: '#313233',
   white: '#FFFFFF',
   white1: '#FDFEFE',
   white2: '#F7F9F9',

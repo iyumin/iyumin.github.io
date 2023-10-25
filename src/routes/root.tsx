@@ -2,8 +2,8 @@ import React from 'react';
 import { IRouteItem } from '@/types';
 
 const AdminPage = React.lazy(() => import('@/pages/admin'));
-const ArticlePage = React.lazy(() => import('@/pages/articles/article'));
-const ArticlesPage = React.lazy(() => import('@/pages/articles'));
+const ArticlePage = React.lazy(() => import('@/pages/posts/post'));
+const ArticlesPage = React.lazy(() => import('@/pages/posts'));
 const GalleryPage = React.lazy(() => import('@/pages/gallery'));
 const EditPage = React.lazy(() => import('@/pages/admin/edit'));
 

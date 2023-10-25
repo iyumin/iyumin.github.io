@@ -1,18 +1,10 @@
-import { ENV } from '@/configs';
-
 import axios, { AxiosRequestConfig } from 'axios';
-import axiosRetry from 'axios-retry';
+// import axiosRetry from 'axios-retry';
+import { BASE_URL } from '@/configs';
 
 const api = axios.create();
 
-let baseUrl: string;
-if (process.env.NODE_ENV === 'development') {
-  baseUrl = ENV.develop.api.baseUrl;
-} else {
-  baseUrl = ENV.production.api.baseUrl;
-}
-
-api.defaults.baseURL = baseUrl;
+api.defaults.baseURL = BASE_URL;
 
 api.interceptors.request.use(
   (config: AxiosRequestConfig) => {
@@ -27,6 +19,7 @@ api.interceptors.request.use(
 
 // retry auto, fix the keep-alive problem;
 // see: https://zhuanlan.zhihu.com/p/86953757
-axiosRetry(api, { retries: 3});
+// 2023-10-25 I use flask for backend now, so delete this
+// axiosRetry(api, { retries: 3});
 
 export default api;

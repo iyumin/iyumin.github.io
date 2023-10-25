@@ -5,13 +5,15 @@ import marked from 'marked';
 import WE from 'wangeditor';
 import dayjs from 'dayjs';
 import { useLocation, useHistory } from 'react-router-dom';
+import { ArrowLeft } from '@icon-park/react';
 
 import { IPost } from '@/types';
 import { Button, Input } from '@/components';
 import { fetchPost, updatePost, addPost } from '@/apis';
-import { BASE_URL } from '@/configs/environment';
+import { BASE_URL } from '@/configs';
 import { MoreInfo } from './info';
 import { Preview } from './preview';
+import COLOR_MAP from '@/styles/colors';
 
 const renderer = {
   image(href: string, title: string, text: string): string {
@@ -26,12 +28,46 @@ const renderer = {
 
 const Frame = styled.div`
   display: flex;
-  padding: 16px 0 0 0;
+  height: 100vh;
+  justify-content: center;
+  .inner {
+    max-width: 1440px;
+  }
+`;
+
+const Header = styled.div`
+  width: 100%;
+  height: 80px;
+  display: flex;
+  background-color: ${COLOR_MAP.white1};
+  align-items: center;
+  margin-bottom: 8px;
+  .back-icon {
+    margin-left: 24px;
+  }
+  .title {
+    flex-grow: 1;
+    text-align: center;
+  }
+`;
+
+const Main = styled.div`
+  width: 100%;
+  display: flex;
+  background-color: ${COLOR_MAP.white};
   .left {
-    padding: 0 32px;
+    flex-grow: 1;
+    margin: 8px 24px 0 16px;
+    .content {
+      display: flex;
+      justify-content: center;
+      height: 600px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
   }
   .right {
-    padding: 0 32px 0 0;
+    padding-right: 16px;
     label {
       width: 36px;
       text-align: right;
@@ -48,7 +84,7 @@ const Frame = styled.div`
   }
 `;
 
-const PostTitle = styled.div`
+const Left = styled.div`
   padding: 0 0 8px 0;
   input {
     display: inline-block;
@@ -60,13 +96,15 @@ const PostTitle = styled.div`
   }
 `;
 
+const Right = styled.div``;
+
 const PostEditor = styled.div`
   line-height: 1.5;
 `;
 
 const Photo = styled.div`
   width: 900px;
-  height: 800px;
+  min-height: 600px;
   display: flex;
   justify-content: center;
   img {
@@ -166,35 +204,49 @@ export function Editor(): React.ReactElement {
   }, []);
 
   return (
-    <Frame>
-      <div className="left">
-        <PostTitle>
-          <Input
-            data-name="title"
-            placeholder="请输入标题"
-            defaultValue={state?.title}
-            onChange={setInputValue}
-          />
-        </PostTitle>
-        { typ === 'article' && <PostEditor id="article-editor" /> }
-        {
-          typ === 'photo' && 
-          <Photo>
-            <img
-              src={BASE_URL + (state?.url)}
-              alt={state?.title} />
-          </Photo>
-        }
-      </div>
-      <div className="right" style={{width: 300}}>
-        <Preview onFinish={onUploadFinish} state={state} />
-        <MoreInfo state={state} setValue={setInputValue} setPostValue={setPostValue} />
-        <div className='submit-cancel'>
-          <Button onClick={clickSubmit} type='primary'>提交</Button>
-          <Button onClick={() => {
-            if (confirm('确定返回？')) history.go(-1);
-          }} danger>取消</Button>
-        </div>
+    <Frame className='edit-page'>
+      <div className='inner'>
+        <Header className='header'>
+          <div className='back-icon' onClick={() => history.go(-1)}>
+            <ArrowLeft theme="outline" size="28" fill="#333"/>
+          </div>
+          <div className='title'>
+            <h1 style={{color: COLOR_MAP.dark2}}>编辑页面</h1>
+          </div>
+        </Header>
+        <Main className='main'>
+          <Left className="left">
+            <div className='post-title'>
+              <Input
+                data-name="title"
+                placeholder="请输入标题"
+                defaultValue={state?.title}
+                onChange={setInputValue}
+              />
+            </div>
+            <div className='content'>
+              { typ === 'article' && <PostEditor id="article-editor" /> }
+              {
+                typ === 'photo' && 
+                <Photo>
+                  <img
+                    src={BASE_URL + (state?.url)}
+                    alt={state?.title} />
+                </Photo>
+              }
+            </div>
+          </Left>
+          <Right className="right">
+            {typ === 'article' && <Preview onFinish={onUploadFinish} state={state} />}
+            <MoreInfo state={state} setValue={setInputValue} setPostValue={setPostValue} />
+            <div className='submit-cancel'>
+              <Button onClick={clickSubmit} type='primary'>提交</Button>
+              <Button onClick={() => {
+                if (confirm('确定返回？')) history.go(-1);
+              }} danger>取消</Button>
+            </div>
+          </Right>
+        </Main>
       </div>
     </Frame>
   );

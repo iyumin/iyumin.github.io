@@ -6,6 +6,7 @@ import COLOR_MAP from '@/styles/colors';
 
 const Box = styled.div`
   position: relative;
+  width: 100%;
   border-radius: 4px;
   background-color: ${COLOR_MAP.white4};
   min-height: 80px;

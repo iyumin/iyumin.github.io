@@ -6,7 +6,7 @@ import { fetchPhotos } from '@/apis';
 import { IPost, IExif } from '@/types';
 import { Masonry, IMasonryItem, Loading } from '@/components';
 import { useDevice, useScroll } from '@/hooks';
-import { BASE_URL } from '@/configs/environment';
+import { BASE_URL } from '@/configs';
 
 const Container = styled.div`
   width: 100%;

@@ -2,7 +2,7 @@ import React from 'react';
 import dayjs from 'dayjs';
 import { IPost } from '@/types';
 import { getLocalStorage } from '..';
-import { BASE_URL } from '@/configs/environment';
+import { BASE_URL } from '@/configs';
 import { Button, Skeleton, Table, Tag } from '@/components';
 
 export interface PostTableProps {
