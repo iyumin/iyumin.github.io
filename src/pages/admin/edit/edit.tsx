@@ -9,6 +9,7 @@ import { ArrowLeft } from '@icon-park/react';
 
 import { IPost } from '@/types';
 import { Button, Input } from '@/components';
+import Upload from '@/components/inputs/upload';
 import { fetchPost, updatePost, addPost } from '@/apis';
 import { BASE_URL } from '@/configs';
 import { MoreInfo } from './info';
@@ -58,6 +59,7 @@ const Main = styled.div`
   .left {
     flex-grow: 1;
     margin: 8px 24px 0 16px;
+    min-width: 800px;
     .content {
       display: flex;
       justify-content: center;
@@ -227,12 +229,22 @@ export function Editor(): React.ReactElement {
             <div className='content'>
               { typ === 'article' && <PostEditor id="article-editor" /> }
               {
-                typ === 'photo' && 
+                (typ === 'photo' && state?.url) &&
                 <Photo>
                   <img
                     src={BASE_URL + (state?.url)}
                     alt={state?.title} />
                 </Photo>
+              }
+              {
+                (typ === 'photo' && !state?.url) &&
+                <div style={{height: 120, width: 200}}>
+                  <Upload
+                    allowExtensions={['jpg', 'jpeg']}
+                    url={BASE_URL + '/upload'}
+                    onFinish={(d: any) => setPostValue('url', d.url)}
+                  />
+                </div>
               }
             </div>
           </Left>

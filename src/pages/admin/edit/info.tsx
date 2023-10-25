@@ -26,9 +26,9 @@ export function MoreInfo(props: MoreInfoProps) {
 
       <EditItem name="category" label='分类'>
         <Select onChange={v => setPostValue('category', v)} defaultValue={state?.category}>
+          <Option value='life' name='生活' />
           <Option value='fiction' name='科幻' />
           <Option value='dairy' name='日志' />
-          <Option value='life' name='生活' />
           <Option value='travel' name='旅行' />
         </Select>
       </EditItem>
