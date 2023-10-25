@@ -3,9 +3,19 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
+const HtmlMinimizer = require('html-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
   template: path.resolve(__dirname, '../public/index.html'),
+  minify: {
+    removeComments: true,
+    removeRedundantAttributes: true,
+    removeEmptyAttributes: true,
+    collapseBooleanAttributes: false,
+    removeStyleLinkTypeAttributes: true,
+    minifyCSS: true,
+  }
 });
 
 // 用于复制文件
@@ -53,4 +63,20 @@ module.exports = {
     copyWebpackPlugin,
     new EslintPlugin(),
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new HtmlMinimizer(),
+      new TerserPlugin({
+        extractComments: true,
+        parallel: true,
+        terserOptions: {
+          compress: true,
+          mangle: true,
+          toplevel: false,
+          keep_classnames: false,
+        }
+      })
+    ]
+  }
 };
