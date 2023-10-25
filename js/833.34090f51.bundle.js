@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkkevinjobs=self.webpackChunkkevinjobs||[]).push([[833],{9833:(e,n,l)=>{l.r(n),l.d(n,{default:()=>s});var t=l(959),a=l(3103),c=l(274);const r=a.ZP.div``;function s(){return t.createElement(r,{className:"admin-home-container"},t.createElement("div",null,t.createElement("h1",null,"Welcome!"),t.createElement(c.Od,null)))}}}]);
