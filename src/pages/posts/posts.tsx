@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 import { IPost } from '@/types';
 import COLOR_MAP from '@/styles/colors';
-import { Loading } from '@/components';
+import { Skeleton } from '@/components';
 import { RightNavi } from '../_partial';
 import { rootRouteItems } from '@/routes';
 import { BASE_URL } from '@/configs';
@@ -13,6 +13,7 @@ import { fetchArticles } from '@/apis';
 
 const Container = styled.div`
   padding: 48px 0;
+  background-color: ${COLOR_MAP.white};
 `;
 
 const ArticleList = styled.div`
@@ -23,15 +24,11 @@ const ArticleList = styled.div`
 const ArticleItem = styled.div`
   width: 100%;
   margin: 16px 0;
-  border-radius: 4px;
+  border-radius: 5px;
   position: relative;
   transition: all .3s ease-in-out;
   display: flex;
-  &:hover {
-    .cover {
-      width: 46%;
-    }
-  }
+  border: 1px solid ${COLOR_MAP.white4};
 `;
 
 const Cover = styled.div`
@@ -44,7 +41,7 @@ const Cover = styled.div`
     height: 100%;
     object-fit: cover;
     cursor: pointer;
-    border-radius: 4px 0 0 4px;
+    border-radius: 5px 0 0 5px;
   }
 `;
 
@@ -82,9 +79,21 @@ const LoadMore = styled.div`
   margin: 0 auto;
   padding: 16px 0;
   text-align: center;
-  background-color: #fff;
+  border: 1px solid ${COLOR_MAP.white4};
   cursor: pointer;
   border-radius: 4px;
+`;
+
+const Sk = styled.div`
+  background-color: ${COLOR_MAP.white1};
+  margin: 8px 0;
+  display: flex;
+  .right {
+    margin-left: 16px;
+  }
+  .item {
+    margin: 0 0 20px 0;
+  }
 `;
 
 function transformList(origin: IPost[]) :IPost[] {
@@ -120,29 +129,31 @@ export default function ArticlesPage () :React.ReactElement {
     history.push(`/article/${a.uid}`);
   };
 
-  const renderItem = (a: IPost) => (
-    <ArticleItem key={a.uid}>
-      <Cover onClick={() => handleClickArticle(a)} className='cover'>
-        <img src={a.url} alt={a.title} />
-      </Cover>
-      <Info>
-        <div style={{margin:16}}>
-          <h3 className="info-item" onClick={() => handleClickArticle(a)}>
-            { a.title }
-          </h3>
-          <div className="info-item" style={{color: COLOR_MAP.white7}}>
-            { a.excerpt }
-          </div>
-          <div className="info-author-date info-item">
-            <div className="info-author">{ a.author }</div>
-            <div className="info-date">
-              { dayjs.unix(a.updateAt).format('YYYY年M月D日') }
+  const renderItem = (a: IPost) => {
+    return (
+      <ArticleItem key={a.uid}>
+        <Cover onClick={() => handleClickArticle(a)} className='cover'>
+          <img src={a.url} alt={a.title} />
+        </Cover>
+        <Info>
+          <div style={{margin:16}}>
+            <h3 className="info-item" onClick={() => handleClickArticle(a)}>
+              { a.title }
+            </h3>
+            <div className="info-item" style={{color: COLOR_MAP.white7}}>
+              { a.excerpt }
+            </div>
+            <div className="info-author-date info-item">
+              <div className="info-author">{ a.author }</div>
+              <div className="info-date">
+                { dayjs.unix(a.updateAt).format('YYYY年M月D日') }
+              </div>
             </div>
           </div>
-        </div>
-      </Info>
-    </ArticleItem>
-  );
+        </Info>
+      </ArticleItem>
+    );
+  };
 
   // 组件加载时获取文章列表
   React.useEffect(() => {
@@ -156,11 +167,11 @@ export default function ArticlesPage () :React.ReactElement {
   return (
     <Container>
       <ArticleList>
-        { list ? list.map(renderItem) : <Loading /> }
+        { list ? list.map(renderItem) : renderSkeleton() }
       </ArticleList>
       {
         hasMore &&
-        <LoadMore role="button" onClick={handleClickMore}>Load More</LoadMore>
+        <LoadMore role="button" onClick={handleClickMore}>点击加载更多</LoadMore>
       }
       <RightNavi
         isOpen={isNavOpen}
@@ -169,4 +180,26 @@ export default function ArticlesPage () :React.ReactElement {
       />
     </Container>
   );
+}
+
+const renderSkeleton = () => {
+  const sk = [];
+  for (let i=0; i<6; i++) {
+    sk.push((
+      <Sk className='wait'>
+        <div className='left'>
+        <Skeleton height={200} width={320} />
+        </div>
+        <div className='right'>
+          <div className='item'><Skeleton height={20} width={460} /></div>
+          <div className='item'><Skeleton height={16} width={260} /></div>
+          <div className='item'><Skeleton height={16} width={180} /></div>
+          <div className='item'><Skeleton height={16} width={240} /></div>
+          <div className='item'><Skeleton height={16} width={300} /></div>
+          <div className='item'><Skeleton height={12} width={380} /></div>
+        </div>
+      </Sk>
+    ));
+  }
+  return sk;
 }
