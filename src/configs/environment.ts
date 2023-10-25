@@ -11,7 +11,9 @@ const ENV = {
   },
 };
 
-const BASE_URL = 'http://localhost:5000';
+const BASE_URL =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5000' : 'https://api.kevinjobs.com:5000';
 
 export {
   BASE_URL,
