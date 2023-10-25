@@ -22,35 +22,25 @@ export async function login(data: LoginData) {
   return;
 }
 
-export async function fetchPosts(offset: number, limit: number) :ReturnType {
+export async function fetchPosts(offset: number, limit: number, prs: any=null) :ReturnType {
   const url = BASE_URL + '/post/list';
-  const params = { offset, limit };
+  let params = { offset, limit, status: 'publish' };
+  if (prs) params = {...params, ...prs};
   const resp = await api.get(url, {params});
   if (resp.data.code === 0) return resp.data.data;
   return;
 }
 
 export async function fetchArticles(offset: number, limit: number) :ReturnType {
-  const url = BASE_URL + '/post/list';
-  const params = { offset, limit, type: 'article' };
-  const resp = await api.get(url, {params});
-  if (resp.data.code === 0) return resp.data.data;
-  return;
+  return await fetchPosts(offset, limit, {type: 'article'});
 }
 
-export async function fetchCovers() {
-  const url = BASE_URL + '/post/list?type=cover';
-  const resp = await api.get(url);
-  if (resp.data.code === 0) return resp.data.data;
-  return;
+export async function fetchCovers(offset: number=0, limit: number=20) {
+  return await fetchPosts(offset, limit, {type: 'cover', status: 'all'});
 }
 
 export async function fetchPhotos(offset: number, limit: number) :ReturnType {
-  const url = BASE_URL + '/post/list';
-  const params = { offset, limit, type: 'photo' };
-  const resp = await api.get(url, {params});
-  if (resp.data.code === 0) return resp.data.data;
-  return;
+  return await fetchPosts(offset, limit, {type: 'photo'});
 }
 
 export async function deletePost(uid: string) :Promise<boolean> {

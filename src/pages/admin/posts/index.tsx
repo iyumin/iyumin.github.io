@@ -74,7 +74,7 @@ export default function AdminArticlePage(): React.ReactElement {
   };
 
   const getPosts = async (offset = 0, limit=PAGE_LIMIT) => {
-    const data = await fetchPosts(offset, limit);
+    const data = await fetchPosts(offset, limit, {status: 'all'});
     if (data) {
       if (offset <= 0) setHasPrev(false);
       else setHasPrev(true);
