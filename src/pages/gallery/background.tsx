@@ -19,10 +19,11 @@ const Desc = styled.div`
   top: 10%;
   right: 5%;
   color: ${COLOR_MAP.white1};
-  opacity: 0.25;
+  opacity: 0.7;
   writing-mode: vertical-rl;
   line-height: 1;
   letter-spacing: 16px;
+  // background-color: ${COLOR_MAP.white2};
   p {
     &:nth-child(1) {
       margin-top: 0;

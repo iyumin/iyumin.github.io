@@ -38,6 +38,13 @@ export async function fetchArticles(offset: number, limit: number) :ReturnType {
   return;
 }
 
+export async function fetchCovers() {
+  const url = BASE_URL + '/post/list?type=cover';
+  const resp = await api.get(url);
+  if (resp.data.code === 0) return resp.data.data;
+  return;
+}
+
 export async function fetchPhotos(offset: number, limit: number) :ReturnType {
   const url = BASE_URL + '/post/list';
   const params = { offset, limit, type: 'photo' };

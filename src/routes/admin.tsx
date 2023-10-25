@@ -12,6 +12,7 @@ import { IRouteItem } from '@/types';
 const AdminArticlePage = React.lazy(() => import('../pages/admin/posts'));
 const AdminHomePage = React.lazy(() => import('../pages/admin/home'));
 const AdminLoggerViewer = React.lazy(() => import('../pages/admin/logs-view'));
+const CoverEdit = React.lazy(() => import('../pages/admin/cover'));
 
 const adminHomeRoute: IRouteItem = {
   key: 0,
@@ -34,7 +35,17 @@ const generalRouteItems: IRouteItem[] = [
     component: AdminArticlePage,
     exact: true,
     type: 'hash',
-  }
+  },
+  {
+    key: 2,
+    icon: <DocumentFolder theme="outline" size="16" fill="#333" strokeWidth={2}/>,
+    paths: ['', 'admin', 'cover'],
+    name: 'admin-cover-eidt',
+    title: '封面',
+    component: CoverEdit,
+    exact: true,
+    type: 'hash',
+  },
 ];
 
 const editRouteItems: IRouteItem[] = [

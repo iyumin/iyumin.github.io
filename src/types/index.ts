@@ -1,8 +1,8 @@
 import React from 'react';
 
 export interface IBase {
-  id: number,
-  uid: string,
+  id?: number,
+  uid?: string,
 }
 
 export type IPost = Partial<{
