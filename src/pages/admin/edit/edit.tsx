@@ -13,8 +13,8 @@ import Upload from '@/components/inputs/upload';
 import { fetchPost, updatePost, addPost } from '@/apis';
 import { BASE_URL } from '@/configs';
 import { MoreInfo } from './info';
-import { Preview } from './preview';
 import COLOR_MAP from '@/styles/colors';
+import { EditItem } from './item';
 
 const renderer = {
   image(href: string, title: string, text: string): string {
@@ -63,7 +63,6 @@ const Main = styled.div`
     .content {
       display: flex;
       justify-content: center;
-      height: 600px;
       margin-top: 8px;
       margin-bottom: 8px;
     }
@@ -104,38 +103,35 @@ const PostEditor = styled.div`
   line-height: 1.5;
 `;
 
-const Photo = styled.div`
-  width: 900px;
-  min-height: 600px;
-  display: flex;
-  justify-content: center;
-  img {
-    object-fit: contain;
-    max-width: 100%;
-    max-height: 100%;
-  }
-`;
-
-const DEFAULT_POST: IPost = {
-  title: '',
-  author: '',
-  updateAt: dayjs().valueOf(),
-  createAt: dayjs().valueOf(),
-  content: '',
-  uid: '',
-  id: 0,
-  excerpt: '',
-  tags: '',
-  format: 'html',
-  status: 'draft',
-};
-
 interface Action {
   type: string;
   payload: Partial<IPost>;
 }
 
 export function Editor(): React.ReactElement {
+  const location = useLocation();
+  const history = useHistory();
+  // update or add
+  const mode = location.pathname.split('/')[1];
+  const typ = location.pathname.split('/')[2];
+  const uid = location.pathname.split('/')[3];
+
+  const DEFAULT_POST: IPost = {
+    title: '',
+    author: '',
+    updateAt: dayjs().valueOf(),
+    createAt: dayjs().valueOf(),
+    content: '',
+    uid: '',
+    id: 0,
+    excerpt: '',
+    tags: '',
+    format: 'default',
+    status: 'draft',
+    type: typ,
+    category: 'default',
+  };
+
   marked.use({ renderer });
   const weditor = React.useRef<WE>(null);
 
@@ -155,13 +151,7 @@ export function Editor(): React.ReactElement {
     dispatch({ type: '', payload: { [name]: value } });
   };
 
-  const location = useLocation();
-  const history = useHistory();
-  // update or add
-  const mode = location.pathname.split('/')[1];
-  const typ = location.pathname.split('/')[2];
-  const uid = location.pathname.split('/')[3];
-
+  
   const clickSubmit = () => {
     (async () => {
       const data = state;
@@ -178,7 +168,7 @@ export function Editor(): React.ReactElement {
     // console.log(state);
   };
 
-  const onUploadFinish = (data: any) => {
+  const onUpCoverFinish = (data: any) => {
     setPostValue('url', data.url);
   };
 
@@ -197,7 +187,7 @@ export function Editor(): React.ReactElement {
   React.useEffect(() => {
     if (document.querySelector('#article-editor')) {
       weditor.current = new WE('#article-editor');
-      weditor.current.config.height = 500;
+      weditor.current.config.height = 700;
       weditor.current.config.onchange = (t: string) => setPostValue('content', t);
       weditor.current.create();
       weditor.current.txt.html(state.content);
@@ -213,7 +203,12 @@ export function Editor(): React.ReactElement {
             <ArrowLeft theme="outline" size="28" fill="#333"/>
           </div>
           <div className='title'>
-            <h1 style={{color: COLOR_MAP.dark2}}>编辑页面</h1>
+            <h1 style={{color: COLOR_MAP.dark2}}>
+              { mode === 'update' && '上传' }
+              { mode === 'add' && '新增' }
+              { typ === 'article' && '文章' }
+              { typ === 'photo' && '照片' }
+            </h1>
           </div>
         </Header>
         <Main className='main'>
@@ -228,35 +223,16 @@ export function Editor(): React.ReactElement {
             </div>
             <div className='content'>
               { typ === 'article' && <PostEditor id="article-editor" /> }
-              {
-                (typ === 'photo' && state?.url) &&
-                <Photo>
-                  <img
-                    src={BASE_URL + (state?.url)}
-                    alt={state?.title} />
-                </Photo>
-              }
-              {
-                (typ === 'photo' && !state?.url) &&
-                <div style={{height: 120, width: 200}}>
-                  <Upload
-                    allowExtensions={['jpg', 'jpeg']}
-                    url={BASE_URL + '/upload'}
-                    onFinish={(d: any) => {
-                      setPostValue('url', d.url);
-                      const width = d.width;
-                      const height = d.height;
-                      setPostValue('exif', JSON.stringify({width, height}));
-                      setPostValue('format', d.ext);
-                    }}
-                  />
-                </div>
-              }
+              { typ === 'photo' && <PhotoUpload setPostValue={setPostValue} /> }
             </div>
           </Left>
           <Right className="right">
-            {typ === 'article' && <Preview onFinish={onUploadFinish} state={state} />}
-            <MoreInfo state={state} setValue={setInputValue} setPostValue={setPostValue} />
+            { typ === 'article' && <CoverUpload onFinish={onUpCoverFinish} /> }
+            <MoreInfo
+              state={state}
+              setValue={setInputValue}
+              setPostValue={setPostValue}
+            />
             <div className='submit-cancel'>
               <Button onClick={clickSubmit} type='primary'>提交</Button>
               <Button onClick={() => {
@@ -270,3 +246,32 @@ export function Editor(): React.ReactElement {
   );
 }
 
+const PhotoUpload = ({setPostValue}: {setPostValue: any}) => {
+  return (
+    <div style={{height: 600, width: 900}}>
+      <Upload
+        allowExtensions={['jpg', 'jpeg']}
+        url={BASE_URL + '/upload'}
+        onFinish={(d: any) => {
+          setPostValue('url', d.url);
+          const width = d.width;
+          const height = d.height;
+          setPostValue('exif', JSON.stringify({width, height}));
+          setPostValue('format', d.ext);
+        }}
+      />
+    </div>
+  );
+};
+
+const CoverUpload = ({onFinish}: {onFinish: any}) => {
+  return (
+    <EditItem label='封面' style={{width: 230}}>
+      <Upload
+        onFinish={onFinish}
+        url={BASE_URL + '/upload'}
+        allowExtensions={['jpg', 'png']}
+      />
+    </EditItem>
+  );
+};

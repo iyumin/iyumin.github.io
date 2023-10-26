@@ -48,8 +48,10 @@ const Up = styled.div`
 
 export default function CoverEdit() :React.ReactElement {
   const [url, setUrl] = React.useState(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [cover, setCovers] = React.useState<any[]>();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFinish = (d: any) => {
     if (d) {
       setUrl(d.url);
@@ -60,6 +62,9 @@ export default function CoverEdit() :React.ReactElement {
           type: 'cover',
           url: d.url,
           exif: JSON.stringify({width: d.width, height: d.height}),
+          format: d.ext,
+          category: 'cover',
+          excerpt: '用于首页封面',
         });
         if (data){
           window.alert('添加封面成功');
@@ -73,11 +78,12 @@ export default function CoverEdit() :React.ReactElement {
     (async() => {
       const data = await fetchCovers();
       if (data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setCovers(data.posts.map((p:any) => {
           p.url = p.url.replace('static/', 'static/thumb-');
           return p;
         }))
-      };
+      }
     })();
   }
 
@@ -120,8 +126,9 @@ export default function CoverEdit() :React.ReactElement {
       </Up>
     </CE>
   );
-};
+}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderPreviewItem = (data: any, onDel?: () => void) => {
   const handleDel = () => {
     const uid = data.uid;

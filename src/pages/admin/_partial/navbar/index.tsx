@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Input, Button, Dialog } from '@/components';
-import { IUser } from '@/types';
 import { LoginData } from '@/apis';
+import { getLocalStorage } from '../..';
 
 const Nav = styled.div`
   width: 100%;
@@ -11,13 +11,22 @@ const Nav = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 48px;
+  padding: 0 60px 0 0;
   .container {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     .version {
       margin-right: 16px;
+    }
+    .user-status {
+      .user {
+        display: flex;
+        align-items: center;
+        .name {
+          margin: 0 8px;
+        }
+      }
     }
   }
 `;
@@ -65,7 +74,7 @@ export interface NavbarProps {
 export default function Navbar (props: NavbarProps) :React.ReactElement {
   const {
     isLogin,
-    isLoginDialogVisible,
+    isLoginDialogVisible: visible,
     onSubmit,
     onCancel,
     onLogin,
@@ -113,7 +122,7 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
   const renderUser = () => (
     <div className="user">
       <div className="avatar"></div>
-      <div className="name"></div>
+      <div className="name">{getLocalStorage().name}</div>
       <div className="level"></div>
       <div className="logout">
         <Button onClick={handleLogout} type="light">登出</Button>
@@ -135,7 +144,7 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
       </div>
       <Dialog
         title="登录界面"
-        visible={isLoginDialogVisible}
+        visible={visible}
         onCancel={onCancel}
         animation="slide-top-down"
         width={400}

@@ -3,7 +3,7 @@ import { IPost } from "@/types";
 import { EditItem } from "./item";
 import { Input } from "@/components";
 import { Option, Select } from '@/components/inputs/select';
-
+import { getLocalStorage } from '..';
 
 export interface MoreInfoProps {
   state: IPost;
@@ -26,6 +26,7 @@ export function MoreInfo(props: MoreInfoProps) {
 
       <EditItem name="category" label='分类'>
         <Select onChange={v => setPostValue('category', v)} defaultValue={state?.category}>
+          <Option value='default' name='默认分类' />
           <Option value='life' name='生活' />
           <Option value='fiction' name='科幻' />
           <Option value='dairy' name='日志' />
@@ -36,7 +37,7 @@ export function MoreInfo(props: MoreInfoProps) {
       <EditItem name="author" label="作者">
         <Input
           data-name="author"
-          defaultValue={state?.author}
+          defaultValue={state?.author || getLocalStorage().name}
           onChange={setValue}
         />
       </EditItem>
@@ -67,6 +68,7 @@ export function MoreInfo(props: MoreInfoProps) {
 
       <EditItem name="format" label='格式'>
         <Select onChange={v => setPostValue('format', v)} defaultValue={state?.format}>
+          <Option value='default' name='默认格式' />
           <Option value='html' name='网页' />
           <Option value='markdown' name='MD文档' />
           <Option value='txt' name='文本' />
@@ -105,6 +107,8 @@ export function MoreInfo(props: MoreInfoProps) {
         <Select onChange={v => setPostValue('type', v)} defaultValue={state?.type}>
           <Option value='article' name='文章' />
           <Option value='photo' name='照片' />
+          <Option value='cover' name='封面' />
+          <Option value='avatar' name='头像' />
         </Select>
       </EditItem>
     </div>

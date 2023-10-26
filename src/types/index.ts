@@ -32,7 +32,13 @@ export interface IExif {
 
 export interface IUser extends IBase {
   username: string,
-  password: string,
+  password?: string,
+  nickname?: string;
+  birthday?: number;
+  gender?: string;
+  location?: string;
+  role?: string;
+  group?: string;
 }
 
 export interface IComment extends IPost {}

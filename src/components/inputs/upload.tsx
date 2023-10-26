@@ -3,16 +3,19 @@ import axios, { AxiosRequestConfig } from 'axios';
 import styled from 'styled-components';
 import { Upload as UploadIcon } from '@icon-park/react';
 import COLOR_MAP from '@/styles/colors';
+import { BASE_URL } from '@/configs';
 
 const Box = styled.div`
   position: relative;
   width: 100%;
-  border-radius: 4px;
-  background-color: ${COLOR_MAP.white4};
+  height: 100%;
+  border-radius: 5px;
+  background-color: ${COLOR_MAP.white3};
   min-height: 80px;
   cursor: pointer;
   display: flex;
   justify-content: center;
+  align-items: center;
 `;
 
 const Mask = styled.div`
@@ -21,8 +24,36 @@ const Mask = styled.div`
   left: 0;
   background-color: ${COLOR_MAP.primary};
   height: 100%;
-  border-radius: 8px;
+  border-radius: 5px;
   z-index: 1;
+`;
+
+const Pre = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+  }
+`;
+
+const T = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  span {
+    margin-left: 4px;
+  }
 `;
 
 export interface UploadProps {
@@ -43,20 +74,18 @@ export default function Upload(props: UploadProps) :React.ReactElement {
   const { url, onFinish, onFailed, allowExtensions } = props;
   const [status, setStatus] = React.useState(null);
   const [width, setWidth] = React.useState<number | string>(0);
-  const [filename, setFilename] = React.useState(null);
+  const [result, setResult] = React.useState(null);
 
   const ref = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const SUCCESS = '上传成功';
-  const FAILED = '失败';
 
   const handleClick = () => {
     if (inputRef.current) {
       inputRef.current.click();
       setWidth(0);
       setStatus(null);
-      setFilename(null);
     }
   };
 
@@ -66,8 +95,7 @@ export default function Upload(props: UploadProps) :React.ReactElement {
     
     if (!allowExtensions?.includes(n)) {
       setWidth('100%');
-      setFilename('不被允许的格式');
-      setStatus(FAILED);
+      setStatus('不支持的格式');
       return;
     }
 
@@ -94,39 +122,62 @@ export default function Upload(props: UploadProps) :React.ReactElement {
         setStatus(SUCCESS);
         if (onFinish) {
           onFinish(resp.data.data);
-          setFilename(resp.data.data.origin);
+          setResult(resp.data.data);
         }
       } else {
-        setStatus(FAILED);
+        setStatus('上传失败');
         if (onFailed) onFailed();
       }
     })();
   };
 
-  const maskColor = () => {
-    if (status === FAILED) return COLOR_MAP.red;
-    if (status === SUCCESS) return COLOR_MAP.green;
-    return COLOR_MAP.primary;
-  };
+  const MASK_COLOR =
+    status === null
+      ? COLOR_MAP.green
+      : (status === SUCCESS ? 'transparent' : COLOR_MAP.red);
+
+  const BOX_BORDRE_COLOR =
+    status === null
+      ? COLOR_MAP.primary
+      : (status === SUCCESS ? COLOR_MAP.green : COLOR_MAP.red);
 
   return (
-    <Box className='component-upload' ref={ref} onClick={handleClick}>
-      <Mask style={{width: width, backgroundColor: maskColor()}} />
+    <Box
+      className='component-upload'
+      ref={ref}
+      onClick={handleClick}
+      style={{borderColor: BOX_BORDRE_COLOR}}
+    >
       <input
         type='file'
         onChange={handleChange}
-        style={{width: 1, height: 1}}
+        style={{width: 1, height: 1, position: 'absolute'}}
         ref={inputRef}
       />
-      <div
-        style={{zIndex: 2, color: COLOR_MAP.white, top: 16, position: 'absolute'}}
-      >{ status || <UploadIcon theme="outline" size="24" fill="#333"/> }</div>
-      <span style={{
-        position: 'absolute',
-        bottom: 8,
-        zIndex: 2,
-        color: COLOR_MAP.white,
-      }}>{ filename && filename?.slice(0, 8) + '...' + filename?.split('.').pop() }</span>
+      {
+        status === SUCCESS
+          ? <Preview result={result} />
+          :
+          <>
+            <Mask style={{width: width, backgroundColor: MASK_COLOR}} />
+            <UploadText txt={status} />
+          </>
+      }
     </Box>
   );
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Preview = ({result}: {result: any}) => (
+  <Pre><img src={BASE_URL + result?.url} alt={result?.filename} /></Pre>
+);
+
+const UploadText = ({txt}: {txt?: string}) => (
+  <T>
+    {
+      txt
+        ? <span style={{color: COLOR_MAP.white2}}>{ txt }</span>
+        : <><UploadIcon theme="outline" size="24" fill="#333"/><span>点击上传</span></>
+    }
+  </T>
+);
