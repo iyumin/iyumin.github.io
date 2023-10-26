@@ -1,6 +1,6 @@
 import api from '@/utils/axios';
 import { BASE_URL } from '@/configs';
-import { IPost } from '@/types';
+import { IPost, IUser } from '@/types';
 
 type ReturnType = Promise<{
   posts?: IPost[];
@@ -22,6 +22,7 @@ export async function login(data: LoginData) {
   return;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function fetchPosts(offset: number, limit: number, prs: any=null) :ReturnType {
   const url = BASE_URL + '/post/list';
   let params = { offset, limit, status: 'publish' };
@@ -74,6 +75,24 @@ export async function fetchPost(uid: string) :Promise<IPost> {
 export async function fetchLogs(start: number, end: number) :ReturnType {
   const url = BASE_URL + `/logs?start=${start}&end=${end}`;
   const resp = await api.get(url);
+  if (resp.data.code === 0) return resp.data.data;
+  return;
+}
+
+interface UserParams {
+  username?: string;
+  nickname?: string;
+}
+
+interface UserData {
+  amount: number;
+  users: IUser[];
+}
+
+
+export async function fetchUsers(params?: UserParams) :Promise<UserData> {
+  const url = BASE_URL + '/user';
+  const resp = await api.get(url, {params});
   if (resp.data.code === 0) return resp.data.data;
   return;
 }

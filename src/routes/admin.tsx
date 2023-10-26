@@ -13,6 +13,7 @@ const AdminArticlePage = React.lazy(() => import('../pages/admin/posts'));
 const AdminHomePage = React.lazy(() => import('../pages/admin/home'));
 const AdminLoggerViewer = React.lazy(() => import('../pages/admin/logs-view'));
 const CoverEdit = React.lazy(() => import('../pages/admin/cover'));
+const UserAdmin = React.lazy(() => import('../pages/admin/users'));
 
 const adminHomeRoute: IRouteItem = {
   key: 0,
@@ -65,7 +66,7 @@ const editRouteItems: IRouteItem[] = [
     paths: ['', 'admin', 'users'],
     name: 'admin-users',
     title: '用户管理',
-    component: null,
+    component: UserAdmin,
     exact: true,
     type: 'hash',
   },

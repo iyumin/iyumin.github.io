@@ -39,6 +39,7 @@ export interface IUser extends IBase {
   location?: string;
   role?: string;
   group?: string;
+  avatar?: string;
 }
 
 export interface IComment extends IPost {}
