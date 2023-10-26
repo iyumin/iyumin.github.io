@@ -25,6 +25,7 @@ function Button (props: ButtonProps) :React.ReactElement {
     danger,
     disabled = false,
     onClick,
+    style,
     ...restProps
   } = props;
 
@@ -54,6 +55,7 @@ function Button (props: ButtonProps) :React.ReactElement {
         backgroundColor: disabled ? COLOR_MAP.white6 : backgroundColor,
         color:fontColor,
         cursor: disabled ? 'not-allowed' : 'pointer',
+        ...style,
       }}
       onClick={e => {
         if (disabled) {

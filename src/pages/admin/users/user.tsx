@@ -36,6 +36,11 @@ const U = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
     }
   }
   .right {
@@ -87,9 +92,10 @@ const U = styled.div`
 
 export interface UserProps {
   user: IUser;
+  onClick?(u: IUser): void;
 }
 
-export function UserInfo({ user }: UserProps): React.ReactElement {
+export function UserInfo({ user, onClick }: UserProps): React.ReactElement {
   const [loc, setLoc] = React.useState(null);
 
   React.useEffect(() => {
@@ -101,7 +107,7 @@ export function UserInfo({ user }: UserProps): React.ReactElement {
   }, []);
 
   return (
-    <U>
+    <U onClick={() => onClick(user)}>
       <div className="left">
         <div className="avatar">
           {user.avatar ? (

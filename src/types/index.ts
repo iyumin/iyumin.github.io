@@ -41,6 +41,8 @@ export interface IUser extends IBase {
   group?: string;
   avatar?: string;
   motto?: string;
+  description?: string;
+  invitation?: string;
 }
 
 export interface IComment extends IPost {}
