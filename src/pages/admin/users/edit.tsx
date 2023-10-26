@@ -6,7 +6,7 @@ import { Select, Option } from '@/components/inputs/select';
 import COLOR_MAP from '@/styles/colors';
 import Upload from '@/components/inputs/upload';
 import { BASE_URL } from '@/configs';
-import { updateUser } from '@/apis/user';
+import { updateUser, addUser } from '@/apis/user';
 
 const Content = styled.div`
   display: flex;
@@ -14,6 +14,8 @@ const Content = styled.div`
   padding: 8px 16px;
   border-radius: 5px;
   border: 1px solid ${COLOR_MAP.blue};
+  background-color: ${COLOR_MAP.white};
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   .item {
     display: flex;
     align-items: center;
@@ -32,6 +34,13 @@ const Content = styled.div`
     width: 100%;
   }
   .upload-avatar {
+    width: 188px;
+    display: flex;
+    justify-content: center;
+    div {
+      width: 152px;
+      height: 152px;
+    }
     img {
       object-fit: cover;
       width: 100%;
@@ -43,6 +52,7 @@ const Content = styled.div`
 export interface UserEditProps {
   user?: IUser
   onSuccess?(): void;
+  onBlur?(): void;
 }
 
 interface Action {
@@ -54,7 +64,7 @@ const reducer = (state: IUser, action: Action) => {
   return { ...state, ...action.payload };
 };
 
-export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
+export function UserEdit({user, onSuccess, onBlur}: UserEditProps) :React.ReactElement {
   const [state, dispatch] = React.useReducer(reducer, user)
 
   const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,34 +74,48 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
   }
 
   const handleSubmit = () => {
-    (async() => {
-      const data = await updateUser(state.uid, state);
-      if (data) {
-        window.alert('更新成功');
-        if (onSuccess) onSuccess();
-      }
-    })();
+    if (state.uid) {
+      (async() => {
+        const data = await updateUser(state.uid, state);
+        if (data) {
+          window.alert('更新成功');
+          if (onSuccess) onSuccess();
+        } else window.alert('添加失败');
+      })();
+    } else {
+      (async() => {
+        const data = await addUser(state);
+        if (data) {
+          window.alert('添加成功');
+          if (onSuccess) onSuccess();
+        } else window.alert('添加失败');
+      })();
+    }
   }
 
   return (
-    <>
+    <div tabIndex={0} onBlur={() => {
+      if (onBlur) onBlur();
+    }}>
       <Content>
         <div className='edit-form'>
           <div className='item'>
             <label>头像</label>
-            <div className='upload-avatar' style={{width: 110, height: 110, overflow: 'hidden'}}>
-              {
-                !state.avatar
-                  ?
-                  <Upload
-                    url={BASE_URL + '/upload'}
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    onFinish={(data: any) => dispatch({type: '', payload: {avatar: data.url}})}
-                    allowExtensions={['jpg', 'png', 'jpeg', 'gif', 'webp']}
-                  />
-                  :
-                  <img src={BASE_URL + state.avatar} alt={state.username} />
-              }
+            <div className='upload-avatar'>
+              <div>
+                {
+                  !state.avatar
+                    ?
+                    <Upload
+                      url={BASE_URL + '/upload'}
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      onFinish={(data: any) => dispatch({type: '', payload: {avatar: data.url}})}
+                      allowExtensions={['jpg', 'png', 'jpeg', 'gif', 'webp']}
+                    />
+                    :
+                    <img src={BASE_URL + state.avatar} alt={state.username} />
+                }
+              </div>
             </div>
           </div>
           <div className='item'>
@@ -111,7 +135,7 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
               defaultValue={user.invitation}
               value={state.invitation}
               onChange={setValue}
-              disabled
+              disabled={Boolean(state.uid)}
             />
           </div>
           <div className='item'>
@@ -211,9 +235,11 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             type='primary'
             style={{width: 200, height: 40}}
             onClick={handleSubmit}
-          >更新</Button>
+          >
+            { state.uid ? '更新' : '注册' }
+          </Button>
         </div>
       </Content>
-    </>
+    </div>
   )
 }

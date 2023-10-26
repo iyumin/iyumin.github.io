@@ -157,7 +157,7 @@ export function UserInfo({ user, onClick }: UserProps): React.ReactElement {
           <span className="icon">
             <Local theme="outline" size="14" />
           </span>
-          <span>{loc || user.location || "未知地点"}</span>
+          <span>{loc || user.location.slice(0, 20) + '...' || "未知地点"}</span>
         </div>
       </div>
     </U>

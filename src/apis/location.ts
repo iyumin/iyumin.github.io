@@ -14,7 +14,11 @@ export interface Location {
 }
 
 export async function getLocation(lat: number, lng: number) :Promise<Location> {
-  const resp = await api.get(LOC_URL, {params: {lat, lng}});
-  if (resp.data.code === 200) return resp.data.data;
-  return;
+  try {
+    const resp = await api.get(LOC_URL, {params: {lat, lng}});
+    if (resp.data.code === 200) return resp.data.data;
+    return;
+  } catch (e) {
+    return;
+  }
 }

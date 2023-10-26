@@ -9,3 +9,10 @@ export async function updateUser(uid: string,data: IUser) {
   if (resp.data.code === 0) return true;
   return;
 }
+
+export async function addUser(data: IUser) {
+  const url = BASE_URL + '/user';
+  const resp = await api.post(url, data);
+  if (resp.data.code === 0) return true;
+  return;
+}
