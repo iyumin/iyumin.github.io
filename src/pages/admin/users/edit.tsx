@@ -64,7 +64,7 @@ const reducer = (state: IUser, action: Action) => {
   return { ...state, ...action.payload };
 };
 
-export function UserEdit({user, onSuccess, onBlur}: UserEditProps) :React.ReactElement {
+export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
   const [state, dispatch] = React.useReducer(reducer, user)
 
   const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,9 +94,7 @@ export function UserEdit({user, onSuccess, onBlur}: UserEditProps) :React.ReactE
   }
 
   return (
-    <div tabIndex={0} onBlur={() => {
-      if (onBlur) onBlur();
-    }}>
+    <div tabIndex={0}>
       <Content>
         <div className='edit-form'>
           <div className='item'>
