@@ -6,8 +6,6 @@ import dayjs from 'dayjs';
 import { IPost } from '@/types';
 import COLOR_MAP from '@/styles/colors';
 import { Skeleton } from '@/components';
-import { RightNavi } from '../_partial';
-import { rootRouteItems } from '@/routes';
 import { BASE_URL } from '@/configs';
 import { fetchArticles } from '@/apis';
 
@@ -110,7 +108,6 @@ function transformList(origin: IPost[]) :IPost[] {
 }
 
 export default function ArticlesPage () :React.ReactElement {
-  const [isNavOpen, setIsNavOpen] = React.useState(false);
   const [list, setList] = React.useState<IPost[]>();
   const [offset, setOffset] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(true);
@@ -176,11 +173,6 @@ export default function ArticlesPage () :React.ReactElement {
         hasMore &&
         <LoadMore role="button" onClick={handleClickMore}>点击加载更多</LoadMore>
       }
-      <RightNavi
-        isOpen={isNavOpen}
-        onClick={() => setIsNavOpen(!isNavOpen)}
-        menus={rootRouteItems}
-      />
     </Container>
   );
 }
@@ -191,7 +183,7 @@ const renderSkeleton = () => {
     sk.push((
       <Sk className='wait'>
         <div className='left'>
-        <Skeleton height={200} width={320} />
+          <Skeleton height={200} width={320} />
         </div>
         <div className='right'>
           <div className='item'><Skeleton height={20} width={460} /></div>
@@ -205,4 +197,4 @@ const renderSkeleton = () => {
     ));
   }
   return sk;
-}
+};

@@ -1,8 +1,6 @@
 import React from 'react';
 
-import { rootRouteItems } from '@/routes';
 import { ViewportProvider } from '@/hooks';
-import { RightNavi } from '../_partial';
 import { BASE_URL } from '@/configs';
 import { fetchCovers } from '@/apis';
 import { random_int } from '@/utils';
@@ -11,7 +9,6 @@ import Background from './background';
 import Gallery from './gallery';
 
 export default function GalleryPage () :React.ReactElement {
-  const [isRightNaviOpen, setIsRightNaviOpen] = React.useState(false);
   const [cover, setCover] = React.useState<string>();
 
   const verses = [
@@ -107,11 +104,6 @@ export default function GalleryPage () :React.ReactElement {
         verse={verses[random_int(0, verses.length)]}
       />
       <Gallery />
-      <RightNavi
-        isOpen={isRightNaviOpen}
-        onClick={e => {e.preventDefault(); setIsRightNaviOpen(!isRightNaviOpen);}}
-        menus={rootRouteItems}
-      />
     </ViewportProvider>
   );
 }

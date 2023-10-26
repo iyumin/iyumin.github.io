@@ -7,8 +7,7 @@ import { Left } from '@icon-park/react';
 import { IPost } from '@/types';
 import { Skeleton } from '@/components';
 import { fetchPost } from '@/apis';
-import { RightNavi, Comment } from '../_partial';
-import { rootRouteItems } from '@/routes';
+import { Comment } from '../_partial';
 import COLOR_MAP from '@/styles/colors';
 import { useHistory } from 'react-router-dom';
 
@@ -76,7 +75,6 @@ const Sk = styled.div`
 
 export default function ArticlePage () :React.ReactElement {
   const [article, setArticle] = React.useState<IPost>();
-  const [isRightNaviOpen, setIsRightNaviOpen] = React.useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const params: any = useParams();
 
@@ -94,11 +92,6 @@ export default function ArticlePage () :React.ReactElement {
       <div style={{marginTop:64,maxWidth:1000,padding:16}}>
         <Comment />
       </div>
-      <RightNavi
-        menus={rootRouteItems}
-        isOpen={isRightNaviOpen}
-        onClick={e => {e.preventDefault(); setIsRightNaviOpen(!isRightNaviOpen);}}
-      />
     </Container>
   );
 }

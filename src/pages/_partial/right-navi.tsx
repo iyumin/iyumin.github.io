@@ -38,13 +38,14 @@ const RightMenus = styled.div`
 `;
 
 interface IProps {
-  isOpen: boolean,
-  onClick: React.MouseEventHandler<HTMLElement>,
+  isOpen?: boolean,
+  onClick?: React.MouseEventHandler<HTMLElement>,
   menus: IRouteItem[],
 }
 
 export default function RightNavi (props: IProps) :React.ReactElement {
-  const { isOpen, onClick, menus } = props;
+  const { isOpen=false, onClick , menus } = props;
+  const [visible, setVisible] = React.useState(isOpen);
 
   const rightNaviWidth = 300;
   const rightNavMenuWidth = 44;
@@ -54,7 +55,7 @@ export default function RightNavi (props: IProps) :React.ReactElement {
   const classnames = (menu: IRouteItem) => {
     const url = menu.paths.join('/');
 
-    if (url === location.pathname && isOpen) {
+    if (url === location.pathname && visible) {
       return 'right-navi-menu-item actived';
     } else {
       return 'right-navi-menu-item';
@@ -69,9 +70,14 @@ export default function RightNavi (props: IProps) :React.ReactElement {
     }
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    setVisible(!visible);
+    if (onClick) onClick(e);
+  };
+
   React.useEffect(() => {
     const handleScroll = (e: Event) => {
-      isOpen && e.preventDefault();
+      visible && e.preventDefault();
     };
 
     window.addEventListener('wheel', handleScroll, {passive: false});
@@ -79,7 +85,7 @@ export default function RightNavi (props: IProps) :React.ReactElement {
     return () => {
       window.removeEventListener('wheel', handleScroll);
     };
-  }, [isOpen]);
+  }, [visible]);
 
   return (
     <>
@@ -87,24 +93,24 @@ export default function RightNavi (props: IProps) :React.ReactElement {
         className="page-article-right-navi"
         style={{
           width: rightNaviWidth,
-          right:isOpen ? 0 : rightNavMenuWidth - rightNaviWidth,
-          backgroundColor: isOpen ? '#fff' : 'transparent',
+          right:visible ? 0 : rightNavMenuWidth - rightNaviWidth,
+          backgroundColor: visible ? '#fff' : 'transparent',
         }}
       >
         <div style={{
-          marginLeft:isOpen ? 16 : 0,
+          marginLeft:visible ? 16 : 0,
           transition:'all .5s ease-in-out',
           cursor:'pointer',
         }}>
           {
-            isOpen
+            visible
               ?
               <MenuUnfold
                 theme="outline"
                 size="32"
                 fill="#555555"
                 strokeWidth={2}
-                onClick={onClick}
+                onClick={handleClick}
               />
               :
               <MenuFold
@@ -112,16 +118,16 @@ export default function RightNavi (props: IProps) :React.ReactElement {
                 size="32"
                 fill="#d1d1d1"
                 strokeWidth={2}
-                onClick={onClick}
+                onClick={handleClick}
               />
           }
         </div>
-        <RightMenus style={{visibility: isOpen ? 'visible' : 'hidden'}}>
+        <RightMenus style={{visibility: visible ? 'visible' : 'hidden'}}>
           {
             menus.map(menu => {
               if (menu.paths.length === 2 && !(menu.show===false)) {
                 return (
-                  <div className={classnames(menu)} key={menu.key}>
+                  <div className={classnames(menu)} key={menu.key} onClick={handleClick}>
                     <a href={_judegPaths(menu)}>{menu.title}</a>
                   </div>
                 );
@@ -130,7 +136,7 @@ export default function RightNavi (props: IProps) :React.ReactElement {
           }
         </RightMenus>
       </Right>
-      { isOpen && <Mask style={{zIndex:998}} /> }
+      { visible && <Mask style={{zIndex:998}} onClick={() => setVisible(false)} /> }
     </>
   );
 }
