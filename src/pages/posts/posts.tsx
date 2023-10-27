@@ -27,6 +27,9 @@ const ArticleItem = styled.div`
   transition: all .3s ease-in-out;
   display: flex;
   border: 1px solid ${COLOR_MAP.white4};
+  &:hover {
+    border-color: ${COLOR_MAP.primary};
+  }
 `;
 
 const Cover = styled.div`
@@ -46,7 +49,6 @@ const Cover = styled.div`
 const Info = styled.div`
   position: relative;
   width: 56%;
-  background-color: #fff;
   color: ${COLOR_MAP.dark};
   border-radius: 0 4px 4px 0;
   flex-grow: 1;
@@ -81,7 +83,7 @@ const LoadMore = styled.div`
   cursor: pointer;
   border-radius: 4px;
   &:hover {
-    background-color: ${COLOR_MAP.white3};
+    border-color: ${COLOR_MAP.primary};
   }
 `;
 
