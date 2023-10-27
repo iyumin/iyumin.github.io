@@ -5,6 +5,10 @@ import { Button } from '@/components/button';
 import { Dialog } from '@/components/dialog';
 import { LoginForm } from '@/apis/auth';
 import { getLocalStorage } from '..';
+import { fetchUser } from '@/apis/user';
+import { IUser } from '@/types';
+import { BASE_URL } from '@/configs';
+import COLOR_MAP from '@/styles/colors';
 
 const Nav = styled.div`
   width: 100%;
@@ -14,19 +18,38 @@ const Nav = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 60px 0 0;
+  .logo {
+    padding-left: 48px;
+    display: flex;
+    align-items: center;
+    .version {
+      position: relative;
+      top: 4px;
+      margin-left: 16px;
+      color: ${COLOR_MAP.white7};
+    }
+  }
   .container {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    .version {
-      margin-right: 16px;
-    }
     .user-status {
       .user {
         display: flex;
         align-items: center;
+        margin-left: 32px;
         .name {
           margin: 0 8px;
+        }
+        .avatar {
+          width: 44px;
+          height: 44px;
+          border-radius: 7px;
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+          }
         }
       }
     }
@@ -87,6 +110,7 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
   // states 2. login - username & password
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [user, setUser] = React.useState<IUser>();
 
   /**
    * 处理点击【提交】按钮事件
@@ -123,7 +147,9 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
    */
   const renderUser = () => (
     <div className="user">
-      <div className="avatar"></div>
+      <div className="avatar">
+        <img src={BASE_URL + user?.avatar} alt={user?.username} />
+      </div>
       <div className="name">{getLocalStorage().name}</div>
       <div className="level"></div>
       <div className="logout">
@@ -132,11 +158,22 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
     </div>
   );
 
+  React.useEffect(() => {
+    (async() => {
+      const resp = await fetchUser(getLocalStorage().name);
+      if (typeof resp !== 'string') {
+        setUser(resp.data.users[0]);
+      }
+    })();
+  }, [username]);
+
   return (
     <Nav className="admin-navbar">
-      <div className="logo"><h2>后台管理系统</h2></div>
+      <div className="logo">
+        <span><h2>后台管理系统</h2></span>
+        <span className="version">v2.0.0-20231027</span>
+      </div>
       <div className="container">
-        <div className="version">v1.1.0</div>
         <div className="search">
           <Input value={searchValue} onChange={e => setSearchValue(e.target.value)} />
         </div>

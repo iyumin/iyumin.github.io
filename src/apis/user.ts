@@ -30,3 +30,9 @@ export async function addUser(data: IUser) :Response {
   if (resp.data.code === 0) return resp.data;
   return resp.data.msg;
 }
+
+export async function fetchUser(username: string) :Response<UsersData> {
+  const resp = await api.get(USER_URL, { params: { username }});
+  if (resp.data.code === 0) return resp.data;
+  return resp.data.msg;
+}
