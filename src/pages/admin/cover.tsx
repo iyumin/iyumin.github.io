@@ -65,6 +65,7 @@ export default function CoverEdit() :React.ReactElement {
           format: d.ext,
           category: 'cover',
           excerpt: '用于首页封面',
+          status: 'publish',
         });
         if (data){
           window.alert('添加封面成功');
@@ -108,16 +109,6 @@ export default function CoverEdit() :React.ReactElement {
               onFinish={handleFinish}
               allowExtensions={['jpg', 'jpeg', 'webp', 'png']}
             />
-          </div>
-          <div className='uploaded'>
-            {
-              url &&
-              <img
-                src={BASE_URL + url}
-                title='gallery-cover'
-                style={{width: '100%', height:'100%', objectFit: 'cover'}}
-              />
-            }
           </div>
         </div>
         <div className='preview'>

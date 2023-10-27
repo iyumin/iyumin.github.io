@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components';
 import { IPost } from '@/types';
 import { fetchPosts, deletePost } from '@/apis/posts';
@@ -29,16 +29,16 @@ const TableContainer = styled.div`
   }
 `;
 
-export default function AdminArticlePage(): React.ReactElement {
+export default function PostAdmin(): React.ReactElement {
   const PAGE_LIMIT = 6;
-  const history = useHistory();
+  const navigate = useNavigate();
   const [posts, setPosts] = React.useState<IPost[]>(null);
   const [offset, setOffset] = React.useState(0);
   const [hasPrev, setHasPrev] = React.useState(false);
   const [hasNext, setHasNext] = React.useState(true);
 
   const clickAdd = (t: string) => {
-    history.push(`/add/${t}/0`);
+    navigate(`/add/${t}/0`);
     return;
   };
 
@@ -53,11 +53,11 @@ export default function AdminArticlePage(): React.ReactElement {
   };
 
   const editTableRow = (p: IPost) => {
-    history.push(`/update/${p.type}/${p.uid}`);
+    navigate(`/update/${p.type}/${p.uid}`);
   };
 
   const clickViewPost = (p: IPost) => {
-    history.push(`/${p.type}/${p.uid}`);
+    navigate(`/${p.type}/${p.uid}`);
   };
 
   const clickDelRow = (p: IPost) => {

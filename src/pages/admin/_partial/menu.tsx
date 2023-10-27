@@ -5,10 +5,7 @@ import COLOR_MAP from '@/styles/colors';
 
 import { BlocksAndArrows, Config, } from '@icon-park/react';
 
-import { adminHomeRoute, generalRouteItems, editRouteItems } from '@/routes';
-import { IRouteItem } from '@/types';
-
-const NavigatorStyled = styled.div`
+const LM = styled.div`
   margin-top: 10px;
   height: calc(100vh - 70px);
   width: 250px;
@@ -19,34 +16,32 @@ const NavigatorStyled = styled.div`
   }
 `;
 
-export default function Navigator () :React.ReactElement {
-  const renderMenuItem = (item: IRouteItem) => (
-    <Menu.Item icon={item.icon} key={item.key}>
-      <Link to={item.paths.join('/')}>{ item.title }</Link>
-    </Menu.Item>
-  );
-
+export default function LeftMenu() {
   return (
-    <NavigatorStyled className="admin-navigator">
+    <LM className="admin-navigator">
       <Menu mode="inline">
-        <Menu.Item icon={adminHomeRoute.icon}>
-          <Link to={adminHomeRoute.paths.join('/')}>{adminHomeRoute.title}</Link>
+        <Menu.Item>
+          <Link to={'/admin'}>Home</Link>
         </Menu.Item>
         <Menu.SubMenu
           title="内容管理"
           isOpen
           icon={<BlocksAndArrows theme="outline" size="20" fill="#333" strokeWidth={2}/>}
         >
-          { generalRouteItems.map(renderMenuItem) }
+          {
+            [
+              <div className=''>Post</div>
+            ]
+          }
         </Menu.SubMenu>
         <Menu.SubMenu
           title="系统管理"
           isOpen
           icon={<Config theme="outline" size="20" fill="#333" strokeWidth={2}/>}
         >
-          { editRouteItems.map(renderMenuItem) }
+          { ['hello', 'heelo'] }
         </Menu.SubMenu>
       </Menu>
-    </NavigatorStyled>
+    </LM>
   );
 }

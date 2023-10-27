@@ -2,17 +2,14 @@ import React, { ReactElement } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { Loading } from '@/components';
 import { login, LoginForm } from '@/apis/auth';
 import Navbar from './_partial/navbar';
-import Navigator from './_partial/menu';
+import LeftMenu from './_partial/menu';
 
-import { adminHomeRoute, generalRouteItems, editRouteItems } from '@/routes';
-
-/**
- * 管理页面的路由
- */
-const adminPageRoutes = generalRouteItems.concat(adminHomeRoute).concat(editRouteItems);
+import PostAdmin from './posts';
+import UserAdmin from './users';
+import HomeAdmin from './home';
+import CoverAdmin from './cover';
 
 const Admin = styled.div`
   height: 100vh;
@@ -132,21 +129,16 @@ export default function AdminPage () :ReactElement {
         onCancel={handleCancel}
       />
       <div className="main-container">
-        <Navigator />
+        <div className='menu-content'>
+          <LeftMenu />
+        </div>
         <div className="admin-content">
-          <React.Suspense fallback={<Loading />}>
-            <Routes>
-              {
-                adminPageRoutes.map(p => (
-                  <Route
-                    path={p.paths.join('/')}
-                    element={p.component}
-                    key={p.key}
-                  />
-                ))
-              }
-            </Routes>
-          </React.Suspense>
+          <Routes>
+            <Route path='home' element={<HomeAdmin />} />
+            <Route path='post' element={<PostAdmin />} />
+            <Route path='user' element={<UserAdmin />} />
+            <Route path='cover' element={<CoverAdmin />} />
+          </Routes>
         </div>
       </div>
     </Admin>
