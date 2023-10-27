@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 import { IPost } from '@/types';
@@ -113,7 +113,7 @@ export function ArticlesPage () :React.ReactElement {
   const [hasMore, setHasMore] = React.useState(true);
   
   const pageLimit = 5;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClickMore = async () => {
     const data = await fetchPosts(offset+pageLimit, pageLimit, {type: 'article'});
@@ -126,7 +126,7 @@ export function ArticlesPage () :React.ReactElement {
   };
 
   const handleClickArticle = (a: IPost) => {
-    history.push(`/article/${a.uid}`);
+    navigate(`/article/${a.uid}`);
   };
 
   const renderItem = (a: IPost) => {

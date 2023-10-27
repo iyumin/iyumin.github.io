@@ -2,6 +2,11 @@ import api from '@/utils/axios';
 import { LOGIN_URL } from './_url';
 import { Response } from '@/types';
 
+export interface LoginForm {
+  username: string;
+  password: string;
+}
+
 export interface LoginData {
   token: string;
 }

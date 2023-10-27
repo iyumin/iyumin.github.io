@@ -9,7 +9,6 @@ import { Skeleton } from '@/components';
 import { fetchPost } from '@/apis/posts';
 import { Comment } from '../_partial';
 import COLOR_MAP from '@/styles/colors';
-import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
   max-width: 1000px;
@@ -97,8 +96,6 @@ export default function ArticlePage () :React.ReactElement {
 }
 
 const renderContent = (article: IPost) => {
-  const history = useHistory();
-
   return (
     <div className='article-content'>
       <div className='back'>

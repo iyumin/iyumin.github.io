@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
-import { Redirect, useHistory, Route, Switch } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Loading } from '@/components';
-import { login, LoginData } from '@/apis';
+import { login, LoginForm } from '@/apis/auth';
 import Navbar from './_partial/navbar';
 import Navigator from './_partial/menu';
 
@@ -47,8 +47,6 @@ export default function AdminPage () :ReactElement {
   const [isLogin, setIsLogin] = React.useState(false);
   const [isLoginDialogVisible, setIsDialogVisible] = React.useState(false);
 
-  const history = useHistory();
-
   /**
    * 集中清理 localStorage 中存储的值
    */
@@ -72,11 +70,11 @@ export default function AdminPage () :ReactElement {
    * @param e 鼠标事件
    * @param form 用户信息表单
    */
-  const handleSubmit = (e: React.MouseEvent<HTMLElement>, form:LoginData) => {
+  const handleSubmit = (e: React.MouseEvent<HTMLElement>, form: LoginForm) => {
     (async() => {
       const data = await login(form);
-      if (data) {
-        setLocalStorage(data.token, form.username);
+      if (typeof data !== 'string') {
+        setLocalStorage(data.data.token, form.username);
         setIsDialogVisible(false);
         setIsLogin(true);
         history.go(0);
@@ -137,19 +135,17 @@ export default function AdminPage () :ReactElement {
         <Navigator />
         <div className="admin-content">
           <React.Suspense fallback={<Loading />}>
-            <Switch>
+            <Routes>
               {
                 adminPageRoutes.map(p => (
                   <Route
-                    exact={p.exact}
                     path={p.paths.join('/')}
-                    component={p.component}
+                    element={p.component}
                     key={p.key}
                   />
                 ))
               }
-              <Redirect from="/admin" to="/admin/home" />
-            </Switch>
+            </Routes>
           </React.Suspense>
         </div>
       </div>

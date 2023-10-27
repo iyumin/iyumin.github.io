@@ -53,7 +53,7 @@ export interface IRouteItem {
   paths: Array<string>,
   name: string,
   title: string,
-  component: React.ComponentType,
+  component: React.ReactNode,
   exact: boolean,
   type: 'history' | 'hash',
   show?: boolean,
