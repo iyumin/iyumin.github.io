@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Inline from './inline';
 import Item from './menu-item';
-import SubMenu from './sub-menu';
+import { SubMenu, SubMenuItem } from './sub-menu';
 
 type MenuProps = {
   mode: 'horizontal' | 'inline',
@@ -19,8 +19,9 @@ function Menu (props: MenuProps) :React.ReactElement {
 
 Menu.Item = Item;
 Menu.SubMenu = SubMenu;
+Menu.SubMenuItem = SubMenuItem;
 
 export {
   Menu,
   MenuProps,
-};
+}

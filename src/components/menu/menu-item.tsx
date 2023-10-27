@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import COLOR_MAP from '@/styles/colors';
 import {
-  SUB_ITEM_CONTAINER_PADDING,
+  SUB_MENU_PADDING,
   ITEM_HEIGHT,
   ITEM_LEFT_PADDING,
   ITEM_FONT_SIZE
-} from './config';
+} from './constant';
 
 export type MenuItemProps = {
   children: React.ReactNode,
@@ -24,10 +24,10 @@ const ItemStyled = styled.div`
     color: ${COLOR_MAP.blue}
   }
   &:nth-child(1) {
-    padding-top: ${basicPadding + SUB_ITEM_CONTAINER_PADDING}px;
+    padding-top: ${basicPadding + SUB_MENU_PADDING}px;
   }
   &:last-child {
-    padding-bottom: ${basicPadding + SUB_ITEM_CONTAINER_PADDING}px;
+    padding-bottom: ${basicPadding + SUB_MENU_PADDING}px;
   }
 `;
 
