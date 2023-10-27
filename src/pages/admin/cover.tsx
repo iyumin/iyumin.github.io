@@ -144,7 +144,7 @@ const renderPreviewItem = (data: any, onDel?: () => void) => {
   };
 
   return (
-    <div className='preview-item'>
+    <div className='preview-item' key={data.uid}>
       <div className='del' onClick={handleDel}>
         <CloseOne theme="outline" size="24" fill="#d0021b"/>
       </div>

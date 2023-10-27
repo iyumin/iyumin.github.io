@@ -119,8 +119,8 @@ export function Editor(): React.ReactElement {
   const DEFAULT_POST: IPost = {
     title: '',
     author: '',
-    updateAt: dayjs().valueOf(),
-    createAt: dayjs().valueOf(),
+    updateAt: dayjs().unix(),
+    createAt: dayjs().unix(),
     content: '',
     uid: '',
     id: 0,
@@ -177,6 +177,7 @@ export function Editor(): React.ReactElement {
       (async () => {
         const data = await fetchPost(uid);
         if (typeof data !== 'string') {
+          console.log(data);
           dispatch({ type: '', payload: data.data.post });
           weditor.current?.txt.html(data.data.post.content);
         }

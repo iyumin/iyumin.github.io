@@ -58,6 +58,7 @@ export function UserAdmin() :React.ReactElement {
 
   const handleClickUser = (u: IUser) => {
     setPickUser(null);
+    console.log(u);
     setTimeout(() => setPickUser(u), 100);
   }
 

@@ -18,8 +18,8 @@ export interface PostParams {
   status?: string;
 }
 
-const unix_stamp = (n: number | string) => {
-  return Number(String(n).slice(0, 11));
+export const unix_stamp = (n: number | string) => {
+  return Number(String(n).slice(0, 10));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -65,6 +65,12 @@ export async function addPost(data: IPost) :Response {
 
 export async function fetchPost(uid: string) :Response<{post: IPost}> {
   const resp = await api.get(POST_URL, { params: { uid } });
-  if (resp.data.code === 0) return resp.data;
+  if (resp.data.code === 0) {
+    const data = resp.data;
+    data.data.post['updateAt'] = unix_stamp(data.data.post['updateAt']);
+    data.data.post['createAt'] = unix_stamp(data.data.post['createAt']);
+    data.data.post['publishAt'] = unix_stamp(data.data.post['publishAt']);
+    return data;
+  }
   return resp.data.msg;
 }

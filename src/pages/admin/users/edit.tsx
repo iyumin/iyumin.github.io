@@ -123,7 +123,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>用户编码</label>
             <Input
               data-name='uid'
-              defaultValue={user.uid}
               value={state.uid}
               onChange={setValue}
               disabled
@@ -133,7 +132,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>邀请码</label>
             <Input
               data-name='invitation'
-              defaultValue={user.invitation}
               value={state.invitation}
               onChange={setValue}
               disabled={Boolean(state.uid)}
@@ -143,7 +141,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>用户名</label>
             <Input
               data-name='username'
-              defaultValue={user.username}
               value={state.username}
               onChange={setValue}
             />
@@ -152,7 +149,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>密码</label>
             <Input
               data-name='password'
-              defaultValue={''}
               value={state.password}
               onChange={setValue}
             />
@@ -161,7 +157,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>昵称</label>
             <Input
               data-name='nickname'
-              defaultValue={user.nickname}
               value={state.nickname}
               onChange={setValue}
             />
@@ -180,15 +175,14 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>生日</label>
             <DatePicker
               dateFormat="yyyy/MM/dd"
-              selected={state.birthday && dayjs.unix(Number(String(state.birthday).slice(0,11))).toDate()}
-              onChange={d => console.log(d.valueOf())}
+              selected={dayjs.unix(state.birthday).toDate()}
+              onChange={d => dispatch({ type: '', payload: { birthday: dayjs(d).unix() } })}
             />
           </div>
           <div className='item'>
             <label>所在地</label>
             <Input
               data-name='location'
-              defaultValue={user.location}
               value={state.location}
               onChange={setValue}
             />
@@ -197,7 +191,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>用户描述</label>
             <Input
               data-name='description'
-              defaultValue={user.description}
               value={state.description}
               onChange={setValue}
             />
@@ -206,7 +199,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>格言</label>
             <Input
               data-name='motto'
-              defaultValue={user.motto}
               value={state.motto}
               onChange={setValue}
             />
@@ -215,7 +207,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>角色</label>
             <Input
               data-name='role'
-              defaultValue={user.role}
               value={state.role}
               onChange={setValue}
             />
@@ -224,7 +215,6 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
             <label>用户组</label>
             <Input
               data-name='group'
-              defaultValue={user.group}
               value={state.group}
               onChange={setValue}
             />

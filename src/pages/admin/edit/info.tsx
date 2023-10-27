@@ -48,15 +48,15 @@ export function MoreInfo(props: MoreInfoProps) {
 
       <EditItem name="createAt" label="创建">
         <DatePicker
-          selected={dayjs.unix(Number(String(state?.createAt).slice(0,10))).toDate()}
-          onChange={d => setPostValue('createAt', d.valueOf())}
+          selected={dayjs.unix(state?.createAt).toDate()}
+          onChange={d => setPostValue('createAt', dayjs(d).unix())}
         />
       </EditItem>
 
       <EditItem name="updateAt" label="更新">
         <DatePicker
-          selected={state?.updateAt && dayjs.unix(Number(String(state?.updateAt).slice(0,10))).toDate()}
-          onChange={d => setPostValue('updateAt', d.valueOf())}
+          selected={state?.updateAt && dayjs.unix(state?.updateAt).toDate()}
+          onChange={d => setPostValue('updateAt', dayjs(d).unix())}
         />
       </EditItem>
       
