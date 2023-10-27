@@ -1,21 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { MenuFold, MenuUnfold, } from '@icon-park/react';
-import { useLocation } from 'react-router-dom';
-
-import { IRouteItem } from '@/types';
+import { PullDoor, Close } from '@icon-park/react';
+import { NavLink, useLocation } from 'react-router-dom';
+import COLOR_MAP from '@/styles/colors';
 
 const Right = styled.div`
-  transition: all .5s ease-in-out;
+  transition: all .3s ease-in-out;
   position: fixed;
   top: 0;
   height: 100vh;
-  padding: 8px 0;
+  padding: 16px 0;
   z-index: 999;
 `;
 
 const RightMenus = styled.div`
-  padding: 32px 0;
+  padding: 40px 0;
   text-align: center;
   .right-navi-menu-item {
     padding: 16px 0;
@@ -30,15 +29,20 @@ const RightMenus = styled.div`
     }
     a {
       text-decoration: none;
-      color: #000;
+      color: ${COLOR_MAP.white4};
     }
   }
 `;
 
+export interface NavbarItem {
+  title: string;
+  to: string;
+}
+
 export interface NavbarProps {
   isOpen?: boolean,
   onClick?: React.MouseEventHandler<HTMLElement>,
-  menus: IRouteItem[],
+  menus: NavbarItem[],
 }
 
 export function Navbar (props: NavbarProps) {
@@ -50,8 +54,8 @@ export function Navbar (props: NavbarProps) {
 
   const location = useLocation();
 
-  const classnames = (menu: IRouteItem) => {
-    const url = menu.paths.join('/');
+  const classnames = (menu: NavbarItem) => {
+    const url = menu.to;
 
     if (url === location.pathname && visible) {
       return 'right-navi-menu-item actived';
@@ -60,18 +64,19 @@ export function Navbar (props: NavbarProps) {
     }
   };
 
-  const _judegPaths = (menu: IRouteItem) => {
-    if (menu.type === 'hash') {
-      return '/#' + menu.paths.join('/');
-    } else {
-      return menu.paths.join('/');
-    }
-  };
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     setVisible(!visible);
     if (onClick) onClick(e);
   };
+
+  const NavbarItem = ({title, to}: NavbarItem) => {
+    return (
+      <div className={classnames({title, to})} onClick={handleClick}>
+        <NavLink to={to}>{title}</NavLink>
+      </div>
+    )
+  }
 
   React.useEffect(() => {
     const handleScroll = (e: Event) => {
@@ -92,7 +97,7 @@ export function Navbar (props: NavbarProps) {
         style={{
           width: rightNaviWidth,
           right:visible ? 0 : rightNavMenuWidth - rightNaviWidth,
-          backgroundColor: visible ? '#fff' : 'transparent',
+          backgroundColor: visible ? COLOR_MAP.dark : 'transparent',
         }}
       >
         <div style={{
@@ -103,17 +108,17 @@ export function Navbar (props: NavbarProps) {
           {
             visible
               ?
-              <MenuUnfold
+              <Close
                 theme="outline"
-                size="32"
+                size="28"
                 fill="#555555"
                 strokeWidth={2}
                 onClick={handleClick}
               />
               :
-              <MenuFold
+              <PullDoor
                 theme="outline"
-                size="32"
+                size="28"
                 fill="#d1d1d1"
                 strokeWidth={2}
                 onClick={handleClick}
@@ -121,17 +126,7 @@ export function Navbar (props: NavbarProps) {
           }
         </div>
         <RightMenus style={{visibility: visible ? 'visible' : 'hidden'}}>
-          {
-            menus.map(menu => {
-              if (menu.paths.length === 2 && !(menu.show===false)) {
-                return (
-                  <div className={classnames(menu)} key={menu.key} onClick={handleClick}>
-                    <a href={_judegPaths(menu)}>{menu.title}</a>
-                  </div>
-                );
-              }
-            })
-          }
+          { menus.map(m => <NavbarItem title={m.title} to={m.to} />) }
         </RightMenus>
       </Right>
     </>
