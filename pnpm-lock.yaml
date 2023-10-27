@@ -62,14 +62,14 @@ devDependencies:
     specifier: ^20.8.7
     version: 20.8.7
   '@types/react':
-    specifier: ^17.0.69
-    version: 17.0.69
+    specifier: ^18.2.33
+    version: 18.2.33
   '@types/react-datepicker':
     specifier: ^4.19.1
     version: 4.19.1(react-dom@18.2.0)(react@18.2.0)
   '@types/react-dom':
-    specifier: ^17.0.22
-    version: 17.0.22
+    specifier: ^18.2.14
+    version: 18.2.14
   '@types/react-router-dom':
     specifier: ^5.3.3
     version: 5.3.3
@@ -2356,8 +2356,8 @@ packages:
       - react-dom
     dev: true
 
-  /@types/react-dom@17.0.22:
-    resolution: {integrity: sha512-wHt4gkdSMb4jPp1vc30MLJxoWGsZs88URfmt3FRXoOEYrrqK3I8IuZLE/uFBb4UT6MRfI0wXFu4DS7LS0kUC7Q==}
+  /@types/react-dom@18.2.14:
+    resolution: {integrity: sha512-V835xgdSVmyQmI1KLV2BEIUgqEuinxp9O4G6g3FqO/SqLac049E53aysv0oEFD2kHfejeKU+ZqL2bcFWj9gLAQ==}
     dependencies:
       '@types/react': 17.0.69
     dev: true
@@ -2395,6 +2395,14 @@ packages:
       '@types/prop-types': 15.7.9
       '@types/scheduler': 0.16.5
       csstype: 3.1.2
+
+  /@types/react@18.2.33:
+    resolution: {integrity: sha512-v+I7S+hu3PIBoVkKGpSYYpiBT1ijqEzWpzQD62/jm4K74hPpSP7FF9BnKG6+fg2+62weJYkkBWDJlZt5JO/9hg==}
+    dependencies:
+      '@types/prop-types': 15.7.9
+      '@types/scheduler': 0.16.5
+      csstype: 3.1.2
+    dev: true
 
   /@types/scheduler@0.16.5:
     resolution: {integrity: sha512-s/FPdYRmZR8SjLWGMCuax7r3qCWQw9QKHzXVukAuuIJkXkDRwp+Pu5LMIVFi0Fxbav35WURicYr8u1QsoybnQw==}
