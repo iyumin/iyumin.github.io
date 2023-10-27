@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Header } from './_partial/layout';
-import Upload from '@/components/inputs/upload';
+import { Upload } from '@/components/upload';
 import { BASE_URL } from '@/configs';
 import { addPost, fetchPosts, deletePost } from '@/apis/posts';
 import { getLocalStorage } from '.';

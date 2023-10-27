@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import marked from 'marked';
 import WE from 'wangeditor';
 import dayjs from 'dayjs';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from '@icon-park/react';
 
 import { IPost } from '@/types';
-import { Button, Input } from '@/components';
-import Upload from '@/components/inputs/upload';
+import { Button } from '@/components/button';
+import { Input } from '@/components/input';
+import { Upload } from '@/components/upload';
 import { fetchPost, updatePost, addPost } from '@/apis/posts';
 import { BASE_URL } from '@/configs';
 import { MoreInfo } from './info';
@@ -110,7 +111,7 @@ interface Action {
 
 export function Editor(): React.ReactElement {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   // update or add
   const mode = location.pathname.split('/')[1];
   const typ = location.pathname.split('/')[2];
@@ -200,7 +201,7 @@ export function Editor(): React.ReactElement {
     <Frame className='edit-page'>
       <div className='inner'>
         <Header className='header'>
-          <div className='back-icon' onClick={() => history.go(-1)}>
+          <div className='back-icon' onClick={() => navigate(-1)}>
             <ArrowLeft theme="outline" size="28" fill="#333"/>
           </div>
           <div className='title'>
@@ -237,7 +238,7 @@ export function Editor(): React.ReactElement {
             <div className='submit-cancel'>
               <Button onClick={clickSubmit} type='primary'>提交</Button>
               <Button onClick={() => {
-                if (confirm('确定返回？')) history.go(-1);
+                if (confirm('确定返回？')) navigate(-1);
               }} danger>取消</Button>
             </div>
           </Right>

@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/configs";
 
-export const LOGIN_URL = BASE_URL + '/login';
+export const LOGIN_URL = BASE_URL + '/token';
 
 export const POSTS_URL = BASE_URL + '/post/list';
 

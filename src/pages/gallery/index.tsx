@@ -8,7 +8,7 @@ import { random_int } from '@/utils';
 import Background from './background';
 import Gallery from './gallery';
 
-export default function GalleryPage () :React.ReactElement {
+export default function GalleryPage () {
   const [cover, setCover] = React.useState<string>();
 
   const verses = [

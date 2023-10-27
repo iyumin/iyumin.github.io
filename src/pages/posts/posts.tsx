@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 import { IPost } from '@/types';
 import COLOR_MAP from '@/styles/colors';
-import { Skeleton } from '@/components';
+import { Skeleton } from '@/components/skeleton';
 import { BASE_URL } from '@/configs';
 import { fetchPosts } from '@/apis/posts';
 

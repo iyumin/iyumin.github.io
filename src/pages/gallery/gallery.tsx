@@ -4,7 +4,8 @@ import dayjs from 'dayjs';
 import { CalendarThirtyTwo, CrossRingTwo } from '@icon-park/react';
 import { fetchPosts } from '@/apis/posts';
 import { IPost, IExif } from '@/types';
-import { Masonry, IMasonryItem, Loading } from '@/components';
+import { Masonry, MasonryItem } from '@/components/masonry';
+import { Loading } from '@/components/loading';
 import { useDevice, useScroll } from '@/hooks';
 import { BASE_URL } from '@/configs';
 
@@ -55,7 +56,7 @@ const maskStyle = {
   filter: 'opacity(98%)',
 } as React.CSSProperties;
 
-type PhotoItem = IMasonryItem & IPost;
+type PhotoItem = MasonryItem & IPost;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const calculateoriginalSize = (item: PhotoItem, clientWidth: number, clientHeight: number) => {

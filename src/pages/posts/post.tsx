@@ -5,9 +5,9 @@ import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { Left } from '@icon-park/react';
 import { IPost } from '@/types';
-import { Skeleton } from '@/components';
+import { Skeleton } from '@/components/skeleton';
 import { fetchPost } from '@/apis/posts';
-import { Comment } from '../_partial';
+import { Comment } from './comment';
 import COLOR_MAP from '@/styles/colors';
 
 const Container = styled.div`

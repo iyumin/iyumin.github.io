@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { login, LoginForm } from '@/apis/auth';
-import Navbar from './_partial/navbar';
+import TitleBar from './_partial/titlebar';
 import LeftMenu from './_partial/menu';
 
 import PostAdmin from './posts';
@@ -120,7 +120,7 @@ export default function AdminPage () :ReactElement {
 
   return (
     <Admin className="admin">
-      <Navbar
+      <TitleBar
         isLogin={isLogin}
         isLoginDialogVisible={isLoginDialogVisible}
         onSubmit={(e, form) => handleSubmit(e, form)}

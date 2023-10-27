@@ -3,7 +3,10 @@ import dayjs from 'dayjs';
 import { IPost } from '@/types';
 import { getLocalStorage } from '..';
 import { BASE_URL } from '@/configs';
-import { Button, Skeleton, Table, Tag } from '@/components';
+import { Button, } from '@/components/button';
+import { Skeleton } from '@/components/skeleton';
+import { Tag } from '@/components/tag';
+import { Table } from '@/components/table';
 import COLOR_MAP from '@/styles/colors';
 
 export interface PostTableProps {

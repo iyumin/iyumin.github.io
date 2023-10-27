@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { IUser } from '@/types';
-import { Input, Button } from '@/components';
-import { Select, Option } from '@/components/inputs/select';
+import { Input } from '@/components/input';
+import { Button } from '@/components/button';
+import { Select, Option } from '@/components/select';
 import COLOR_MAP from '@/styles/colors';
-import Upload from '@/components/inputs/upload';
+import { Upload } from '@/components/upload';
 import { BASE_URL } from '@/configs';
 import { updateUser, addUser } from '@/apis/user';
 import DatePicker from 'react-datepicker';

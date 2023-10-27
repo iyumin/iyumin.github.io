@@ -1,7 +1,7 @@
 import { IUser } from "@/types";
 import React from "react";
 import styled from "styled-components";
-import { Skeleton } from "@/components";
+import { Skeleton } from "@/components/skeleton";
 import COLOR_MAP from "@/styles/colors";
 import dayjs from "dayjs";
 import { BASE_URL } from "@/configs";

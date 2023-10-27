@@ -33,6 +33,10 @@ export const RootRouter = () => useRoutes(
         {
           path: 'user',
           element: <React.Suspense><UserAdmin /></React.Suspense>
+        },
+        {
+          path: 'edit',
+          element: <React.Suspense><EditPage /></React.Suspense>,
         }
       ]
     },
@@ -48,9 +52,5 @@ export const RootRouter = () => useRoutes(
       path: 'gallery',
       element: <React.Suspense><GalleryPage /></React.Suspense>,
     },
-    {
-      path: 'edit',
-      element: <React.Suspense><EditPage /></React.Suspense>,
-    }
   ]
 );

@@ -5,7 +5,7 @@ import { IUser } from '@/types';
 import { Header } from '../_partial/layout';
 import styled from 'styled-components';
 import { UserEdit } from './edit';
-import { Button } from '@/components';
+import { Button } from '@/components/button';
 
 const Us = styled.div``;
 

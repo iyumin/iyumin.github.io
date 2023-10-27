@@ -1,10 +1,10 @@
 import React from 'react';
 import { IPost } from "@/types";
 import { EditItem } from "./item";
-import { Input } from "@/components";
-import { Option, Select } from '@/components/inputs/select';
+import { Input } from "@/components/input";
+import { Option, Select } from '@/components/select';
 import { getLocalStorage } from '..';
-import DatePicker from 'react-datepicker';
+import DP from 'react-datepicker';
 import dayjs from 'dayjs';
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -47,14 +47,14 @@ export function MoreInfo(props: MoreInfoProps) {
       </EditItem>
 
       <EditItem name="createAt" label="创建">
-        <DatePicker
+        <DP
           selected={dayjs.unix(state?.createAt).toDate()}
           onChange={d => setPostValue('createAt', dayjs(d).unix())}
         />
       </EditItem>
 
       <EditItem name="updateAt" label="更新">
-        <DatePicker
+        <DP
           selected={state?.updateAt && dayjs.unix(state?.updateAt).toDate()}
           onChange={d => setPostValue('updateAt', dayjs(d).unix())}
         />

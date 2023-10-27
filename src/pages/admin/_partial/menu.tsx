@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Menu, Link } from '@/components';
+import { Menu } from '@/components/menu';
+import { Link } from '@/components/link';
 import COLOR_MAP from '@/styles/colors';
 
 import { BlocksAndArrows, Config, } from '@icon-park/react';
