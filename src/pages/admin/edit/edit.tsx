@@ -5,7 +5,6 @@ import marked from 'marked';
 import WE from 'wangeditor';
 import dayjs from 'dayjs';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft } from '@icon-park/react';
 
 import { IPost } from '@/types';
 import { Button } from '@/components/button';
@@ -30,8 +29,10 @@ const renderer = {
 
 const Frame = styled.div`
   display: flex;
-  height: 100vh;
+  height: 880px;
   justify-content: center;
+  border: 1px solid ${COLOR_MAP.white6};
+  border-radius: 5px;
   .inner {
     max-width: 1440px;
   }
@@ -39,7 +40,7 @@ const Frame = styled.div`
 
 const Header = styled.div`
   width: 100%;
-  height: 80px;
+  height: 40px;
   display: flex;
   background-color: ${COLOR_MAP.white1};
   align-items: center;
@@ -113,9 +114,9 @@ export function Editor(): React.ReactElement {
   const location = useLocation();
   const navigate = useNavigate();
   // update or add
-  const mode = location.pathname.split('/')[1];
-  const typ = location.pathname.split('/')[2];
-  const uid = location.pathname.split('/')[3];
+  const mode = location.pathname.split('/')[3];
+  const typ = location.pathname.split('/')[4];
+  const uid = location.pathname.split('/')[5];
 
   const DEFAULT_POST: IPost = {
     title: '',
@@ -189,7 +190,7 @@ export function Editor(): React.ReactElement {
   React.useEffect(() => {
     if (document.querySelector('#article-editor')) {
       weditor.current = new WE('#article-editor');
-      weditor.current.config.height = 700;
+      weditor.current.config.height = 660;
       weditor.current.config.onchange = (t: string) => setPostValue('content', t);
       weditor.current.create();
       weditor.current.txt.html(state.content);
@@ -201,16 +202,14 @@ export function Editor(): React.ReactElement {
     <Frame className='edit-page'>
       <div className='inner'>
         <Header className='header'>
-          <div className='back-icon' onClick={() => navigate(-1)}>
-            <ArrowLeft theme="outline" size="28" fill="#333"/>
-          </div>
           <div className='title'>
-            <h1 style={{color: COLOR_MAP.dark2}}>
-              { mode === 'update' && '上传' }
+            <h2 style={{color: COLOR_MAP.dark2}}>
+              { mode === 'update' && '更新' }
               { mode === 'add' && '新增' }
               { typ === 'article' && '文章' }
               { typ === 'photo' && '照片' }
-            </h1>
+              { typ === 'cover' && '封面' }
+            </h2>
           </div>
         </Header>
         <Main className='main'>

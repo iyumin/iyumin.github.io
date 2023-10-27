@@ -35,7 +35,7 @@ export const RootRouter = () => useRoutes(
           element: <React.Suspense><UserAdmin /></React.Suspense>
         },
         {
-          path: 'edit',
+          path: 'edit/:mode/:typ/:uid',
           element: <React.Suspense><EditPage /></React.Suspense>,
         }
       ]

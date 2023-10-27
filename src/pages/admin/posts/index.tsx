@@ -38,7 +38,7 @@ export default function PostAdmin(): React.ReactElement {
   const [hasNext, setHasNext] = React.useState(true);
 
   const clickAdd = (t: string) => {
-    navigate(`/add/${t}/0`);
+    navigate(`/admin/edit/add/${t}/0`);
     return;
   };
 
@@ -53,7 +53,7 @@ export default function PostAdmin(): React.ReactElement {
   };
 
   const editTableRow = (p: IPost) => {
-    navigate(`/update/${p.type}/${p.uid}`);
+    navigate(`/admin/edit/update/${p.type}/${p.uid}`);
   };
 
   const clickViewPost = (p: IPost) => {
