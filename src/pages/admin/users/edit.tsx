@@ -7,6 +7,9 @@ import COLOR_MAP from '@/styles/colors';
 import Upload from '@/components/inputs/upload';
 import { BASE_URL } from '@/configs';
 import { updateUser, addUser } from '@/apis/user';
+import DatePicker from 'react-datepicker';
+import dayjs from 'dayjs';
+import "react-datepicker/dist/react-datepicker.css";
 
 const Content = styled.div`
   display: flex;
@@ -175,11 +178,10 @@ export function UserEdit({user, onSuccess}: UserEditProps) :React.ReactElement {
           </div>
           <div className='item'>
             <label>生日</label>
-            <Input
-              data-name='birthday'
-              defaultValue={user.birthday}
-              value={state.birthday}
-              onChange={setValue}
+            <DatePicker
+              dateFormat="yyyy/MM/dd"
+              selected={state.birthday && dayjs.unix(Number(String(state.birthday).slice(0,11))).toDate()}
+              onChange={d => console.log(d.valueOf())}
             />
           </div>
           <div className='item'>

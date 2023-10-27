@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchUsers } from '@/apis';
+import { fetchUsers } from '@/apis/user';
 import { UserInfo, UserSke } from './user';
 import { IUser } from '@/types';
 import { Header } from '../_partial/layout';
@@ -50,7 +50,7 @@ export function UserAdmin() :React.ReactElement {
   const getAndSetUsers = () => {
     (async() => {
       const data = await fetchUsers();
-      if (data) setUsers(data.users);
+      if (typeof data !== 'string') setUsers(data.data.users);
     })();
   }
 

@@ -4,11 +4,15 @@ import { EditItem } from "./item";
 import { Input } from "@/components";
 import { Option, Select } from '@/components/inputs/select';
 import { getLocalStorage } from '..';
+import DatePicker from 'react-datepicker';
+import dayjs from 'dayjs';
+import "react-datepicker/dist/react-datepicker.css";
 
 export interface MoreInfoProps {
   state: IPost;
   setValue(e: React.ChangeEvent<HTMLInputElement>): void;
-  setPostValue(key: string, v: string): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setPostValue(key: string, v: any): void;
 }
 
 export function MoreInfo(props: MoreInfoProps) {
@@ -43,18 +47,16 @@ export function MoreInfo(props: MoreInfoProps) {
       </EditItem>
 
       <EditItem name="createAt" label="创建">
-        <Input
-          data-name="createAt"
-          defaultValue={state?.createAt}
-          onChange={setValue}
+        <DatePicker
+          selected={dayjs.unix(Number(String(state?.createAt).slice(0,10))).toDate()}
+          onChange={d => setPostValue('createAt', d.valueOf())}
         />
       </EditItem>
 
-      <EditItem name='updateAt' label="更新">
-        <Input
-          data-name="updateAt"
-          defaultValue={state?.updateAt}
-          onChange={setValue}
+      <EditItem name="updateAt" label="更新">
+        <DatePicker
+          selected={state?.updateAt && dayjs.unix(Number(String(state?.updateAt).slice(0,10))).toDate()}
+          onChange={d => setPostValue('updateAt', d.valueOf())}
         />
       </EditItem>
       

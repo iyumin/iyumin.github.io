@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { Left } from '@icon-park/react';
 import { IPost } from '@/types';
 import { Skeleton } from '@/components';
-import { fetchPost } from '@/apis';
+import { fetchPost } from '@/apis/posts';
 import { Comment } from '../_partial';
 import COLOR_MAP from '@/styles/colors';
 import { useHistory } from 'react-router-dom';
@@ -82,7 +82,7 @@ export default function ArticlePage () :React.ReactElement {
     const { uid } = params;
     (async() => {
       const data = await fetchPost(uid);
-      setArticle(data);
+      if (typeof data !== 'string') setArticle(data.data.post);
     })();
   }, []);
 
@@ -113,7 +113,7 @@ const renderContent = (article: IPost) => {
           { article.author }
         </div>
         <div className="date">
-          { dayjs.unix(Number(String(article.createAt).slice(0,10))).format('YYYY年M月D日') }
+          { dayjs.unix(article.createAt).format('YYYY年M月D日') }
         </div>
       </Header>
       <Content>

@@ -10,7 +10,7 @@ import { ArrowLeft } from '@icon-park/react';
 import { IPost } from '@/types';
 import { Button, Input } from '@/components';
 import Upload from '@/components/inputs/upload';
-import { fetchPost, updatePost, addPost } from '@/apis';
+import { fetchPost, updatePost, addPost } from '@/apis/posts';
 import { BASE_URL } from '@/configs';
 import { MoreInfo } from './info';
 import COLOR_MAP from '@/styles/colors';
@@ -175,10 +175,10 @@ export function Editor(): React.ReactElement {
   React.useEffect(() => {
     if (mode === 'update') {
       (async () => {
-        const data: IPost = await fetchPost(uid);
-        if (data) {
-          dispatch({ type: '', payload: data });
-          weditor.current?.txt.html(data.content);
+        const data = await fetchPost(uid);
+        if (typeof data !== 'string') {
+          dispatch({ type: '', payload: data.data.post });
+          weditor.current?.txt.html(data.data.post.content);
         }
       })();
     }

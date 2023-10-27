@@ -7,7 +7,7 @@ import { IPost } from '@/types';
 import COLOR_MAP from '@/styles/colors';
 import { Skeleton } from '@/components';
 import { BASE_URL } from '@/configs';
-import { fetchArticles } from '@/apis';
+import { fetchPosts } from '@/apis/posts';
 
 const Container = styled.div`
   padding: 48px 0;
@@ -107,7 +107,7 @@ function transformList(origin: IPost[]) :IPost[] {
   return arr;
 }
 
-export default function ArticlesPage () :React.ReactElement {
+export function ArticlesPage () :React.ReactElement {
   const [list, setList] = React.useState<IPost[]>();
   const [offset, setOffset] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(true);
@@ -116,12 +116,12 @@ export default function ArticlesPage () :React.ReactElement {
   const history = useHistory();
 
   const handleClickMore = async () => {
-    const data = await fetchArticles(offset+pageLimit, pageLimit);
-    if (!data) {
+    const data = await fetchPosts(offset+pageLimit, pageLimit, {type: 'article'});
+    if (typeof data === 'string') {
       setHasMore(false);
       return;
     }
-    setList(list.concat(transformList(data.posts)));
+    setList(list.concat(transformList(data.data.posts)));
     setOffset(offset+pageLimit);
   };
 
@@ -158,9 +158,11 @@ export default function ArticlesPage () :React.ReactElement {
   // 组件加载时获取文章列表
   React.useEffect(() => {
     (async() => {
-      const data = await fetchArticles(offset, pageLimit);
-      setList(transformList(data?.posts));
-      if (data?.amount < pageLimit) setHasMore(false);
+      const data = await fetchPosts(offset, pageLimit, { type: 'article'});
+      if (typeof data !== 'string') {
+        setList(transformList(data.data.posts));
+        if (data.data.amount < pageLimit) setHasMore(false);
+      }
     })();
   }, []);
 

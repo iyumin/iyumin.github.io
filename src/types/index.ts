@@ -89,3 +89,9 @@ export interface IVerse {
   author: string,
   content: string[],
 }
+
+export type Response<T = undefined> = Promise<{
+  code: number;
+  msg: string;
+  data?: T
+} | string>;

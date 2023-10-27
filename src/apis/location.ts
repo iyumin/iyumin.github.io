@@ -1,6 +1,6 @@
 import api from "@/utils/axios"
 
-const LOC_URL = 'https://api.kertennet.com/geography/locationInfo'
+const LOC_URL = 'https://api.kertennet.com/geography/locationInfo';
 
 export interface Location {
   address?: string;

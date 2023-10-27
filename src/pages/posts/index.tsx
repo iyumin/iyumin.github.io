@@ -1,3 +1,1 @@
-import ArticlesPage from './posts';
-
-export default ArticlesPage;
+export { ArticlesPage as default } from './posts';

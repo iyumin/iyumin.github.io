@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { CalendarThirtyTwo, CrossRingTwo } from '@icon-park/react';
-import { fetchPhotos } from '@/apis';
+import { fetchPosts } from '@/apis/posts';
 import { IPost, IExif } from '@/types';
 import { Masonry, IMasonryItem, Loading } from '@/components';
 import { useDevice, useScroll } from '@/hooks';
@@ -190,10 +190,10 @@ export default function GalleryPage () :React.ReactElement {
 
   // 获取图片
   const getImageList = async (page: number, size = 12) => {
-    const data = await fetchPhotos(page, size);
-    if (data) {
-      setPhotos(photos.concat(covertImageList(data.posts)));
-      if (data.amount < pageLimit) setHasMore(false);
+    const data = await fetchPosts(page, size, {type: 'photo'});
+    if (typeof data !== 'string') {
+      setPhotos(photos.concat(covertImageList(data.data.posts)));
+      if (data.data.amount < pageLimit) setHasMore(false);
       else setHasMore(true);
     }
   };

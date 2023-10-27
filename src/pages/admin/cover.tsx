@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Header } from './_partial/layout';
 import Upload from '@/components/inputs/upload';
 import { BASE_URL } from '@/configs';
-import { addPost, fetchCovers, deletePost } from '@/apis';
+import { addPost, fetchPosts, deletePost } from '@/apis/posts';
 import { getLocalStorage } from '.';
 import { CloseOne } from '@icon-park/react';
 
@@ -76,10 +76,10 @@ export default function CoverEdit() :React.ReactElement {
 
   const getAllCovers = () => {
     (async() => {
-      const data = await fetchCovers();
-      if (data) {
+      const resp = await fetchPosts(0, 100, {type: 'cover'});
+      if (typeof resp !== 'string') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setCovers(data.posts.map((p:any) => {
+        setCovers(resp.data.posts.map((p:any) => {
           p.url = p.url.replace('static/', 'static/thumb-');
           return p;
         }))

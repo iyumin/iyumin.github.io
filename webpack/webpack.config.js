@@ -56,6 +56,10 @@ module.exports = {
         test: /\.(ts|tsx)$/,
         use: ['ts-loader'],
       },
+      {
+        test: /\.css$/i,
+        use: ["css-loader"],
+      },
     ],
   },
   plugins: [

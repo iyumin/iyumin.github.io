@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ViewportProvider } from '@/hooks';
 import { BASE_URL } from '@/configs';
-import { fetchCovers } from '@/apis';
+import { fetchPosts } from '@/apis/posts';
 import { random_int } from '@/utils';
 
 import Background from './background';
@@ -88,11 +88,11 @@ export default function GalleryPage () :React.ReactElement {
 
   React.useEffect(() => {
     (async() => {
-      const data = await fetchCovers();
-      if (data) {
-        const amount = data.amount;
+      const data = await fetchPosts(0, 10, {type: 'cover'});
+      if (typeof data !== 'string') {
+        const amount = data.data.amount;
         const idx = random_int(0, amount);
-        setCover(data.posts[idx].url);
+        setCover(data.data.posts[idx].url);
       }
     })();
   }, []);

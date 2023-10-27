@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@/components';
 import { IPost } from '@/types';
-import { fetchPosts, deletePost } from '@/apis';
+import { fetchPosts, deletePost } from '@/apis/posts';
 
 import { Header } from '../_partial/layout';
 import { PostTable } from './table';
@@ -75,14 +75,14 @@ export default function AdminArticlePage(): React.ReactElement {
 
   const getPosts = async (offset = 0, limit=PAGE_LIMIT) => {
     const data = await fetchPosts(offset, limit, {status: 'all'});
-    if (data) {
+    if (typeof data !== 'string') {
       if (offset <= 0) setHasPrev(false);
       else setHasPrev(true);
 
-      if (data.amount < limit) setHasNext(false);
+      if (data.data.amount < limit) setHasNext(false);
       else setHasNext(true);
 
-      setPosts(data.posts);
+      setPosts(data.data.posts);
     }
   };
 
