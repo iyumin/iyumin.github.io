@@ -5,6 +5,7 @@ import { CalendarThirtyTwo, CrossRingTwo } from '@icon-park/react';
 import { fetchPosts } from '@/apis/posts';
 import { IPost, IExif } from '@/types';
 import { Masonry, MasonryItem } from '@/components/masonry';
+import { Image } from '@/components/image';
 import { Loading } from '@/components/loading';
 import { useDevice, useScroll } from '@/hooks';
 import { BASE_URL } from '@/configs';
@@ -109,7 +110,7 @@ export default function GalleryPage () :React.ReactElement {
   const { clientWidth, clientHeight, device } = useDevice();
   const { toBottom } = useScroll();
 
-  const masonryRef: React.RefObject<HTMLDivElement> = React.useRef();
+  const masonryRef = React.useRef<HTMLDivElement>();
 
   const pageLimit = 12;
 
@@ -284,7 +285,7 @@ const covertImageList = (imageList: Array<IPost>) :Array<PhotoItem> => {
       'updateAt': Number(String(img.updateAt).slice(0, 10)),
       'description': img.excerpt,
       'title': img.title,
-      'child': <img src={src} data-index={index} alt={img.title} style={{width:'100%', height: '100%'}} />,
+      'child': <Image src={src} data-index={index} alt={img.title} style={{width:'100%', height: '100%'}} />,
       'width': exif?.width,
       'height': exif?.height,
     };
