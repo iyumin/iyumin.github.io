@@ -62,6 +62,7 @@ export interface UploadProps {
   onChange?(file: File): void;
   onFinish?(data: UploadData): void;
   onFailed?(): void;
+  defaultImage?: string;
 }
 
 export type UploadData = Promise<{
@@ -71,7 +72,7 @@ export type UploadData = Promise<{
 }>;
 
 export function Upload(props: UploadProps) :React.ReactElement {
-  const { url, onFinish, onFailed, allowExtensions } = props;
+  const { url, onFinish, onFailed, allowExtensions, defaultImage } = props;
   const [status, setStatus] = React.useState(null);
   const [width, setWidth] = React.useState<number | string>(0);
   const [result, setResult] = React.useState(null);
@@ -155,8 +156,8 @@ export function Upload(props: UploadProps) :React.ReactElement {
         ref={inputRef}
       />
       {
-        status === SUCCESS
-          ? <Preview result={result} />
+        (status === SUCCESS) || defaultImage
+          ? <Preview url={defaultImage} title={result?.filename} />
           :
           <>
             <Mask style={{width: width, backgroundColor: MASK_COLOR}} />
@@ -168,8 +169,13 @@ export function Upload(props: UploadProps) :React.ReactElement {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Preview = ({result}: {result: any}) => (
-  <Pre><img src={BASE_URL + result?.url} alt={result?.filename} /></Pre>
+const Preview = ({url, title}: {url: string; title?: string}) => (
+  <Pre
+    className='preview'
+    title='点击更换图片'
+  >
+    <img src={BASE_URL + url} alt={title || 'pic'} />
+  </Pre>
 );
 
 const UploadText = ({txt}: {txt?: string}) => (

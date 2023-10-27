@@ -28,13 +28,12 @@ export function MoreInfo(props: MoreInfoProps) {
         </Select>
       </EditItem>
 
-      <EditItem name="category" label='分类'>
-        <Select onChange={v => setPostValue('category', v)} defaultValue={state?.category}>
-          <Option value='default' name='默认分类' />
-          <Option value='life' name='生活' />
-          <Option value='fiction' name='科幻' />
-          <Option value='dairy' name='日志' />
-          <Option value='travel' name='旅行' />
+      <EditItem name="type" label='类型'>
+        <Select onChange={v => setPostValue('type', v)} defaultValue={state?.type}>
+          <Option value='article' name='文章' />
+          <Option value='photo' name='照片' />
+          <Option value='cover' name='封面' />
+          <Option value='avatar' name='头像' />
         </Select>
       </EditItem>
 
@@ -50,6 +49,7 @@ export function MoreInfo(props: MoreInfoProps) {
         <DP
           selected={dayjs.unix(state?.createAt).toDate()}
           onChange={d => setPostValue('createAt', dayjs(d).unix())}
+          dateFormat={'yyyy-MM-dd'}
         />
       </EditItem>
 
@@ -57,6 +57,7 @@ export function MoreInfo(props: MoreInfoProps) {
         <DP
           selected={state?.updateAt && dayjs.unix(state?.updateAt).toDate()}
           onChange={d => setPostValue('updateAt', dayjs(d).unix())}
+          dateFormat={'yyyy-MM-dd'}
         />
       </EditItem>
       
@@ -78,6 +79,16 @@ export function MoreInfo(props: MoreInfoProps) {
           <Option value='png' name='图片(PNG)' />
           <Option value='jpeg' name='图片(JPEG)' />
           <Option value='gif' name='图片(GIF)' />
+        </Select>
+      </EditItem>
+
+      <EditItem name="category" label='分类'>
+        <Select onChange={v => setPostValue('category', v)} defaultValue={state?.category}>
+          <Option value='default' name='默认分类' />
+          <Option value='life' name='生活' />
+          <Option value='fiction' name='科幻' />
+          <Option value='dairy' name='日志' />
+          <Option value='travel' name='旅行' />
         </Select>
       </EditItem>
 
@@ -103,15 +114,6 @@ export function MoreInfo(props: MoreInfoProps) {
           defaultValue={state?.exif}
           onChange={setValue}
         />
-      </EditItem>
-
-      <EditItem name="type" label='类型'>
-        <Select onChange={v => setPostValue('type', v)} defaultValue={state?.type}>
-          <Option value='article' name='文章' />
-          <Option value='photo' name='照片' />
-          <Option value='cover' name='封面' />
-          <Option value='avatar' name='头像' />
-        </Select>
       </EditItem>
     </div>
   );

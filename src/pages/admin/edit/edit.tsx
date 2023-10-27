@@ -224,11 +224,18 @@ export function Editor(): React.ReactElement {
             </div>
             <div className='content'>
               { typ === 'article' && <PostEditor id="article-editor" /> }
-              { typ === 'photo' && <PhotoUpload setPostValue={setPostValue} /> }
+              { typ === 'photo' && <PhotoUpload setPostValue={setPostValue} defaultImage={state?.url} /> }
+              { typ === 'cover' && <PhotoUpload setPostValue={setPostValue} defaultImage={state?.url} /> }
             </div>
           </Left>
           <Right className="right">
-            { typ === 'article' && <CoverUpload onFinish={onUpCoverFinish} /> }
+            {
+              typ === 'article' &&
+              <CoverUpload
+                onFinish={onUpCoverFinish}
+                defaultImage={state?.url}
+              />
+            }
             <MoreInfo
               state={state}
               setValue={setInputValue}
@@ -247,7 +254,7 @@ export function Editor(): React.ReactElement {
   );
 }
 
-const PhotoUpload = ({setPostValue}: {setPostValue: any}) => {
+const PhotoUpload = ({setPostValue, defaultImage}: {setPostValue: any, defaultImage: string}) => {
   return (
     <div style={{height: 600, width: 900}}>
       <Upload
@@ -260,18 +267,20 @@ const PhotoUpload = ({setPostValue}: {setPostValue: any}) => {
           setPostValue('exif', JSON.stringify({width, height}));
           setPostValue('format', d.ext);
         }}
+        defaultImage={defaultImage}
       />
     </div>
   );
 };
 
-const CoverUpload = ({onFinish}: {onFinish: any}) => {
+const CoverUpload = ({onFinish, defaultImage}: {onFinish: any, defaultImage: string}) => {
   return (
     <EditItem label='封面' style={{width: 230}}>
       <Upload
         onFinish={onFinish}
         url={BASE_URL + '/upload'}
         allowExtensions={['jpg', 'png']}
+        defaultImage={defaultImage}
       />
     </EditItem>
   );

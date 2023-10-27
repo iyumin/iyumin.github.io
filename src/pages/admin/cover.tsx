@@ -126,10 +126,10 @@ const renderPreviewItem = (data: any, onDel?: () => void) => {
     if (window.confirm('确定删除吗')) {
       (async() => {
         const res = await deletePost(uid);
-        if (res) {
+        if (typeof res !== 'string') {
           window.alert('删除成功')
           if (onDel) onDel();
-        } else window.alert('删除失败');
+        } else window.alert(res);
       })();
     }
   };

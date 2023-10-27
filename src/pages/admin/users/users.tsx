@@ -51,6 +51,7 @@ export function UserAdmin() :React.ReactElement {
     (async() => {
       const data = await fetchUsers();
       if (typeof data !== 'string') setUsers(data.data.users);
+      else window.alert(data);
     })();
   }
 
@@ -58,7 +59,6 @@ export function UserAdmin() :React.ReactElement {
 
   const handleClickUser = (u: IUser) => {
     setPickUser(null);
-    console.log(u);
     setTimeout(() => setPickUser(u), 100);
   }
 

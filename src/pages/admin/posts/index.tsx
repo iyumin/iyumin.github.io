@@ -65,10 +65,10 @@ export default function PostAdmin(): React.ReactElement {
     if (confirm('确定要删除？')) {
       (async() => {
         const data = await deletePost(uid);
-        if (data) {
+        if (typeof data !== 'string') {
           window.alert('删除成功');
           getPosts();
-        } else window.alert('删除失败');
+        } else window.alert(data);
       })();
     }
   };
