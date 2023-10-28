@@ -14,6 +14,9 @@ const EditPage = React.lazy(() => import('@/pages/admin/edit'));
 
 const MobileAdmin = React.lazy(() => import('@/pages/mobile'));
 const MobilePhoto = React.lazy(() => import('./pages/mobile/photo'));
+const MobilePhotos = React.lazy(() => import('./pages/mobile/photos'));
+const MobileArticles = React.lazy(() => import('./pages/mobile/articles'));
+const MobileUsers = React.lazy(() => import('./pages/mobile/users'));
 
 export const RootRouter = () => useRoutes(
   [
@@ -28,6 +31,18 @@ export const RootRouter = () => useRoutes(
         {
           path: 'photo/:uid',
           element: <React.Suspense><MobilePhoto /></React.Suspense>
+        },
+        {
+          path: 'photos',
+          element: <React.Suspense><MobilePhotos /></React.Suspense>
+        },
+        {
+          path: 'articles',
+          element: <React.Suspense><MobileArticles /></React.Suspense>
+        },
+        {
+          path: 'users',
+          element: <React.Suspense><MobileUsers /></React.Suspense>
         }
       ]
     },
