@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkkevinjobs=self.webpackChunkkevinjobs||[]).push([[739],{739:(e,s,a)=>{a.r(s),a.d(s,{default:()=>c});var t=a(959);function c(){return t.createElement("div",{className:"articles-mobile"},"articles")}}}]);
