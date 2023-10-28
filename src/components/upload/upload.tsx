@@ -65,11 +65,14 @@ export interface UploadProps {
   defaultImage?: string;
 }
 
-export type UploadData = Promise<{
+export type UploadData = {
   filename: string;
   origin: string;
   url: string;
-}>;
+  ext?: string;
+  width?: number;
+  height?: number;
+};
 
 export function Upload(props: UploadProps) :React.ReactElement {
   const { url, onFinish, onFailed, allowExtensions, defaultImage } = props;

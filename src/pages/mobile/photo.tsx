@@ -4,7 +4,7 @@ import { Upload } from '@/components/upload';
 import { BASE_URL } from '@/configs';
 import COLOR_MAP from '@/styles/colors';
 import { Input } from '@/components/input';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { fetchPost, updatePost } from '@/apis/posts';
 import { IPost } from '@/types';
 import dayjs from 'dayjs';
@@ -12,6 +12,7 @@ import { Select, Option } from '@/components/select';
 import { Button } from '@/components/button';
 import DP from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { getLocalStorage } from '../admin';
 
 const F = styled.div`
   display: flex;
@@ -80,7 +81,7 @@ const reducer = (state: IPost, action: {type: string, payload: IPost}) => {
 
 const default_post: IPost = {
   title: '',
-  author: '',
+  author: getLocalStorage().name,
   updateAt: dayjs().unix(),
   createAt: dayjs().unix(),
   content: '',
@@ -92,14 +93,15 @@ const default_post: IPost = {
   status: 'draft',
   type: 'photo',
   category: 'default',
+  exif: '',
 };
 
 export default function PhotoEdit() {
   const [state, dispatch] = React.useReducer(reducer, default_post)
   const params = useParams();
+  const navigate = useNavigate();
 
   const uid = params.uid;
-  const ref = React.useRef(null);
 
   const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.dataset['name'];
@@ -123,6 +125,8 @@ export default function PhotoEdit() {
   }
 
   React.useEffect(() => {
+    if (uid === '0') return;
+ 
     (async() => {
       const resp = await fetchPost(uid);
       if (typeof resp !== 'string') {
@@ -139,7 +143,10 @@ export default function PhotoEdit() {
         <div className='inner'>
           <Upload
             url={BASE_URL + '/upload'}
-            onFinish={p => console.log(p)}
+            onFinish={p => {
+              setPhotoValue('format', p.ext);
+              setPhotoValue('exif', JSON.stringify({width: p.width, height: p.height}));
+            }}
             allowExtensions={['jpg', 'jpeg', 'png', 'gif', 'webp']}
             defaultImage={state.url}
           />
@@ -294,7 +301,7 @@ export default function PhotoEdit() {
       </FormArea>
       <SubmitArea>
         <Button onClick={handleSubmit} type='primary'>提交</Button>
-        <Button danger>取消</Button>
+        <Button danger onClick={() => navigate(-1)}>取消</Button>
       </SubmitArea>
     </F>
   )

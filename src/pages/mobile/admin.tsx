@@ -4,19 +4,19 @@ import { Routes, Route } from 'react-router-dom';
 import PhotoEdit from './photo';
 import COLOR_MAP from '@/styles/colors';
 import Photos from './photos';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Articles from './articles';
 import Users from './users';
 import { Down } from '@icon-park/react';
 
-const HEIGHT = 56;
+const HEIGHT = 58;
 
 const F = styled.div`
   height: 100vh;
 `;
 
 const RouteArea = styled.div`
-  padding: 16px 0;
+  padding: 8px 0;
 `;
 
 const TitleArea = styled.div`
@@ -50,7 +50,6 @@ const ITEMS = [
         <span className='icon'><Down theme="outline" size="16" fill="#fff"/></span>
       </>
     ),
-    to: '',
   },
   {
     title: '照片',
@@ -68,15 +67,14 @@ const ITEMS = [
 
 export function MobileAdmin() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [items, setItems] = React.useState(ITEMS);
   const [navH, setNavH] = React.useState(HEIGHT);
 
-  const renderItem = (item: {title: string, to: string}) => {
+  const renderItem = (item: {title: React.ReactNode, to?: string}) => {
     return (
-      <NavItem key={item.title}>
+      <NavItem key={item.to || 'dasiasdig'}>
         <span onClick={(e) => {
-          navigate(item.to);
+          if (item.to) navigate(item.to);
           e.stopPropagation();
           if (navH !== HEIGHT ) setNavH(HEIGHT);
           else setNavH(HEIGHT * ITEMS.length + 8);
@@ -84,10 +82,6 @@ export function MobileAdmin() {
       </NavItem>
     )
   }
-
-  React.useEffect(() => {
-    console.log(location);
-  }, [location]);
 
   return (
     <F className='mobile-admin'>
