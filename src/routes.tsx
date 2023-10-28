@@ -15,6 +15,10 @@ const UserAdmin = React.lazy(() => import('./pages/admin/users'));
 export const RootRouter = () => useRoutes(
   [
     {
+      path: '/',
+      element: <React.Suspense><GalleryPage /></React.Suspense>
+    },
+    {
       path: 'admin',
       element: <React.Suspense><AdminPage /></React.Suspense>,
       children: [

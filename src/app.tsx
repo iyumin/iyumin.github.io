@@ -5,6 +5,10 @@ import { Navbar } from './components/navbar';
 
 const ITEMS = [
   {
+    title: 'Home',
+    to: '/',
+  },
+  {
     title: 'Gallery',
     to: '/gallery',
   },

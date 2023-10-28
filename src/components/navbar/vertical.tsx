@@ -37,6 +37,7 @@ const RightMenus = styled.div`
 export interface NavbarItem {
   title: string;
   to: string;
+  icon?: React.ReactNode;
 }
 
 export interface NavbarProps {
