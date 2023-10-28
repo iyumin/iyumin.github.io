@@ -195,8 +195,12 @@ export default function GalleryPage () :React.ReactElement {
     const data = await fetchPosts(page, size, {type: 'photo'});
     if (typeof data !== 'string') {
       setPhotos(photos.concat(covertImageList(data.data.posts)));
-      if (data.data.amount < pageLimit) setHasMore(false);
-      else setHasMore(true);
+      if (pageLimit + nowOffset >= data.data.totals) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+        setNowOffset(nowOffset + pageLimit);
+      }
     }
   };
 
@@ -207,9 +211,9 @@ export default function GalleryPage () :React.ReactElement {
 
   React.useEffect(() => {
     if (hasMore && toBottom < 500) {
-      getImageList(nowOffset + pageLimit, pageLimit);
-      setNowOffset(nowOffset + pageLimit);
+      getImageList(nowOffset, pageLimit);
     }
+    console.log(hasMore, nowOffset);
   }, [toBottom]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

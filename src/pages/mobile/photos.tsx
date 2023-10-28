@@ -72,8 +72,8 @@ export default function Photos() {
       const resp = await fetchPosts(offset, limit, {type: 'photo'});
       if (typeof resp !== 'string') {
         setPhotos(resp.data.posts);
-        if (resp.data.amount >= limit) setHasMore(true);
-        else setHasMore(false);
+        if (limit + offset >= resp.data.totals) setHasMore(false);
+        else setHasMore(true);
       } else window.alert(resp);
     })();
   }

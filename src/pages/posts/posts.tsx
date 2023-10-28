@@ -110,28 +110,37 @@ function transformList(origin: IPost[]) :IPost[] {
 }
 
 export function ArticlesPage () :React.ReactElement {
-  const [list, setList] = React.useState<IPost[]>();
+  const [posts, setPosts] = React.useState<IPost[]>([]);
   const [offset, setOffset] = React.useState(0);
   const [hasMore, setHasMore] = React.useState(true);
   
   const pageLimit = 5;
   const navigate = useNavigate();
 
-  const handleClickMore = async () => {
-    const data = await fetchPosts(offset+pageLimit, pageLimit, {type: 'article'});
-    if (typeof data === 'string') {
-      setHasMore(false);
-      return;
-    }
-    setList(list.concat(transformList(data.data.posts)));
-    setOffset(offset+pageLimit);
+  const handleClickMore = () => {
+    getAndSet(offset);
   };
 
   const handleClickArticle = (a: IPost) => {
     navigate(`/article/${a.uid}`);
   };
 
-  const renderItem = (a: IPost) => {
+  const getAndSet = (offset: number, limit=pageLimit) => {
+    (async() => {
+      const data = await fetchPosts(offset, pageLimit, { type: 'article'});
+      if (typeof data !== 'string') {
+        setPosts([...posts, ...transformList(data.data.posts)]);
+        if (offset + pageLimit >= data.data.totals) {
+          setHasMore(false); 
+        } else {
+          setOffset(offset + limit);
+          setHasMore(true)
+        }
+      } else window.alert(data);
+    })();
+  }
+
+  const PostItem = ({a}: {a: IPost}) => {
     return (
       <ArticleItem key={a.uid}>
         <Cover onClick={() => handleClickArticle(a)} className='cover'>
@@ -158,20 +167,16 @@ export function ArticlesPage () :React.ReactElement {
   };
 
   // 组件加载时获取文章列表
-  React.useEffect(() => {
-    (async() => {
-      const data = await fetchPosts(offset, pageLimit, { type: 'article'});
-      if (typeof data !== 'string') {
-        setList(transformList(data.data.posts));
-        if (data.data.amount < pageLimit) setHasMore(false);
-      }
-    })();
-  }, []);
+  React.useEffect(() => getAndSet(offset), []);
 
   return (
     <Container>
       <ArticleList>
-        { list ? list.map(renderItem) : renderSkeleton() }
+        { 
+          posts.length > 0
+            ? posts.map(p => <PostItem key={p.uid} a={p} />)
+            : renderSkeleton()
+        }
       </ArticleList>
       {
         hasMore &&
@@ -185,7 +190,7 @@ const renderSkeleton = () => {
   const sk = [];
   for (let i=0; i<6; i++) {
     sk.push((
-      <Sk className='wait'>
+      <Sk className='wait' key={i}>
         <div className='left'>
           <Skeleton height={200} width={320} />
         </div>
@@ -200,5 +205,5 @@ const renderSkeleton = () => {
       </Sk>
     ));
   }
-  return sk;
+  return <>{sk}</>;
 };

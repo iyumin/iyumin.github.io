@@ -8,6 +8,7 @@ export interface PostsData {
   offset: number;
   limit: number;
   posts: IPost[];
+  totals: number;
 }
 
 export interface PostParams {

@@ -12,6 +12,7 @@ interface UserParams {
 interface UsersData {
   amount: number;
   users: IUser[];
+  totals: number;
 }
 
 export async function fetchUsers(params?: UserParams) :Response<UsersData> {

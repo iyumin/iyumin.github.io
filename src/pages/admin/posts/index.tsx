@@ -79,7 +79,7 @@ export default function PostAdmin(): React.ReactElement {
       if (offset <= 0) setHasPrev(false);
       else setHasPrev(true);
 
-      if (data.data.amount < limit) setHasNext(false);
+      if (offset + limit >= data.data.totals) setHasNext(false);
       else setHasNext(true);
 
       setPosts(data.data.posts);
