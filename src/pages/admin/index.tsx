@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { ReactElement, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { login, LoginForm } from '@/apis/auth';
@@ -135,6 +135,7 @@ export default function AdminPage () :ReactElement {
         </div>
         <div className="admin-content">
           <Routes>
+            <Route path='/' element={<Redirect to={'/admin/home'} />} />
             <Route path='home' element={<HomeAdmin />} />
             <Route path='post' element={<PostAdmin />} />
             <Route path='user' element={<UserAdmin />} />
@@ -145,4 +146,10 @@ export default function AdminPage () :ReactElement {
       </div>
     </Admin>
   );
+}
+
+function Redirect({to}: {to: string}) :null {
+  const navigate = useNavigate();
+  useEffect(() => navigate(to), []);
+  return null;
 }
