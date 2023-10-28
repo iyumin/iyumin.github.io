@@ -127,7 +127,7 @@ export function Navbar (props: NavbarProps) {
           }
         </div>
         <RightMenus style={{visibility: visible ? 'visible' : 'hidden'}}>
-          { menus.map(m => <NavbarItem title={m.title} to={m.to} />) }
+          { menus.map(m => <NavbarItem key={m.title} title={m.title} to={m.to} />) }
         </RightMenus>
       </Right>
     </>

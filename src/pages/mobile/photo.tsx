@@ -5,7 +5,7 @@ import { BASE_URL } from '@/configs';
 import COLOR_MAP from '@/styles/colors';
 import { Input } from '@/components/input';
 import { useParams } from 'react-router-dom';
-import { fetchPost } from '@/apis/posts';
+import { fetchPost, updatePost } from '@/apis/posts';
 import { IPost } from '@/types';
 import dayjs from 'dayjs';
 import { Select, Option } from '@/components/select';
@@ -112,7 +112,14 @@ export default function PhotoEdit() {
   }
 
   const handleSubmit = () => {
-    console.log(state);
+    (async() => {
+      const resp = await updatePost(state.uid, state);
+      if (typeof resp !== 'string') {
+        window.alert('更新成功');
+      } else {
+        window.alert(resp);
+      }
+    })();
   }
 
   React.useEffect(() => {
@@ -123,7 +130,7 @@ export default function PhotoEdit() {
       } else {
         window.alert(resp);
       }
-    })
+    })();
   }, [uid]);
 
   return (
@@ -134,6 +141,7 @@ export default function PhotoEdit() {
             url={BASE_URL + '/upload'}
             onFinish={p => console.log(p)}
             allowExtensions={['jpg', 'jpeg', 'png', 'gif', 'webp']}
+            defaultImage={state.url}
           />
         </div>
       </UploadArea>
@@ -180,11 +188,13 @@ export default function PhotoEdit() {
           <div className='item-inner'>
             <label className='item-label'>图片格式</label>
             <span className='item-input'>
-              <Select onChange={v => setPhotoValue('format', v)} defaultValue={state?.status}>
-                <Option value=' ' name='Unkonwn' />
+              <Select onChange={v => setPhotoValue('format', v)} defaultValue={state?.format}>
+                <Option value='' name='未知格式' />
                 <Option value='jpg' name='JPG' />
                 <Option value='png' name='PNG' />
                 <Option value='jpeg' name='JPEG' />
+                <Option value='gif' name='动图' />
+                <Option value='webp' name='WEBP' />
               </Select>
             </span>
           </div>
@@ -233,11 +243,12 @@ export default function PhotoEdit() {
           <div className='item-inner'>
             <label className='item-label'>分类</label>
             <span className='item-input'>
-              <Input
-                data-name='category'
-                value={state.category}
-                onChange={setValue}
-              />
+              <Select onChange={v => setPhotoValue('category', v)} defaultValue={state?.category}>
+                <Option value='default' name='默认' />
+                <Option value='life' name='生活' />
+                <Option value='travel' name='旅途' />
+                <Option value='scenery' name='风景' />
+              </Select>
             </span>
           </div>
         </Item>
