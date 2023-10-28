@@ -10,7 +10,7 @@ const Box = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 5px;
-  background-color: ${COLOR_MAP.white3};
+  // background-color: ${COLOR_MAP.white3};
   min-height: 80px;
   cursor: pointer;
   display: flex;

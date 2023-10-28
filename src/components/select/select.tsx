@@ -88,6 +88,10 @@ export const Select: React.FC<SelectProps> = (props: SelectProps) => {
     if (onChange) onChange(v);
   };
 
+  const handleTouch = (e: React.TouchEvent<HTMLDivElement>) => {
+
+  }
+
   const findName = (v: string) => {
     const childs = ref?.current?.children;
     if (!childs) return;
@@ -110,10 +114,18 @@ export const Select: React.FC<SelectProps> = (props: SelectProps) => {
   }, [defaultValue]);
 
   return (
-    <Sel {...rest} onClick={handleClick} onBlur={() => setHeight(0)} tabIndex={0}>
+    <Sel
+      {...rest}
+      onClick={handleClick}
+      onBlur={() => setHeight(0)}
+      tabIndex={0}
+    >
       <div className='default-option'>
         { findName(value) }
-        <span className='arrow' onClick={e => e.stopPropagation()}>
+        <span className='arrow' onClick={e => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}>
           <Down theme="outline" size="24" fill="#333"/>
         </span>
       </div>

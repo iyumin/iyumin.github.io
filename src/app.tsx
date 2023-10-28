@@ -19,6 +19,10 @@ const ITEMS = [
   {
     title: 'Admin',
     to: '/admin',
+  },
+  {
+    title: 'Mobile',
+    to: '/mobile'
   }
 ]
 

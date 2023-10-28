@@ -5,18 +5,31 @@ const AdminPage = React.lazy(() => import('@/pages/admin'));
 const ArticlePage = React.lazy(() => import('@/pages/posts/post'));
 const ArticlesPage = React.lazy(() => import('@/pages/posts'));
 const GalleryPage = React.lazy(() => import('@/pages/gallery'));
-const EditPage = React.lazy(() => import('@/pages/admin/edit'));
 
 const PostsAdmin = React.lazy(() => import('./pages/admin/posts'));
 const HomeAdmin = React.lazy(() => import('./pages/admin/home'));
 const CoverAdmin = React.lazy(() => import('./pages/admin/cover'));
 const UserAdmin = React.lazy(() => import('./pages/admin/users'));
+const EditPage = React.lazy(() => import('@/pages/admin/edit'));
+
+const MobileAdmin = React.lazy(() => import('@/pages/mobile'));
+const MobilePhoto = React.lazy(() => import('./pages/mobile/photo'));
 
 export const RootRouter = () => useRoutes(
   [
     {
       path: '/',
       element: <React.Suspense><GalleryPage /></React.Suspense>
+    },
+    {
+      path: 'mobile',
+      element: <React.Suspense><MobileAdmin /></React.Suspense>,
+      children: [
+        {
+          path: 'photo/:uid',
+          element: <React.Suspense><MobilePhoto /></React.Suspense>
+        }
+      ]
     },
     {
       path: 'admin',
