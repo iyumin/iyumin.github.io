@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Spin } from '../spin';
+import { Loading2 } from './loading2';
 
 const Container = styled.div`
   width: 100%;
@@ -10,7 +11,7 @@ const Container = styled.div`
 `;
 
 export interface LoadingProps {
-  type?: 'dot-circle'
+  type?: 'dot-circle' | '2'
 }
 
 export function Loading (props: LoadingProps) {
@@ -22,6 +23,9 @@ export function Loading (props: LoadingProps) {
     switch (t) {
     case 'dot-circle':
       final = <Spin />;
+      break;
+    case '2':
+      final = <Loading2 />;
       break;
     default:
       final = <Spin />;

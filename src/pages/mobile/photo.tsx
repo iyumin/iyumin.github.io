@@ -5,7 +5,7 @@ import { BASE_URL } from '@/configs';
 import COLOR_MAP from '@/styles/colors';
 import { Input } from '@/components/input';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchPost, updatePost } from '@/apis/posts';
+import { addPost, fetchPost, updatePost } from '@/apis/posts';
 import { IPost } from '@/types';
 import dayjs from 'dayjs';
 import { Select, Option } from '@/components/select';
@@ -94,6 +94,7 @@ const default_post: IPost = {
   type: 'photo',
   category: 'default',
   exif: '',
+  description: '',
 };
 
 export default function PhotoEdit() {
@@ -114,14 +115,25 @@ export default function PhotoEdit() {
   }
 
   const handleSubmit = () => {
-    (async() => {
-      const resp = await updatePost(state.uid, state);
-      if (typeof resp !== 'string') {
-        window.alert('更新成功');
-      } else {
-        window.alert(resp);
-      }
-    })();
+    if (uid === '0') {
+      (async() => {
+        const resp = await addPost(state);
+        if (typeof resp !== 'string') {
+          window.alert('添加成功');
+          navigate(-1);
+        } else window.alert(resp);
+      })();
+    } else {
+      (async() => {
+        const resp = await updatePost(state.uid, state);
+        if (typeof resp !== 'string') {
+          window.alert('更新成功');
+          navigate(-1);
+        } else {
+          window.alert(resp);
+        }
+      })();
+    }
   }
 
   React.useEffect(() => {
@@ -144,6 +156,7 @@ export default function PhotoEdit() {
           <Upload
             url={BASE_URL + '/upload'}
             onFinish={p => {
+              setPhotoValue('url', p.url);
               setPhotoValue('format', p.ext);
               setPhotoValue('exif', JSON.stringify({width: p.width, height: p.height}));
             }}

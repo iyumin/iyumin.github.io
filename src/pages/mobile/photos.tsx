@@ -53,7 +53,7 @@ const I = styled.div`
 `;
 
 export default function Photos() {
-  const LIMIT = 10;
+  const LIMIT = 8;
   const navigate = useNavigate();
   const [photos, setPhotos] = React.useState<IPost[]>(null);
   const [offset, setOffset] = React.useState(0);
@@ -86,7 +86,7 @@ export default function Photos() {
         <Button type="primary" onClick={() => navigate('/mobile/photo/0')}>添加图片</Button>
       </div>
       <div className="photos">
-        { photos?.map(p => <Item p={p} />) }
+        { photos?.map(p => <Item key={p.uid} p={p} />) }
       </div>
       <div className="prev-next">
         <Button

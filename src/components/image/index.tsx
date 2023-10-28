@@ -18,7 +18,7 @@ export function Image(props: ImageProps) {
         onLoad={handleLoad}
         style={{...style, display: loaded ? 'block' : 'none'}}
       />
-      { !loaded && <Loading /> }
+      { loaded && <Loading type='2' /> }
     </>
   )
 }

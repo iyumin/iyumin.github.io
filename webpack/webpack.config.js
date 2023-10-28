@@ -5,6 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
 const HtmlMinimizer = require('html-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssPlugin = require('mini-css-extract-plugin');
+const WebpackBar = require('webpackbar');
 
 const htmlWebpackPlugin = new HtmlWebPackPlugin({
   template: path.resolve(__dirname, '../public/index.html'),
@@ -58,7 +60,10 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["css-loader"],
+        use: [
+          MiniCssPlugin.loader,
+          "css-loader"
+        ],
       },
     ],
   },
@@ -66,6 +71,8 @@ module.exports = {
     htmlWebpackPlugin,
     copyWebpackPlugin,
     new EslintPlugin(),
+    new MiniCssPlugin(),
+    new WebpackBar(),
   ],
   optimization: {
     minimize: true,

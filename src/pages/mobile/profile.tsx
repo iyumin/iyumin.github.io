@@ -42,11 +42,10 @@ const F = styled.div`
   .item {
     text-align: left;
     margin: 16px 0;
-    
     span:nth-child(1) {
       vertical-align: middle;
       display: inline-block;
-      width: 64px;
+      width: 84px;
       text-align: justify;
       text-align-last: justify;
       margin-right: 16px;
