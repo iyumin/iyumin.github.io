@@ -34,6 +34,7 @@ export default function PostAdmin(): React.ReactElement {
   const navigate = useNavigate();
   const [posts, setPosts] = React.useState<IPost[]>(null);
   const [offset, setOffset] = React.useState(0);
+  const [typ, setTyp] = React.useState('all');
   const [hasPrev, setHasPrev] = React.useState(false);
   const [hasNext, setHasNext] = React.useState(true);
 
@@ -67,14 +68,14 @@ export default function PostAdmin(): React.ReactElement {
         const data = await deletePost(uid);
         if (typeof data !== 'string') {
           window.alert('删除成功');
-          getPosts();
+          getAndSet();
         } else window.alert(data);
       })();
     }
   };
 
-  const getPosts = async (offset = 0, limit=PAGE_LIMIT) => {
-    const data = await fetchPosts(offset, limit, {status: 'all'});
+  const getAndSet = async (offset = 0, limit=PAGE_LIMIT) => {
+    const data = await fetchPosts(offset, limit, {status: 'all', type: typ});
     if (typeof data !== 'string') {
       if (offset <= 0) setHasPrev(false);
       else setHasPrev(true);
@@ -87,17 +88,29 @@ export default function PostAdmin(): React.ReactElement {
   };
 
   React.useEffect(() => {
-    getPosts(offset, PAGE_LIMIT);
+    getAndSet(offset, PAGE_LIMIT);
   }, [offset]);
+
+  React.useEffect(() => {
+    setOffset(0);
+    getAndSet(0, PAGE_LIMIT);
+  }, [typ]);
 
   return (
     <Article>
       <Header>
-        <Header.Title>文章管理</Header.Title>
+        <Header.Title>内容管理</Header.Title>
         <Header.Add>
           <Button onClick={() => clickAdd('article')}>新增文章</Button>
           <Button onClick={() => clickAdd('photo')}>添加图片</Button>
         </Header.Add>
+        <div style={{marginLeft: 32}}>
+          <span>点击筛选</span>
+          <Button type='primary' onClick={() => setTyp('all')}>所有</Button>
+          <Button type='primary' onClick={() => setTyp('article')}>文章</Button>
+          <Button type='primary' onClick={() => setTyp('photo')}>照片</Button>
+          <Button type='primary' onClick={() => setTyp('cover')}>封面</Button>
+        </div>
       </Header>
       <TableContainer>
         <div className="table">
