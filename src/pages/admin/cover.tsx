@@ -21,7 +21,7 @@ const Up = styled.div`
       width: 300px;
     }
   }
-  .preview {
+  > .preview {
     margin-left: 32px;
     display: flex;
     flex-wrap: wrap;

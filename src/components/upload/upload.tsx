@@ -157,7 +157,7 @@ export function Upload(props: UploadProps) :React.ReactElement {
       />
       {
         (status === SUCCESS) || defaultImage
-          ? <Preview url={defaultImage} title={result?.filename} />
+          ? <Preview url={result?.url || defaultImage} title={result?.filename} />
           :
           <>
             <Mask style={{width: width, backgroundColor: MASK_COLOR}} />
