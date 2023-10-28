@@ -31,43 +31,26 @@ const Admin = styled.div`
   }
 `;
 
-/**
- * 取出存放在 localStorage 中的值
- * @returns {object} {token: string, name: string}
- */
 export const getLocalStorage = () :{token: string, name: string} => {
   const token = localStorage.getItem('token');
   const name = localStorage.getItem('name');
   return { token, name };
 };
 
+export const clearLocalStorage = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('name');
+};
+
+export const setLocalStorage = (token: string, name: string) => {
+  localStorage.setItem('token', token);
+  localStorage.setItem('name', name);
+};
+
 export default function AdminPage () :ReactElement {
   const [isLogin, setIsLogin] = React.useState(false);
   const [isLoginDialogVisible, setIsDialogVisible] = React.useState(false);
 
-  /**
-   * 集中清理 localStorage 中存储的值
-   */
-  const clearLocalStorage = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('name');
-  };
-
-  /**
-   * 集中将值存储到 localStorage 中
-   * @param token 用户登录 token
-   * @param name 用户名
-   */
-  const setLocalStorage = (token: string, name: string) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('name', name);
-  };
-
-  /**
-   * 处理点击【提交】按钮事件
-   * @param e 鼠标事件
-   * @param form 用户信息表单
-   */
   const handleSubmit = (e: React.MouseEvent<HTMLElement>, form: LoginForm) => {
     (async() => {
       const data = await login(form);
@@ -148,7 +131,7 @@ export default function AdminPage () :ReactElement {
   );
 }
 
-function Redirect({to}: {to: string}) :null {
+export function Redirect({to}: {to: string}) :null {
   const navigate = useNavigate();
   useEffect(() => navigate(to), []);
   return null;

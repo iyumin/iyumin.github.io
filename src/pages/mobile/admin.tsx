@@ -1,15 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
 import PhotoEdit from './photo';
 import COLOR_MAP from '@/styles/colors';
 import Photos from './photos';
-import { useNavigate } from 'react-router-dom';
 import Articles from './articles';
 import Users from './users';
 import { Down } from '@icon-park/react';
+import { getLocalStorage } from '../admin';
+import { IUser } from '@/types';
+import { fetchUser } from '@/apis/user';
+import Login from './login';
+import Profile from './profile';
 
 const HEIGHT = 58;
+const AVATAR_SIZE = 24;
 
 const F = styled.div`
   height: 100vh;
@@ -24,6 +29,22 @@ const TitleArea = styled.div`
   background-color: ${COLOR_MAP.dark};
   color: ${COLOR_MAP.white3};
   transition: height .15s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  .avatar {
+    position: absolute;
+    left: 8px;
+    top: ${(HEIGHT - AVATAR_SIZE)/2-8}px;
+    width: 40px;
+    height: 40px;
+    background-color: ${COLOR_MAP.white5};
+    border-radius: 50%;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+    }
+  }
 `;
 
 const NavItem = styled.div`
@@ -47,7 +68,9 @@ const ITEMS = [
     title: (
       <>
         <span>后台管理</span>
-        <span className='icon'><Down theme="outline" size="16" fill="#fff"/></span>
+        <span className='icon'>
+          <Down theme="outline" size="16" fill="#fff"/>
+        </span>
       </>
     ),
   },
@@ -67,8 +90,11 @@ const ITEMS = [
 
 export function MobileAdmin() {
   const navigate = useNavigate();
+  const [search] = useSearchParams();
   const [items, setItems] = React.useState(ITEMS);
   const [navH, setNavH] = React.useState(HEIGHT);
+  const [user, setUser] = React.useState<IUser>(null);
+  const [isLogin, setIsLogin] = React.useState(false);
 
   const renderItem = (item: {title: React.ReactNode, to?: string}) => {
     return (
@@ -83,6 +109,29 @@ export function MobileAdmin() {
     )
   }
 
+  const handleClickAvatar = () => {
+    if (getLocalStorage().name) {
+      navigate(`/mobile/profile/${getLocalStorage().name}`);
+    } else {
+      navigate('/mobile/login');
+    }
+  }
+
+  React.useEffect(() => {
+    const { token, name } = getLocalStorage();
+    if (token && name) {
+      setIsLogin(true);
+      (async() => {
+        const resp = await fetchUser(getLocalStorage().name);
+        if (typeof resp !== 'string') setUser(resp.data.users[0]);
+      })();
+    } else {
+      setIsLogin(false);
+    }
+  }, [isLogin, search.get('time')]);
+
+  React.useEffect(() => navigate('/mobile/photos'), [search.get('time')]);
+
   return (
     <F className='mobile-admin'>
       <TitleArea
@@ -90,6 +139,9 @@ export function MobileAdmin() {
         onBlur={() => setNavH(HEIGHT)}
         tabIndex={0}
       >
+        <div className='avatar' onClick={handleClickAvatar}>
+          { isLogin && <img src={user?.avatar} alt={user?.username} /> }
+        </div>
         { items.map(i => renderItem(i)) }
       </TitleArea>
       <RouteArea>
@@ -98,6 +150,8 @@ export function MobileAdmin() {
           <Route path='photos' element={<Photos />} />
           <Route path='articles' element={<Articles />} />
           <Route path='users' element={<Users />} />
+          <Route path='login' element={<Login />} />
+          <Route path='profile/:username' element={<Profile />} />
         </Routes>
       </RouteArea>
     </F>

@@ -7,7 +7,6 @@ import { LoginForm } from '@/apis/auth';
 import { getLocalStorage } from '..';
 import { fetchUser } from '@/apis/user';
 import { IUser } from '@/types';
-import { BASE_URL } from '@/configs';
 import COLOR_MAP from '@/styles/colors';
 
 const Nav = styled.div`
@@ -148,7 +147,7 @@ export default function Navbar (props: NavbarProps) :React.ReactElement {
   const renderUser = () => (
     <div className="user">
       <div className="avatar">
-        <img src={BASE_URL + user?.avatar} alt={user?.username} />
+        <img src={user?.avatar} alt={user?.username} />
       </div>
       <div className="name">{getLocalStorage().name}</div>
       <div className="level"></div>

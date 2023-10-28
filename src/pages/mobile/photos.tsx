@@ -16,6 +16,11 @@ const F = styled.div`
     display: flex;
     justify-content: center;
     margin: 8px 0;
+    button {
+      width: 280px;
+      height: 36px;
+      border-radius: 5px;
+    }
   }
   .photos {
     width: 100%;

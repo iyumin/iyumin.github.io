@@ -20,6 +20,7 @@ const COLOR_MAP: IColorMap = {
   white5: '#CACACA',
   white6: '#bcbcbc',
   white7: '#a1a1a1',
+  white8: '#919293',
 };
 
 export default COLOR_MAP;

@@ -77,6 +77,7 @@ export interface IColorMap {
   white5: string,
   white6: string,
   white7: string,
+  white8: string;
   dark: string,
 }
 

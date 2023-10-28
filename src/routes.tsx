@@ -17,6 +17,8 @@ const MobilePhoto = React.lazy(() => import('./pages/mobile/photo'));
 const MobilePhotos = React.lazy(() => import('./pages/mobile/photos'));
 const MobileArticles = React.lazy(() => import('./pages/mobile/articles'));
 const MobileUsers = React.lazy(() => import('./pages/mobile/users'));
+const MobileLogin = React.lazy(() => import('./pages/mobile/login'));
+const MobileProfile = React.lazy(() => import('./pages/mobile/profile'));
 
 export const RootRouter = () => useRoutes(
   [
@@ -43,6 +45,14 @@ export const RootRouter = () => useRoutes(
         {
           path: 'users',
           element: <React.Suspense><MobileUsers /></React.Suspense>
+        },
+        {
+          path: 'login',
+          element: <React.Suspense><MobileLogin /></React.Suspense>
+        },
+        {
+          path: 'profile/:username',
+          element: <React.Suspense><MobileProfile /></React.Suspense>
         }
       ]
     },
