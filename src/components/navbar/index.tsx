@@ -1,1 +1,1 @@
-export { Navbar, NavbarProps } from './vertical';
+export { Navbar, type NavbarProps } from './vertical';

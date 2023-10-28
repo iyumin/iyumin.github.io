@@ -1,1 +1,1 @@
-export { Upload, UploadProps, UploadData } from './upload';
+export { Upload, type UploadProps, type UploadData } from './upload';

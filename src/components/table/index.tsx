@@ -1,1 +1,1 @@
-export { Table, TableProps, TableHead } from './table';
+export { Table, type TableProps, type TableHead } from './table';
