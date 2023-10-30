@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunklumie=self.webpackChunklumie||[]).push([[966],{9966:(e,s,u)=>{u.r(s),u.d(s,{default:()=>l});var a=u(2983);function l(){return a.createElement("div",{className:"articles-users"},"articles")}}}]);

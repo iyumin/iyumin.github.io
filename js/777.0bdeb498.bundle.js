@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunklumie=self.webpackChunklumie||[]).push([[777],{5777:(e,l,a)=>{a.r(l),a.d(l,{default:()=>t});var s=a(2983);function t(){return s.createElement("div",{className:"articles-mobile"},"articles")}}}]);

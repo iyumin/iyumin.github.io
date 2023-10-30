@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkkevinjobs=self.webpackChunkkevinjobs||[]).push([[374],{2374:(e,s,a)=>{a.r(s),a.d(s,{default:()=>t});var r=a(959);function t(){return r.createElement("div",{className:"articles-users"},"articles")}}}]);
