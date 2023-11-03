@@ -90,7 +90,7 @@
     from { left: -100%; }
     to { left: 120%; }
   }
-`;function o({width:e="100%",height:t=16}){return a.createElement(r,{className:"component-skeleton",style:{width:e,height:t}})}},3729:(e,t,n)=>{n.d(t,{g:()=>f});var a=n(2983),l=n(5326),i=n.n(l),r=n(9606),o=n(2670),c=n(7952),s=n(7755),d=function(e,t,n,a){return new(n||(n=Promise))((function(l,i){function r(e){try{c(a.next(e))}catch(e){i(e)}}function o(e){try{c(a.throw(e))}catch(e){i(e)}}function c(e){var t;e.done?l(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(r,o)}c((a=a.apply(e,t||[])).next())}))};const u=r.ZP.div`
+`;function o({width:e="100%",height:t=16}){return a.createElement(r,{className:"component-skeleton",style:{width:e,height:t}})}},3729:(e,t,n)=>{n.d(t,{g:()=>v});var a=n(2983),l=n(5326),i=n.n(l),r=n(9606),o=n(2670),c=n(7952),s=n(7755),d=n(538),u=function(e,t,n,a){return new(n||(n=Promise))((function(l,i){function r(e){try{c(a.next(e))}catch(e){i(e)}}function o(e){try{c(a.throw(e))}catch(e){i(e)}}function c(e){var t;e.done?l(e.value):(t=e.value,t instanceof n?t:new n((function(e){e(t)}))).then(r,o)}c((a=a.apply(e,t||[])).next())}))};const m=r.ZP.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -101,7 +101,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-`,m=r.ZP.div`
+`,p=r.ZP.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -109,7 +109,7 @@
   height: 100%;
   border-radius: 5px;
   z-index: 1;
-`,p=r.ZP.div`
+`,h=r.ZP.div`
   height: 100%;
   width: 100%;
   display: flex;
@@ -120,7 +120,7 @@
     object-fit: contain;
     border-radius: 5px;
   }
-`,h=r.ZP.div`
+`,f=r.ZP.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,7 +133,7 @@
   span {
     margin-left: 4px;
   }
-`;function f(e){const{url:t,onFinish:n,onFailed:l,allowExtensions:r,defaultImage:o}=e,[s,p]=a.useState(null),[h,f]=a.useState(0),[E,b]=a.useState(null),y=a.useRef(null),x=a.useRef(null),w="上传成功",Z=null===s?c.Z.green:s===w?"transparent":c.Z.red,k=null===s?c.Z.primary:s===w?c.Z.green:c.Z.red;return a.createElement(u,{className:"component-upload",ref:y,onClick:()=>{x.current&&(x.current.click(),f(0),p(null))},style:{borderColor:k}},a.createElement("input",{type:"file",onChange:e=>{const a=e.target.files[0],o=null==a?void 0:a.name.split(".").pop();if(!(null==r?void 0:r.includes(o)))return f("100%"),void p("不支持的格式");const c=new FormData;c.append("file",a),(()=>{d(this,void 0,void 0,(function*(){const e={method:"post",data:c,url:t,headers:{"content-type":"multipart/form-data",Authorization:`Bearer ${localStorage.getItem("token")}`},onUploadProgress(e){const t=Number((e.loaded/e.total).toFixed(1));y.current&&f(y.current.offsetWidth*t)}},a=yield i()(e);0===a.data.code?(p(w),n&&(n(a.data.data),b(a.data.data))):(p("上传失败"),l&&l())}))})()},style:{width:1,height:1,position:"absolute"},ref:x}),s===w||o?a.createElement(v,{url:(null==E?void 0:E.url)||o,title:null==E?void 0:E.filename}):a.createElement(a.Fragment,null,a.createElement(m,{style:{width:h,backgroundColor:Z}}),a.createElement(g,{txt:s})))}const v=({url:e,title:t})=>a.createElement(p,{className:"preview",title:"点击更换图片"},a.createElement("img",{src:s._+e,alt:t||"pic"})),g=({txt:e})=>a.createElement(h,null,e?a.createElement("span",{style:{color:c.Z.white2}},e):a.createElement(a.Fragment,null,a.createElement(o.Z,{theme:"outline",size:"24",fill:"#333"}),a.createElement("span",null,"点击上传")))},7755:(e,t,n)=>{n.d(t,{_:()=>a});const a="https://api.kevinjobs.com:5000"},3255:(e,t,n)=>{n.d(t,{h4:()=>d});var a=n(2983),l=n(9606),i=n(7952);const r=l.ZP.div`
+`;function v(e){const{url:t,onFinish:n,onFailed:l,allowExtensions:r,defaultImage:o}=e,[s,h]=a.useState(null),[f,v]=a.useState(0),[b,y]=a.useState(null),x=a.useRef(null),w=a.useRef(null),Z="上传成功",k=null===s?c.Z.green:s===Z?"transparent":c.Z.red,N=null===s?c.Z.primary:s===Z?c.Z.green:c.Z.red;return a.createElement(m,{className:"component-upload",ref:x,onClick:()=>{w.current&&(w.current.click(),v(0),h(null))},style:{borderColor:N}},a.createElement("input",{type:"file",onChange:e=>{const a=e.target.files[0],o=null==a?void 0:a.name.split(".").pop();if(!(null==r?void 0:r.includes(o)))return v("100%"),void h("不支持的格式");const c=new FormData;c.append("file",a),(()=>{u(this,void 0,void 0,(function*(){const e=yield d.ZP.load(a),r={method:"post",data:c,url:t,headers:{"content-type":"multipart/form-data",Authorization:`Bearer ${localStorage.getItem("token")}`},onUploadProgress(e){const t=Number((e.loaded/e.total).toFixed(1));x.current&&v(x.current.offsetWidth*t)}},o=yield i()(r);if(0===o.data.code){if(h(Z),n){const t=o.data.data;n(t,e),y(t)}}else h("上传失败"),l&&l()}))})()},style:{width:1,height:1,position:"absolute"},ref:w}),s===Z||o?a.createElement(g,{url:(null==b?void 0:b.url)||o,title:null==b?void 0:b.filename}):a.createElement(a.Fragment,null,a.createElement(p,{style:{width:f,backgroundColor:k}}),a.createElement(E,{txt:s})))}const g=({url:e,title:t})=>a.createElement(h,{className:"preview",title:"点击更换图片"},a.createElement("img",{src:s._+e,alt:t||"pic"})),E=({txt:e})=>a.createElement(f,null,e?a.createElement("span",{style:{color:c.Z.white2}},e):a.createElement(a.Fragment,null,a.createElement(o.Z,{theme:"outline",size:"24",fill:"#333"}),a.createElement("span",null,"点击上传")))},7755:(e,t,n)=>{n.d(t,{_:()=>a});const a="https://api.kevinjobs.com:5000"},3255:(e,t,n)=>{n.d(t,{h4:()=>d});var a=n(2983),l=n(9606),i=n(7952);const r=l.ZP.div`
   margin: 8px 0 16px 0;
   padding-bottom: 16px;
   border-bottom: 1px solid ${i.Z.white4};
