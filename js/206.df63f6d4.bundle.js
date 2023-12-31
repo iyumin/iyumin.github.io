@@ -4,7 +4,9 @@
   border-bottom: 1px solid ${r.Z.white4};
   display: flex;
   align-items: center;
-`,a=n.ZP.h3``,l=n.ZP.div``;function c(e){const{children:t}=e;return o.createElement(s,null,t)}c.Title=a,c.Add=l;const d=c,h=n.ZP.div`
+`,a=n.ZP.h3``,l=n.ZP.div`
+  margin-left: 8px;
+`;function c(e){const{children:t}=e;return o.createElement(s,null,t)}c.Title=a,c.Add=l;const d=c,h=n.ZP.div`
   margin: 8px;
   display: inline-block;
   position: relative;
