@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunklumie=self.webpackChunklumie||[]).push([[972,208],{6196:(e,t,a)=>{a.r(t),a.d(t,{default:()=>P});var l=a(2983),n=a(9606),m=a(3729),i=a(8432),r=a(7952),c=a(9287),s=a(3891),u=a(5577),p=a(7860),d=a.n(p),E=a(5511),o=a(4653),g=a(5667),v=a.n(g),h=(a(8765),a(6742)),f=a(9647);const N=n.ZP.div`
+"use strict";(self.webpackChunklumie=self.webpackChunklumie||[]).push([[72,74],{6196:(e,t,a)=>{a.r(t),a.d(t,{default:()=>P});var l=a(2983),n=a(9606),m=a(5693),i=a(8432),r=a(7952),c=a(9287),s=a(3891),u=a(5577),p=a(7860),d=a.n(p),E=a(5511),o=a(4653),g=a(5667),v=a.n(g),h=(a(8765),a(6742)),f=a(9647);const N=n.ZP.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;

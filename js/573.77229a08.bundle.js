@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunklumie=self.webpackChunklumie||[]).push([[41,208],{4842:(e,t,a)=>{a.r(t),a.d(t,{default:()=>f});var n=a(2983),l=a(9606),i=a(2384),r=a(3891),c=a(7952),s=a(7860),m=a.n(s),o=a(2760),p=a(3e3),d=a(8890),u=a(4653),E=a(6742);const h=l.ZP.div`
+"use strict";(self.webpackChunklumie=self.webpackChunklumie||[]).push([[573,74],{4842:(e,t,a)=>{a.r(t),a.d(t,{default:()=>f});var n=a(2983),l=a(9606),i=a(2384),r=a(3891),c=a(7952),s=a(7860),m=a.n(s),o=a(2760),p=a(3e3),d=a(8890),u=a(4653),E=a(6742);const h=l.ZP.div`
   padding: 32px 0;
   background-color: ${c.Z.white};
   margin: 0 8px;
