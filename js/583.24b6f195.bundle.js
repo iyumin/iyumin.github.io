@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunklumie=self.webpackChunklumie||[]).push([[583],{2583:(e,l,n)=>{n.r(l),n.d(l,{default:()=>c});var t=n(2983);const a=n(9606).ZP.div``;function c(){return t.createElement(a,{className:"admin-home-container"},t.createElement("div",null,t.createElement("h1",null,"Welcome!")))}}}]);
